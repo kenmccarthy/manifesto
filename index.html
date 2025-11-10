@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenAI:N3 - Manifesto for Generative AI in Higher Education</title>
+	<link rel="icon" type="image/x-icon" href="favicon.ico">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #2C2C2C;
+            background-color: #F5F5F5;
+        }
+
+        /* Sticky header */
+        .sticky-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1B4F5C 0%, #0F2F37 100%);
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 999;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .sticky-header.active {
+            display: block;
+        }
+
+        body.has-sticky-header {
+            padding-top: 50px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1B4F5C 0%, #0F2F37 100%);
+            color: white;
+            padding: 40px 20px 20px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        header .tagline {
+            font-size: 1.2em;
+            font-style: italic;
+            opacity: 0.95;
+            margin-bottom: 6px;
+            margin-top: 6px;
+        }
+
+        header .authors {
+            font-size: 0.95em;
+            opacity: 0.85;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            max-width: 500px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1em;
+            border: 2px solid #DDD;
+            border-radius: 6px;
+            transition: border-color 0.3s;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #1B4F5C;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #DDD;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95em;
+            transition: all 0.3s;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.all {
+            border-color: #2C2C2C;
+            color: #2C2C2C;
+        }
+
+        .filter-btn.theme1 {
+            border-color: #0b5394;
+            color: #0b5394;
+        }
+
+        .filter-btn.theme1.active {
+            background-color: #0b5394;
+            color: white;
+        }
+
+        .filter-btn.theme2 {
+            border-color: #e85c41;
+            color: #e85c41;
+        }
+
+        .filter-btn.theme2.active {
+            background-color: #e85c41;
+            color: white;
+        }
+
+        .filter-btn.theme3 {
+            border-color: #00796b;
+            color: #00796b;
+        }
+
+        .filter-btn.theme3.active {
+            background-color: #00796b;
+            color: white;
+        }
+
+        .filter-btn.all.active {
+            background-color: #2C2C2C;
+            color: white;
+        }
+
+        /* Statements Grid */
+        .statements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .statement-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border-left: 6px solid;
+            opacity: 1;
+            max-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .statement-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .statement-card.hidden {
+            display: none;
+        }
+
+        .statement-card.theme1 {
+            border-left-color: #0b5394;
+        }
+
+        .statement-card.theme2 {
+            border-left-color: #e85c41;
+        }
+
+        .statement-card.theme3 {
+            border-left-color: #00796b;
+        }
+
+        .statement-header {
+            padding: 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .statement-card.theme1 .statement-header {
+            background-color: #0b5394;
+        }
+
+        .statement-card.theme2 .statement-header {
+            background-color: #e85c41;
+        }
+
+        .statement-card.theme3 .statement-header {
+            background-color: #00796b;
+        }
+
+        .statement-number {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .statement-theme {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .statement-body {
+            padding: 24px;
+            flex-grow: 1;
+        }
+
+        .statement-text {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #2C2C2C;
+            font-weight: 500;
+        }
+
+        .statement-footer {
+            padding: 16px 24px;
+            background-color: #F9F9F9;
+            border-top: 1px solid #EEE;
+            font-size: 0.85em;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: #1B4F5C;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            transition: color 0.3s;
+            padding: 4px 8px;
+        }
+
+        .copy-btn:hover {
+            color: #0F2F37;
+        }
+
+        /* Theme Sections */
+        .theme-section {
+            margin-bottom: 60px;
+        }
+
+        .theme-title {
+            font-size: 2em;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-title.theme1 {
+            color: #0b5394;
+            border-bottom-color: #0b5394;
+        }
+
+        .theme-title.theme2 {
+            color: #e85c41;
+            border-bottom-color: #e85c41;
+        }
+
+        .theme-title.theme3 {
+            color: #00796b;
+            border-bottom-color: #00796b;
+        }
+
+        .theme-icon {
+            font-size: 1.5em;
+        }
+
+        .theme-subtitle {
+            font-size: 1.1em;
+            color: #888;
+            font-style: italic;
+            margin-top: 8px;
+        }
+
+        /* Results info */
+        .results-info {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #888;
+            font-size: 0.95em;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #2C2C2C;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-radius: 8px;
+        }
+
+        footer p {
+            margin: 0;
+            padding: 4px 0;
+        }
+
+        footer a {
+            color: #E85D5D;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Modal for full statement */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 40px;
+            max-width: 600px;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 2em;
+            font-weight: bold;
+            color: #888;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #2C2C2C;
+        }
+
+        .modal-header {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #EEE;
+        }
+
+        .modal-statement {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #2C2C2C;
+        }
+
+        .modal-footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #EEE;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .copy-btn-modal {
+            background-color: #0b5394;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn-modal:hover {
+            background-color: #003d82;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .copy-btn-modal:active {
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .sticky-header {
+                font-size: 1.1em;
+                padding: 10px 15px;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .search-box {
+                max-width: 100%;
+            }
+
+            .filter-buttons {
+                justify-content: center;
+            }
+
+            .statements-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-title {
+                font-size: 1.5em;
+            }
+
+            .modal-content {
+                margin: 20% auto;
+                padding: 30px 20px;
+                max-width: 90%;
+            }
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .statement-card {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        .statement-card.hidden {
+            animation: none;
+        }
+
+        /* No results */
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+        }
+
+        .no-results p {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            background-color: #FFFACD;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Header -->
+    <div class="sticky-header" id="stickyHeader">Manifesto for Generative AI in Higher Education</div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>Manifesto for Generative AI in Higher Education</h1>
+            <p class="tagline">A living reflection on teaching, learning, and technology in an age of abundance</p>
+            <p class="authors">Dr Hazel Farrell & Ken McCarthy<br>GenAI:N3, South East Technological University</p>
+        </header>
+
+        <!-- Theme Explanation -->
+        <div style="background-color: white; padding: 30px; margin-bottom: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p style="font-size: 1.05em; line-height: 1.8; color: #2C2C2C; margin: 0;">
+			We stand at a threshold between what learning has been and what it might become. GenAI invites possibility and provokes uncertainty in equal measure. Our task is to respond not with fear, but with imagination and integrity to ensure that learning remains a deeply human act. Every generation of educators inherits a changing landscape. GenAI has redrawn ours, but the direction remains ours to choose.<br><br>
+			This manifesto is not a rulebook or a warning. It is an invitation to think, to question, and to act with intention. It speaks to educators, students, and institutions who want to teach and learn with and without GenAI, not merely about it. It is designed to evolve and to be read aloud, debated, annotated, and rewritten.<br><br>
+
+                <i>This manifesto unfolds across three intertwined themes:</i><br>
+                <strong style="color: #0b5394;">Theme 1: Rethinking Teaching and Learning</strong> explores how curiosity, collaboration, and critical design can redefine education in an age of abundance.<br>
+                <strong style="color: #e85c41;">Theme 2: Responsibility, Ethics, and Power</strong> examines the shared duty of educators and institutions to act with transparency, equity, and care.<br>
+                <strong style="color: #00796b;">Theme 3: Imagination, Humanity, and the Future</strong> looks forward, affirming that while GenAI may transform the tools of learning, it is human creativity, conscience, and connection that will shape what comes next.
+            </p>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search statements... (e.g., 'curiosity', 'ethics', 'students')">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn all active" data-filter="all">All Themes</button>
+                <button class="filter-btn theme1" data-filter="theme1">Theme 1</button>
+                <button class="filter-btn theme2" data-filter="theme2">Theme 2</button>
+                <button class="filter-btn theme3" data-filter="theme3">Theme 3</button>
+            </div>
+        </div>
+
+        <!-- Results Info -->
+        <div class="results-info">
+            <span id="resultsCount">Showing 30 statements</span>
+        </div>
+
+        <!-- Statements Grid -->
+        <div class="statements-grid" id="statementsGrid"></div>
+
+        <!-- No Results -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <p>No statements found matching your search.</p>
+            <p>Try different keywords or clear your filters.</p>
+        </div>
+
+        <!-- Files -->
+        <div style="background-color: white; padding: 30px; margin-bottom: 40px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <p style="font-size: 1.05em; line-height: 1.8; color: #2C2C2C; margin: 0;">
+                <i>Digital Assets:</i><br>
+                <strong>Manifesto Document</strong> <a href="https://genain3.ie/files/manifesto/Manifesto_Document.pdf" target="_blank">PDF</a> | <a href="https://genain3.ie/files/manifesto/Manifesto_Document.docx" target="_blank">Word</a><br>
+                <strong>Manifesto Poster</strong> <a href="https://genain3.ie/files/manifesto/Manifesto_Poster.pdf" target="_blank">PDF</a><br>
+                <strong>Manifesto Presentation</strong> <a href="https://genain3.ie/files/manifesto/Manifesto_Presentation.pdf" target="_blank">PDF</a> | <a href="https://genain3.ie/files/manifesto/Manifesto_Presentation.pptx" target="_blank">PowerPoint</a>
+            </p>
+		</div>
+        <!-- Footer -->
+        <footer>
+			<strong>Manifesto for Generative AI in Higher Education</strong>
+            <p>This manifesto is open. Use it, adapt it, challenge it.<br>Cite it with care, change it with courage.</p>
+			<p><i>Inspired by the Manifesto for Teaching Online: from the Centre for Research in Digital Education at the University of Edinburgh</i></p>
+			<p>Thanks to our reviewers Dr Tom Farrelly, MTU and Sue Beckingham, Sheffield Hallam University for their feedback and suggestions.</p>
+			<p>Farrell, H. & McCarthy, K. GenAI:N3 (2025). | <a href="https://genain3.ie/" target="_blank">GenAI:N3</a><br>Licensed under Creative Commons BY-SA 4.0.,<br>Version: 1.00</p> 
+        </footer>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal" id="statementModal">
+        <div class="modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <div class="modal-header" id="modalHeader"></div>
+            <div class="modal-statement" id="modalStatement"></div>
+            <div id="modalRationale" style="margin-top: 30px; padding-top: 20px; border-top: 2px solid #EEE;">
+                <p id="rationale-text" style="font-size: 0.95em; line-height: 1.7; color: #555;"></p>
+            </div>
+            <div class="modal-footer">
+                <button id="copyBtn" class="copy-btn-modal">📋 Copy </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // All statements data with impactful words in bold
+        const statements = [
+            // Theme 1: Rethinking Teaching and Learning
+            { id: 1, text: "We teach in an age of abundance, not <strong>scarcity</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Information is accessible and freely available - it overflows onto our screens. The work of educators is to help students find meaning in the deluge, guiding them to discern, connect, and critique. GenAI does not give us more knowledge; it reveals how much we already overlook. Teaching now means navigating excess with purpose." },
+            { id: 2, text: "Inquiry has become the new <strong>intelligence</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "In an age of instant answers, the question assumes more importance than ever before. Crafting meaningful questions that provoke depth and not just data becomes a core academic skill. The art of prompting is curiosity in action." },
+            { id: 3, text: "GenAI does not replace thinking - it reveals the cost of not <strong>thinking</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "GenAI can produce fluent nonsense and hidden bias. When we outsource thought, we see how easily we mistake coherence for truth. The greatest lesson is humility: GenAI shows how much effort authentic thinking still requires." },
+            { id: 4, text: "Detection chases the past; thoughtful design shapes the <strong>future</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "To chase detection is to fight the future with the tools of the past. Designing assessments that reward originality, reflection, and human insight changes the rules entirely. Instead of policing use, we design for purpose - where the value lies in the process, not the product." },
+            { id: 5, text: "Courage opens the door, but <strong>resources</strong> build the path.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Innovation cannot flourish when educators are asked to reimagine learning in the margins of overfilled schedules. Institutions must match their ambitions with meaningful investment in time, training, and collaborative spaces. Without that commitment, change becomes rhetoric, not reality; aspirational, not transformational." },
+            { id: 6, text: "<strong>Curiosity</strong> surpasses completion.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "In a world where technology fills in the blanks, curiosity keeps the mind alive. When answers arrive before the questions are formed, curiosity becomes radical. True learning is not about racing to the finish but about lingering in the unknown." },
+            { id: 7, text: "Students must learn with GenAI before they can <strong>question</strong> it.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Ethical understanding grows through experience, not avoidance. Ethical literacy is not born of walls, but of windows. By engaging with generative tools, students come to recognise their capacities, limits, and biases. To know GenAI is to stand beside it critically, not compliantly." },
+            { id: 8, text: "Students are <strong>collaborators</strong>, not spectators.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "They must help write the story of GenAI in education, not merely read its script. In doing so, they learn both the weight of responsibility and the strength to challenge the systems that shape them." },
+            { id: 9, text: "We cannot ask students to be collaborators in systems designed to <strong>constrain</strong> them.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Inviting students to collaborate in systems that will not change is not partnership but performance, deepening cynicism instead of trust. Trust is built not through invitations, but through the courage of institutions to listen and to change." },
+            { id: 10, text: "Our job is not to tame the machine, but to awaken the <strong>human</strong> next to it.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "GenAI will surge forward, indifferent to our rules. Our work is to nurture the inner compass of empathy, discernment, and ethical vision which keeps education anchored in humanity. The true horizon of learning is not control; it is conscience." },
+            
+            // Theme 2: Responsibility, Ethics, and Power
+            { id: 11, text: "Transparency is the new <strong>integrity</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "As the line between original and generated grows indistinct, honesty about process becomes more important than the illusion of purity. Students and staff alike should be able to say: Here's what I used, and here's how it shaped my work. In a hybrid world, transparency builds the trust that integrity depends on." },
+            { id: 12, text: "Academic judgement is <strong>augmented</strong>, not automated.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "GenAI can illuminate patterns, generate ideas, and offer feedback - but discernment remains the domain of educators. Algorithms may assist, but they do not assess. Human context, empathy, and fairness are not optional; they are the foundation of academic decision-making." },
+            { id: 13, text: "Institutions must lead <strong>ethically</strong>, not just efficiently.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Universities cannot hand their conscience to vendors. Universities must anchor decisions in the core values of equity, privacy, and sustainability rather than simply cost. Institutional courage is what makes staff integrity possible." },
+            { id: 14, text: "Accountability scales with <strong>influence</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "The greater the reach of our technologies, the stronger our duty to justify their use. Institutions must show, not just state, how GenAI aligns with educational and institutional values. Responsibility must be visible through transparent governance, clear boundaries, and open dialogue." },
+            { id: 15, text: "Efficiency is seductive; <strong>wisdom</strong> lingers.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Automation races ahead, promising speed and ease. But learning does not live in haste; it breathes in reflection, conversation, and the slow turning of thought. Growth unfolds in the pauses. As the world accelerates, we must guard the quiet tempos where thought becomes understanding." },
+            { id: 16, text: "There is no \"neutral\" data - only stories told by <strong>systems</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Every dataset carries values, omissions, and histories within it. GenAI is not a mirror of truth but a chorus of inherited biases, shaped by its makers and the cultures that feed it. Recognising this enables us to teach students to read outputs not as objective facts, but as narratives to be questioned." },
+            { id: 17, text: "<strong>Prompting</strong> is pedagogy.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "The questions we pose shape the knowledge we receive. Critical prompting requires awareness of power, context, and intention. Students must learn not only to generate prompts, but to interrogate them and question the frame as much as the response." },
+            { id: 18, text: "GenAI is not one thing - it lives differently in every <strong>discipline</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Its meaning shifts across disciplines and what enlightens one may obscure another. Education does not need uniformity, but plurality with each discipline finding its own pathway. Rather than universal rules, disciplines must co-create their own frameworks in conversation with their students and communities." },
+            { id: 19, text: "Writing remains an act of <strong>thinking</strong>, even when machines hold the pen.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Text generation does not end the need for writing; it transforms it. Drafting, reshaping, and interpreting AI-assisted text can be acts of deep thought. The goal is not to reject GenAI-authored text, but to think through it, critique and refine." },
+            { id: 20, text: "Ease is not the enemy; uncritical <strong>learning</strong> is.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "When GenAI lightens the load of routine work, the focus of education must shift to deeper learning such as thinking critically, creating boldly, and reasoning ethically. Rather than lowering expectations, grades should reflect the depth of human growth, not the ease of technological shortcuts." },
+            
+            // Theme 3: Imagination, Humanity, and the Future
+            { id: 21, text: "We owe students more than caution - we owe them <strong>courage</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Fear of misuse must not define our pedagogy. Students need to see bold, critical experimentation modelled in practice. Courage means making space for uncertainty and trusting learners to act responsibly with the tools of their time. Courage is the pedagogy they will remember." },
+            { id: 22, text: "Every technological shift doesn't just change tools; it changes <strong>power</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "GenAI carries political, economic, and social consequences. Education must make these visible by revealing who gains, who is left behind, and why it matters. To stay silent is to side with inequity; to teach critically is to challenge it." },
+            { id: 23, text: "<strong>Inclusion</strong> is not optional.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "When GenAI privileges some languages, abilities, or cultures over others, inequity is built into the system. Education must actively design for access and belonging, adapting tools and practices so that all voices can be heard." },
+            { id: 24, text: "<strong>Sustainability</strong> is a learning outcome.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "GenAI engagement and innovation comes with environmental costs. Embedding sustainability as a core learning outcome means cultivating awareness of impact and environmental responsibility." },
+            { id: 25, text: "Constraint is not the enemy of creativity; it is a <strong>catalyst</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "The limitations of GenAI can spark new forms of expression where human imagination and creativity expand and flourish. Constraint becomes a canvas, not a cage." },
+            { id: 26, text: "<strong>Ethics</strong> is a foundation, not a footnote.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Responsibility should not arrive as a final slide in a presentation; it should breathe through every decision. Ethical reflection belongs in the design stage of every policy, course, prompt, and dataset used. The most sustainable systems are those that start with conscience, not compliance." },
+            { id: 27, text: "<strong>Privacy</strong> is practice.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Understanding what data we trade for convenience is part of digital literacy. Educators should lead by example - using GenAI transparently, anonymising where possible, questioning what is collected and why, and making informed choices of the tools used and for what purpose." },
+            { id: 28, text: "GenAI challenges us to teach <strong>why</strong>, not just how.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Technical fluency without philosophical grounding lacks depth. Students must understand both the power of GenAI and the wisdom to choose when not to use it. Meaningful literacy joins purpose with skill." },
+            { id: 29, text: "The <strong>horizon</strong> is still ours to shape.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "GenAI may reshape how we learn, but it does not rewrite our purpose. The future classroom is not a contest of minds and machines; it is a space of shared imagination, where creativity, conscience and care continue to grow. The legacy is not the machine, but the mind that guided it." },
+            { id: 30, text: "The future classroom is a <strong>conversation</strong>, and it can be extraordinary.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Learning now unfolds in dialogue: between teachers and students, people and systems, questions, and responses. The challenge is not control but balance and allowing technology to contribute without letting it speak for us." },
+        ];
+
+        const themeInfo = {
+            theme1: { name: "Rethinking Teaching and Learning", icon: "â–²", color: "#0b5394" },
+            theme2: { name: "Responsibility, Ethics, and Power", icon: "â– ", color: "#e85c41" },
+            theme3: { name: "Imagination, Humanity, and the Future", icon: "â—", color: "#00796b" }
+        };
+
+        let currentFilter = "all";
+        let currentSearch = "";
+
+        // Render statements
+        function renderStatements() {
+            const grid = document.getElementById("statementsGrid");
+            grid.innerHTML = "";
+            let visibleCount = 0;
+
+            statements.forEach(statement => {
+                const matchesFilter = currentFilter === "all" || statement.theme === currentFilter;
+                const matchesSearch = currentSearch === "" || 
+                    statement.text.toLowerCase().includes(currentSearch.toLowerCase());
+
+                if (matchesFilter && matchesSearch) {
+                    visibleCount++;
+                    const card = createStatementCard(statement);
+                    grid.appendChild(card);
+                }
+            });
+
+            // Show/hide no results message
+            document.getElementById("noResults").style.display = visibleCount === 0 ? "block" : "none";
+            
+            // Update results count
+            document.getElementById("resultsCount").textContent = 
+                visibleCount === 1 ? "Showing 1 statement" : `Showing ${visibleCount} statements`;
+        }
+
+        // Create statement card
+        function createStatementCard(statement) {
+            const card = document.createElement("div");
+            card.className = `statement-card ${statement.theme}`;
+            
+            card.innerHTML = `
+                <div class="statement-header">
+                    <span class="statement-theme">${themeInfo[statement.theme].name}</span>
+                </div>
+                <div class="statement-body">
+                    <div class="statement-text">${highlightSearchTerms(statement.text)}</div>
+                </div>
+                <div class="statement-footer">
+                    <button class="copy-btn" onclick="openModalFromCard(event, ${statement.id})">Show</button>
+                </div>
+            `;
+
+            card.addEventListener("click", () => openModal(statement));
+            return card;
+        }
+
+        // Highlight search terms
+        function highlightSearchTerms(text) {
+            if (!currentSearch) return text;
+            
+            const regex = new RegExp(`(${currentSearch})`, "gi");
+            return text.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        // Open modal
+        function openModal(statement) {
+            const themeColor = themeInfo[statement.theme].color;
+            document.getElementById("modalHeader").innerHTML = 
+                `<strong style="color: ${themeColor};">${themeInfo[statement.theme].name}</strong>`;
+            document.getElementById("modalStatement").innerHTML = statement.text;
+            document.getElementById("rationale-text").textContent = statement.rationale;
+            
+            // Set up copy button
+            const copyBtn = document.getElementById("copyBtn");
+            copyBtn.onclick = function(e) {
+                e.preventDefault();
+                const plainText = statement.text.replace(/<strong>|<\/strong>/g, '');
+                const fullText = plainText + "\n\n" + statement.rationale + "\n\n— from the Manifesto for Generative AI in Higher Education (GenAI:N3)";
+                
+                navigator.clipboard.writeText(fullText).then(() => {
+                    // Visual feedback
+                    const originalText = copyBtn.textContent;
+                    const originalBg = copyBtn.style.backgroundColor;
+                    copyBtn.textContent = "✓ Copied!";
+                    copyBtn.style.backgroundColor = "#4CAF50";
+                    
+                    setTimeout(() => {
+                        copyBtn.textContent = originalText;
+                        copyBtn.style.backgroundColor = originalBg;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                    alert("Failed to copy to clipboard. Please try again.");
+                });
+            };
+            
+            document.getElementById("statementModal").classList.add("active");
+        }
+
+        // Open modal from card button
+        function openModalFromCard(event, statementId) {
+            event.stopPropagation();
+            const statement = statements.find(s => s.id === statementId);
+            if (statement) {
+                openModal(statement);
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById("statementModal").classList.remove("active");
+        }
+
+        // Copy to clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert("Statement copied to clipboard!");
+            });
+        }
+
+        // Event listeners
+        document.getElementById("searchInput").addEventListener("input", (e) => {
+            currentSearch = e.target.value;
+            renderStatements();
+        });
+
+        document.querySelectorAll(".filter-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+                e.target.classList.add("active");
+                currentFilter = e.target.dataset.filter;
+                renderStatements();
+            });
+        });
+
+        document.getElementById("modalClose").addEventListener("click", closeModal);
+        window.addEventListener("click", (e) => {
+            const modal = document.getElementById("statementModal");
+            if (e.target === modal) closeModal();
+        });
+
+        // Initial render
+        renderStatements();
+
+        // Sticky header scroll behavior
+        const header = document.querySelector('header');
+        const stickyHeader = document.getElementById('stickyHeader');
+        
+        window.addEventListener('scroll', () => {
+            if (header.getBoundingClientRect().bottom < 0) {
+                stickyHeader.classList.add('active');
+                document.body.classList.add('has-sticky-header');
+            } else {
+                stickyHeader.classList.remove('active');
+                document.body.classList.remove('has-sticky-header');
+            }
+        });
+    </script>
+<script data-goatcounter="https://genain3.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+</body>
+</html>
