@@ -241,6 +241,37 @@
         .statement-number {
             font-size: 1.1em;
             font-weight: bold;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .statement-card.theme1 .statement-number {
+            background-color: #5990d0;
+        }
+
+        .statement-card.theme2 .statement-number {
+            background-color: #f0a894;
+        }
+
+        .statement-card.theme3 .statement-number {
+            background-color: #5fa39f;
+        }
+
+        .modal-statement-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 10px;
+            flex-shrink: 0;
         }
 
         .statement-theme {
@@ -603,7 +634,8 @@
             <p>This manifesto is open. Use it, adapt it, challenge it.<br>Cite it with care, change it with courage.</p>
 			<p><i>Inspired by the Manifesto for Teaching Online: from the Centre for Research in Digital Education at the University of Edinburgh</i></p>
 			<p>Thanks to our reviewers Dr Tom Farrelly, MTU and Sue Beckingham, Sheffield Hallam University for their feedback and suggestions.</p>
-			<p>Farrell, H. & McCarthy, K. GenAI:N3 (2025). | <a href="https://genain3.ie/" target="_blank">GenAI:N3</a><br>Licensed under Creative Commons BY-SA 4.0.,<br>Version: 1.00</p> 
+			<p>Farrell, H. & McCarthy, K. GenAI:N3 (2025). | <a href="https://genain3.ie/" target="_blank">GenAI:N3</a><br>Licensed under Creative Commons BY-SA 4.0.,<br>Version: 1.00</p>
+			<p>Interactive HTML developed with assistance from Claude</p>
         </footer>
     </div>
 
@@ -730,8 +762,16 @@
         // Open modal
         function openModal(statement) {
             const themeColor = themeInfo[statement.theme].color;
+
+            // Create lighter background color for the number circle
+            const lightBgColors = {
+                theme1: "#5990d0",
+                theme2: "#f0a894",
+                theme3: "#5fa39f"
+            };
+
             document.getElementById("modalHeader").innerHTML =
-                `<strong style="color: ${themeColor};">Statement ${statement.id}: ${themeInfo[statement.theme].name}</strong>`;
+                `<strong style="display: flex; align-items: center; gap: 10px;"><span class="modal-statement-number" style="background-color: ${lightBgColors[statement.theme]}; color: white;">${statement.id}</span> ${themeInfo[statement.theme].name}</strong>`;
             document.getElementById("modalStatement").innerHTML = statement.text;
             document.getElementById("rationale-text").textContent = statement.rationale;
             
