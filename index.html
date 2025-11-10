@@ -701,9 +701,10 @@
         function createStatementCard(statement) {
             const card = document.createElement("div");
             card.className = `statement-card ${statement.theme}`;
-            
+
             card.innerHTML = `
                 <div class="statement-header">
+                    <span class="statement-number">${statement.id}</span>
                     <span class="statement-theme">${themeInfo[statement.theme].name}</span>
                 </div>
                 <div class="statement-body">
@@ -729,8 +730,8 @@
         // Open modal
         function openModal(statement) {
             const themeColor = themeInfo[statement.theme].color;
-            document.getElementById("modalHeader").innerHTML = 
-                `<strong style="color: ${themeColor};">${themeInfo[statement.theme].name}</strong>`;
+            document.getElementById("modalHeader").innerHTML =
+                `<strong style="color: ${themeColor};">Statement ${statement.id}: ${themeInfo[statement.theme].name}</strong>`;
             document.getElementById("modalStatement").innerHTML = statement.text;
             document.getElementById("rationale-text").textContent = statement.rationale;
             
