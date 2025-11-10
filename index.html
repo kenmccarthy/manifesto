@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GenAI:N3 - Manifesto for Generative AI in Higher Education</title>
 	<link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -305,16 +306,48 @@
         .copy-btn {
             background: none;
             border: none;
-            color: #1B4F5C;
             cursor: pointer;
             font-size: 0.9em;
             font-weight: 600;
-            transition: color 0.3s;
-            padding: 4px 8px;
+            transition: all 0.3s;
+            padding: 10px 16px;
+            border-radius: 4px;
+            color: white;
         }
 
-        .copy-btn:hover {
-            color: #0F2F37;
+        .statement-card.theme1 .copy-btn {
+            background-color: #0b5394;
+        }
+
+        .statement-card.theme1 .copy-btn:hover {
+            background-color: #003d82;
+        }
+
+        .statement-card.theme2 .copy-btn {
+            background-color: #e85c41;
+        }
+
+        .statement-card.theme2 .copy-btn:hover {
+            background-color: #d64a2f;
+        }
+
+        .statement-card.theme3 .copy-btn {
+            background-color: #00796b;
+        }
+
+        .statement-card.theme3 .copy-btn:hover {
+            background-color: #005955;
+        }
+
+        .statement-icon {
+            font-size: 1.3em;
+            margin-right: 8px;
+            color: white;
+        }
+
+        .modal-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
         }
 
         /* Theme Sections */
@@ -659,40 +692,40 @@
         // All statements data with impactful words in bold
         const statements = [
             // Theme 1: Rethinking Teaching and Learning
-            { id: 1, text: "We teach in an age of abundance, not <strong>scarcity</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Information is accessible and freely available - it overflows onto our screens. The work of educators is to help students find meaning in the deluge, guiding them to discern, connect, and critique. GenAI does not give us more knowledge; it reveals how much we already overlook. Teaching now means navigating excess with purpose." },
-            { id: 2, text: "Inquiry has become the new <strong>intelligence</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "In an age of instant answers, the question assumes more importance than ever before. Crafting meaningful questions that provoke depth and not just data becomes a core academic skill. The art of prompting is curiosity in action." },
-            { id: 3, text: "GenAI does not replace thinking - it reveals the cost of not <strong>thinking</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "GenAI can produce fluent nonsense and hidden bias. When we outsource thought, we see how easily we mistake coherence for truth. The greatest lesson is humility: GenAI shows how much effort authentic thinking still requires." },
-            { id: 4, text: "Detection chases the past; thoughtful design shapes the <strong>future</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "To chase detection is to fight the future with the tools of the past. Designing assessments that reward originality, reflection, and human insight changes the rules entirely. Instead of policing use, we design for purpose - where the value lies in the process, not the product." },
-            { id: 5, text: "Courage opens the door, but <strong>resources</strong> build the path.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Innovation cannot flourish when educators are asked to reimagine learning in the margins of overfilled schedules. Institutions must match their ambitions with meaningful investment in time, training, and collaborative spaces. Without that commitment, change becomes rhetoric, not reality; aspirational, not transformational." },
-            { id: 6, text: "<strong>Curiosity</strong> surpasses completion.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "In a world where technology fills in the blanks, curiosity keeps the mind alive. When answers arrive before the questions are formed, curiosity becomes radical. True learning is not about racing to the finish but about lingering in the unknown." },
-            { id: 7, text: "Students must learn with GenAI before they can <strong>question</strong> it.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Ethical understanding grows through experience, not avoidance. Ethical literacy is not born of walls, but of windows. By engaging with generative tools, students come to recognise their capacities, limits, and biases. To know GenAI is to stand beside it critically, not compliantly." },
-            { id: 8, text: "Students are <strong>collaborators</strong>, not spectators.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "They must help write the story of GenAI in education, not merely read its script. In doing so, they learn both the weight of responsibility and the strength to challenge the systems that shape them." },
-            { id: 9, text: "We cannot ask students to be collaborators in systems designed to <strong>constrain</strong> them.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "Inviting students to collaborate in systems that will not change is not partnership but performance, deepening cynicism instead of trust. Trust is built not through invitations, but through the courage of institutions to listen and to change." },
-            { id: 10, text: "Our job is not to tame the machine, but to awaken the <strong>human</strong> next to it.", theme: "theme1", title: "Rethinking Teaching and Learning", rationale: "GenAI will surge forward, indifferent to our rules. Our work is to nurture the inner compass of empathy, discernment, and ethical vision which keeps education anchored in humanity. The true horizon of learning is not control; it is conscience." },
+            { id: 1, text: "We teach in an age of abundance, not <strong>scarcity</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-database", rationale: "Information is accessible and freely available - it overflows onto our screens. The work of educators is to help students find meaning in the deluge, guiding them to discern, connect, and critique. GenAI does not give us more knowledge; it reveals how much we already overlook. Teaching now means navigating excess with purpose." },
+            { id: 2, text: "Inquiry has become the new <strong>intelligence</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-circle-question", rationale: "In an age of instant answers, the question assumes more importance than ever before. Crafting meaningful questions that provoke depth and not just data becomes a core academic skill. The art of prompting is curiosity in action." },
+            { id: 3, text: "GenAI does not replace thinking - it reveals the cost of not <strong>thinking</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-brain", rationale: "GenAI can produce fluent nonsense and hidden bias. When we outsource thought, we see how easily we mistake coherence for truth. The greatest lesson is humility: GenAI shows how much effort authentic thinking still requires." },
+            { id: 4, text: "Detection chases the past; thoughtful design shapes the <strong>future</strong>.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-compass-drafting", rationale: "To chase detection is to fight the future with the tools of the past. Designing assessments that reward originality, reflection, and human insight changes the rules entirely. Instead of policing use, we design for purpose - where the value lies in the process, not the product." },
+            { id: 5, text: "Courage opens the door, but <strong>resources</strong> build the path.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-door-open", rationale: "Innovation cannot flourish when educators are asked to reimagine learning in the margins of overfilled schedules. Institutions must match their ambitions with meaningful investment in time, training, and collaborative spaces. Without that commitment, change becomes rhetoric, not reality; aspirational, not transformational." },
+            { id: 6, text: "<strong>Curiosity</strong> surpasses completion.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-lightbulb", rationale: "In a world where technology fills in the blanks, curiosity keeps the mind alive. When answers arrive before the questions are formed, curiosity becomes radical. True learning is not about racing to the finish but about lingering in the unknown." },
+            { id: 7, text: "Students must learn with GenAI before they can <strong>question</strong> it.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-robot", rationale: "Ethical understanding grows through experience, not avoidance. Ethical literacy is not born of walls, but of windows. By engaging with generative tools, students come to recognise their capacities, limits, and biases. To know GenAI is to stand beside it critically, not compliantly." },
+            { id: 8, text: "Students are <strong>collaborators</strong>, not spectators.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-users", rationale: "They must help write the story of GenAI in education, not merely read its script. In doing so, they learn both the weight of responsibility and the strength to challenge the systems that shape them." },
+            { id: 9, text: "We cannot ask students to be collaborators in systems designed to <strong>constrain</strong> them.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-lock-open", rationale: "Inviting students to collaborate in systems that will not change is not partnership but performance, deepening cynicism instead of trust. Trust is built not through invitations, but through the courage of institutions to listen and to change." },
+            { id: 10, text: "Our job is not to tame the machine, but to awaken the <strong>human</strong> next to it.", theme: "theme1", title: "Rethinking Teaching and Learning", icon: "fa-hand-holding-heart", rationale: "GenAI will surge forward, indifferent to our rules. Our work is to nurture the inner compass of empathy, discernment, and ethical vision which keeps education anchored in humanity. The true horizon of learning is not control; it is conscience." },
             
             // Theme 2: Responsibility, Ethics, and Power
-            { id: 11, text: "Transparency is the new <strong>integrity</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "As the line between original and generated grows indistinct, honesty about process becomes more important than the illusion of purity. Students and staff alike should be able to say: Here's what I used, and here's how it shaped my work. In a hybrid world, transparency builds the trust that integrity depends on." },
-            { id: 12, text: "Academic judgement is <strong>augmented</strong>, not automated.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "GenAI can illuminate patterns, generate ideas, and offer feedback - but discernment remains the domain of educators. Algorithms may assist, but they do not assess. Human context, empathy, and fairness are not optional; they are the foundation of academic decision-making." },
-            { id: 13, text: "Institutions must lead <strong>ethically</strong>, not just efficiently.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Universities cannot hand their conscience to vendors. Universities must anchor decisions in the core values of equity, privacy, and sustainability rather than simply cost. Institutional courage is what makes staff integrity possible." },
-            { id: 14, text: "Accountability scales with <strong>influence</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "The greater the reach of our technologies, the stronger our duty to justify their use. Institutions must show, not just state, how GenAI aligns with educational and institutional values. Responsibility must be visible through transparent governance, clear boundaries, and open dialogue." },
-            { id: 15, text: "Efficiency is seductive; <strong>wisdom</strong> lingers.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Automation races ahead, promising speed and ease. But learning does not live in haste; it breathes in reflection, conversation, and the slow turning of thought. Growth unfolds in the pauses. As the world accelerates, we must guard the quiet tempos where thought becomes understanding." },
-            { id: 16, text: "There is no \"neutral\" data - only stories told by <strong>systems</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Every dataset carries values, omissions, and histories within it. GenAI is not a mirror of truth but a chorus of inherited biases, shaped by its makers and the cultures that feed it. Recognising this enables us to teach students to read outputs not as objective facts, but as narratives to be questioned." },
-            { id: 17, text: "<strong>Prompting</strong> is pedagogy.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "The questions we pose shape the knowledge we receive. Critical prompting requires awareness of power, context, and intention. Students must learn not only to generate prompts, but to interrogate them and question the frame as much as the response." },
-            { id: 18, text: "GenAI is not one thing - it lives differently in every <strong>discipline</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Its meaning shifts across disciplines and what enlightens one may obscure another. Education does not need uniformity, but plurality with each discipline finding its own pathway. Rather than universal rules, disciplines must co-create their own frameworks in conversation with their students and communities." },
-            { id: 19, text: "Writing remains an act of <strong>thinking</strong>, even when machines hold the pen.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "Text generation does not end the need for writing; it transforms it. Drafting, reshaping, and interpreting AI-assisted text can be acts of deep thought. The goal is not to reject GenAI-authored text, but to think through it, critique and refine." },
-            { id: 20, text: "Ease is not the enemy; uncritical <strong>learning</strong> is.", theme: "theme2", title: "Responsibility, Ethics, and Power", rationale: "When GenAI lightens the load of routine work, the focus of education must shift to deeper learning such as thinking critically, creating boldly, and reasoning ethically. Rather than lowering expectations, grades should reflect the depth of human growth, not the ease of technological shortcuts." },
+            { id: 11, text: "Transparency is the new <strong>integrity</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-eye", rationale: "As the line between original and generated grows indistinct, honesty about process becomes more important than the illusion of purity. Students and staff alike should be able to say: Here's what I used, and here's how it shaped my work. In a hybrid world, transparency builds the trust that integrity depends on." },
+            { id: 12, text: "Academic judgement is <strong>augmented</strong>, not automated.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-scale-balanced", rationale: "GenAI can illuminate patterns, generate ideas, and offer feedback - but discernment remains the domain of educators. Algorithms may assist, but they do not assess. Human context, empathy, and fairness are not optional; they are the foundation of academic decision-making." },
+            { id: 13, text: "Institutions must lead <strong>ethically</strong>, not just efficiently.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-building-columns", rationale: "Universities cannot hand their conscience to vendors. Universities must anchor decisions in the core values of equity, privacy, and sustainability rather than simply cost. Institutional courage is what makes staff integrity possible." },
+            { id: 14, text: "Accountability scales with <strong>influence</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-diagram-project", rationale: "The greater the reach of our technologies, the stronger our duty to justify their use. Institutions must show, not just state, how GenAI aligns with educational and institutional values. Responsibility must be visible through transparent governance, clear boundaries, and open dialogue." },
+            { id: 15, text: "Efficiency is seductive; <strong>wisdom</strong> lingers.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-hourglass-half", rationale: "Automation races ahead, promising speed and ease. But learning does not live in haste; it breathes in reflection, conversation, and the slow turning of thought. Growth unfolds in the pauses. As the world accelerates, we must guard the quiet tempos where thought becomes understanding." },
+            { id: 16, text: "There is no \"neutral\" data - only stories told by <strong>systems</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-database", rationale: "Every dataset carries values, omissions, and histories within it. GenAI is not a mirror of truth but a chorus of inherited biases, shaped by its makers and the cultures that feed it. Recognising this enables us to teach students to read outputs not as objective facts, but as narratives to be questioned." },
+            { id: 17, text: "<strong>Prompting</strong> is pedagogy.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-keyboard", rationale: "The questions we pose shape the knowledge we receive. Critical prompting requires awareness of power, context, and intention. Students must learn not only to generate prompts, but to interrogate them and question the frame as much as the response." },
+            { id: 18, text: "GenAI is not one thing - it lives differently in every <strong>discipline</strong>.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-layer-group", rationale: "Its meaning shifts across disciplines and what enlightens one may obscure another. Education does not need uniformity, but plurality with each discipline finding its own pathway. Rather than universal rules, disciplines must co-create their own frameworks in conversation with their students and communities." },
+            { id: 19, text: "Writing remains an act of <strong>thinking</strong>, even when machines hold the pen.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-pen", rationale: "Text generation does not end the need for writing; it transforms it. Drafting, reshaping, and interpreting AI-assisted text can be acts of deep thought. The goal is not to reject GenAI-authored text, but to think through it, critique and refine." },
+            { id: 20, text: "Ease is not the enemy; uncritical <strong>learning</strong> is.", theme: "theme2", title: "Responsibility, Ethics, and Power", icon: "fa-scale-unbalanced", rationale: "When GenAI lightens the load of routine work, the focus of education must shift to deeper learning such as thinking critically, creating boldly, and reasoning ethically. Rather than lowering expectations, grades should reflect the depth of human growth, not the ease of technological shortcuts." },
             
             // Theme 3: Imagination, Humanity, and the Future
-            { id: 21, text: "We owe students more than caution - we owe them <strong>courage</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Fear of misuse must not define our pedagogy. Students need to see bold, critical experimentation modelled in practice. Courage means making space for uncertainty and trusting learners to act responsibly with the tools of their time. Courage is the pedagogy they will remember." },
-            { id: 22, text: "Every technological shift doesn't just change tools; it changes <strong>power</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "GenAI carries political, economic, and social consequences. Education must make these visible by revealing who gains, who is left behind, and why it matters. To stay silent is to side with inequity; to teach critically is to challenge it." },
-            { id: 23, text: "<strong>Inclusion</strong> is not optional.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "When GenAI privileges some languages, abilities, or cultures over others, inequity is built into the system. Education must actively design for access and belonging, adapting tools and practices so that all voices can be heard." },
-            { id: 24, text: "<strong>Sustainability</strong> is a learning outcome.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "GenAI engagement and innovation comes with environmental costs. Embedding sustainability as a core learning outcome means cultivating awareness of impact and environmental responsibility." },
-            { id: 25, text: "Constraint is not the enemy of creativity; it is a <strong>catalyst</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "The limitations of GenAI can spark new forms of expression where human imagination and creativity expand and flourish. Constraint becomes a canvas, not a cage." },
-            { id: 26, text: "<strong>Ethics</strong> is a foundation, not a footnote.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Responsibility should not arrive as a final slide in a presentation; it should breathe through every decision. Ethical reflection belongs in the design stage of every policy, course, prompt, and dataset used. The most sustainable systems are those that start with conscience, not compliance." },
-            { id: 27, text: "<strong>Privacy</strong> is practice.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Understanding what data we trade for convenience is part of digital literacy. Educators should lead by example - using GenAI transparently, anonymising where possible, questioning what is collected and why, and making informed choices of the tools used and for what purpose." },
-            { id: 28, text: "GenAI challenges us to teach <strong>why</strong>, not just how.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Technical fluency without philosophical grounding lacks depth. Students must understand both the power of GenAI and the wisdom to choose when not to use it. Meaningful literacy joins purpose with skill." },
-            { id: 29, text: "The <strong>horizon</strong> is still ours to shape.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "GenAI may reshape how we learn, but it does not rewrite our purpose. The future classroom is not a contest of minds and machines; it is a space of shared imagination, where creativity, conscience and care continue to grow. The legacy is not the machine, but the mind that guided it." },
-            { id: 30, text: "The future classroom is a <strong>conversation</strong>, and it can be extraordinary.", theme: "theme3", title: "Imagination, Humanity, and the Future", rationale: "Learning now unfolds in dialogue: between teachers and students, people and systems, questions, and responses. The challenge is not control but balance and allowing technology to contribute without letting it speak for us." },
+            { id: 21, text: "We owe students more than caution - we owe them <strong>courage</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-fire", rationale: "Fear of misuse must not define our pedagogy. Students need to see bold, critical experimentation modelled in practice. Courage means making space for uncertainty and trusting learners to act responsibly with the tools of their time. Courage is the pedagogy they will remember." },
+            { id: 22, text: "Every technological shift doesn't just change tools; it changes <strong>power</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-bolt", rationale: "GenAI carries political, economic, and social consequences. Education must make these visible by revealing who gains, who is left behind, and why it matters. To stay silent is to side with inequity; to teach critically is to challenge it." },
+            { id: 23, text: "<strong>Inclusion</strong> is not optional.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-people-group", rationale: "When GenAI privileges some languages, abilities, or cultures over others, inequity is built into the system. Education must actively design for access and belonging, adapting tools and practices so that all voices can be heard." },
+            { id: 24, text: "<strong>Sustainability</strong> is a learning outcome.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-leaf", rationale: "GenAI engagement and innovation comes with environmental costs. Embedding sustainability as a core learning outcome means cultivating awareness of impact and environmental responsibility." },
+            { id: 25, text: "Constraint is not the enemy of creativity; it is a <strong>catalyst</strong>.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-puzzle-piece", rationale: "The limitations of GenAI can spark new forms of expression where human imagination and creativity expand and flourish. Constraint becomes a canvas, not a cage." },
+            { id: 26, text: "<strong>Ethics</strong> is a foundation, not a footnote.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-scale-balanced", rationale: "Responsibility should not arrive as a final slide in a presentation; it should breathe through every decision. Ethical reflection belongs in the design stage of every policy, course, prompt, and dataset used. The most sustainable systems are those that start with conscience, not compliance." },
+            { id: 27, text: "<strong>Privacy</strong> is practice.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-shield-halved", rationale: "Understanding what data we trade for convenience is part of digital literacy. Educators should lead by example - using GenAI transparently, anonymising where possible, questioning what is collected and why, and making informed choices of the tools used and for what purpose." },
+            { id: 28, text: "GenAI challenges us to teach <strong>why</strong>, not just how.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-circle-question", rationale: "Technical fluency without philosophical grounding lacks depth. Students must understand both the power of GenAI and the wisdom to choose when not to use it. Meaningful literacy joins purpose with skill." },
+            { id: 29, text: "The <strong>horizon</strong> is still ours to shape.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-sun", rationale: "GenAI may reshape how we learn, but it does not rewrite our purpose. The future classroom is not a contest of minds and machines; it is a space of shared imagination, where creativity, conscience and care continue to grow. The legacy is not the machine, but the mind that guided it." },
+            { id: 30, text: "The future classroom is a <strong>conversation</strong>, and it can be extraordinary.", theme: "theme3", title: "Imagination, Humanity, and the Future", icon: "fa-comments", rationale: "Learning now unfolds in dialogue: between teachers and students, people and systems, questions, and responses. The challenge is not control but balance and allowing technology to contribute without letting it speak for us." },
         ];
 
         const themeInfo = {
@@ -741,10 +774,10 @@
                     <span class="statement-theme">${themeInfo[statement.theme].name}</span>
                 </div>
                 <div class="statement-body">
-                    <div class="statement-text">${highlightSearchTerms(statement.text)}</div>
+                    <div class="statement-text"><i class="fa-solid ${statement.icon} statement-icon"></i>${highlightSearchTerms(statement.text)}</div>
                 </div>
                 <div class="statement-footer">
-                    <button class="copy-btn" onclick="openModalFromCard(event, ${statement.id})">Show</button>
+                    <button class="copy-btn" onclick="openModalFromCard(event, ${statement.id})"><i class="fa-solid fa-arrow-up-right-from-square" style="margin-right: 5px;"></i>Show</button>
                 </div>
             `;
 
@@ -772,24 +805,26 @@
             };
 
             document.getElementById("modalHeader").innerHTML =
-                `<strong style="display: flex; align-items: center; gap: 10px;"><span class="modal-statement-number" style="background-color: ${lightBgColors[statement.theme]}; color: white;">${statement.id}</span> ${themeInfo[statement.theme].name}</strong>`;
-            document.getElementById("modalStatement").innerHTML = statement.text;
+                `<strong style="display: flex; align-items: center; gap: 10px;"><span class="modal-statement-number" style="background-color: ${lightBgColors[statement.theme]}; color: white;">${statement.id}</span> <i class="fa-solid ${statement.icon} modal-icon" style="color: ${themeColor};"></i> ${themeInfo[statement.theme].name}</strong>`;
+            document.getElementById("modalStatement").innerHTML = `<i class="fa-solid ${statement.icon}" style="color: ${themeColor}; margin-right: 15px; font-size: 1.8em;"></i>${statement.text}`;
             document.getElementById("rationale-text").textContent = statement.rationale;
             
-            // Set up copy button
+            // Set up copy button with theme color
             const copyBtn = document.getElementById("copyBtn");
+            copyBtn.style.backgroundColor = themeColor;
+
             copyBtn.onclick = function(e) {
                 e.preventDefault();
                 const plainText = statement.text.replace(/<strong>|<\/strong>/g, '');
                 const fullText = plainText + "\n\n" + statement.rationale + "\n\n— from the Manifesto for Generative AI in Higher Education (GenAI:N3)";
-                
+
                 navigator.clipboard.writeText(fullText).then(() => {
                     // Visual feedback
                     const originalText = copyBtn.textContent;
                     const originalBg = copyBtn.style.backgroundColor;
                     copyBtn.textContent = "✓ Copied!";
                     copyBtn.style.backgroundColor = "#4CAF50";
-                    
+
                     setTimeout(() => {
                         copyBtn.textContent = originalText;
                         copyBtn.style.backgroundColor = originalBg;
@@ -799,7 +834,7 @@
                     alert("Failed to copy to clipboard. Please try again.");
                 });
             };
-            
+
             document.getElementById("statementModal").classList.add("active");
         }
 
