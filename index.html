@@ -347,12 +347,18 @@
       .statement-icon {
         font-size: 1.3em;
         margin-right: 8px;
-        color: white;
       }
 
-      .modal-icon {
-        font-size: 1.5em;
-        margin-right: 10px;
+      .statement-card.theme1 .statement-icon {
+        color: #0b5394;
+      }
+
+      .statement-card.theme2 .statement-icon {
+        color: #e85c41;
+      }
+
+      .statement-card.theme3 .statement-icon {
+        color: #00796b;
       }
 
       /* Theme Sections */
@@ -1276,7 +1282,7 @@
         };
 
         document.getElementById("modalHeader").innerHTML =
-          `<strong style="display: flex; align-items: center; gap: 10px;"><span class="modal-statement-number" style="background-color: ${lightBgColors[statement.theme]}; color: white;">${statement.id}</span> <i class="fa-solid ${statement.icon} modal-icon" style="color: ${themeColor};" aria-hidden="true"></i> ${themeInfo[statement.theme].name}</strong>`;
+          `<strong style="display: flex; align-items: center; gap: 10px;"><span class="modal-statement-number" style="background-color: ${lightBgColors[statement.theme]}; color: white;">${statement.id}</span> ${themeInfo[statement.theme].name}</strong>`;
         document.getElementById("modalStatement").innerHTML =
           `<i class="fa-solid ${statement.icon}" style="color: ${themeColor}; margin-right: 15px; font-size: 1.8em;" aria-hidden="true"></i>${statement.text}`;
         document.getElementById("rationale-text").textContent =
