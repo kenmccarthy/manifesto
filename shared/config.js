@@ -5,6 +5,6 @@
 // supabase_setup.sql) is what protects the data.
 // ---------------------------------------------------------------------------
 window.MANIFESTO_CONFIG = {
-  SUPABASE_URL: "https://YOUR-PROJECT-REF.supabase.co",
-  SUPABASE_ANON_KEY: "YOUR-ANON-PUBLIC-KEY",
+  SUPABASE_URL: "https://kurbycoojbafumeuodof.supabase.co",
+  SUPABASE_ANON_KEY: "sb_publishable_OWEXHrnc8knSkFtGsp5DkQ_skp5OBei",
 };
