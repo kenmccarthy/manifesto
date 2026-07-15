@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Responses | Manifesto for Generative AI in Higher Education</title>
+<meta name="description" content="How the sector is responding to the 30 statements of the Manifesto for Generative AI in Higher Education: agreement, importance, and the gap between aspiration and practice.">
+<link rel="canonical" href="https://manifesto.genain3.ie/explore/">
+<meta property="og:title" content="Explore Responses — Manifesto for Generative AI in Higher Education">
+<meta property="og:description" content="Agreement, importance, and the practice gap across all 30 manifesto statements.">
+<meta property="og:url" content="https://manifesto.genain3.ie/explore/">
+<meta property="og:type" content="article">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/statement.css">
+</head>
+
+<body class="explore">
+
+<div class="topbar">
+  <div class="wrap wide">
+    <a class="site-title" href="../">Manifesto for Generative AI in Higher Education</a>
+    <nav class="site-nav" aria-label="Site">
+      <a href="../#about">About</a>
+      <a href="../#statements">All Statements</a>
+      <a href="../explore/" aria-current="page">Explore Responses</a>
+    </nav>
+  </div>
+</div>
+
+<header class="explore-hero">
+  <div class="wrap wide">
+    <h1>Explore Responses</h1>
+    <p>How the sector is responding to the manifesto, statement by statement: agreement, importance, and how well each idea is reflected in current practice. The <strong>practice gap</strong> is the distance between how important respondents say a statement is and how embedded they see it in practice — the larger the gap, the more work there is to do. Click any column to sort, or any statement to add your own view.</p>
+  </div>
+</header>
+<main class="wrap wide">
+  <div class="theme-key" aria-hidden="true">
+    <span class="key-1">▲ Rethinking Teaching and Learning</span>
+    <span class="key-2">■ Responsibility, Ethics, and Power</span>
+    <span class="key-3">● Imagination, Humanity, and the Future</span>
+  </div>
+  <p class="explore-loading" id="explore-loading">Loading responses…</p>
+  <div class="explore-table-wrap">
+    <table class="explore-table" id="explore-table" hidden>
+      <thead>
+        <tr>
+          <th data-key="id">#<span class="arrow"></span></th>
+          <th data-key="statement">Statement<span class="arrow"></span></th>
+          <th data-key="count">Responses<span class="arrow"></span></th>
+          <th data-key="agreement">Agreement<span class="arrow"></span></th>
+          <th data-key="importance">Importance<span class="arrow"></span></th>
+          <th data-key="practice">In practice<span class="arrow"></span></th>
+          <th data-key="gap">Practice gap<span class="arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody id="explore-body"></tbody>
+    </table>
+  </div>
+</main>
+<footer>
+  <div class="wrap wide">
+    <p>Farrell, H. &amp; McCarthy, K. GenAI:N3 (2025). <a href="https://genain3.ie/" target="_blank" rel="noopener">GenAI:N3</a> · Licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">Creative Commons BY-SA 4.0</a>.</p>
+    <p>Aggregate statistics only; individual responses are anonymous and written observations appear on statement pages after moderation.</p>
+  </div>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../shared/config.js"></script>
+<script>
+(function () {
+  "use strict";
+  const STATEMENTS = [{"id": 1, "theme": 1, "glyph": "▲", "statement": "We teach in an age of abundance, not scarcity."}, {"id": 2, "theme": 1, "glyph": "▲", "statement": "Inquiry has become the new intelligence."}, {"id": 3, "theme": 1, "glyph": "▲", "statement": "GenAI does not replace thinking - it reveals the cost of not thinking."}, {"id": 4, "theme": 1, "glyph": "▲", "statement": "Detection chases the past; thoughtful design shapes the future."}, {"id": 5, "theme": 1, "glyph": "▲", "statement": "Courage opens the door, but resources build the path."}, {"id": 6, "theme": 1, "glyph": "▲", "statement": "Curiosity surpasses completion."}, {"id": 7, "theme": 1, "glyph": "▲", "statement": "Students must learn with GenAI before they can question it."}, {"id": 8, "theme": 1, "glyph": "▲", "statement": "Students are collaborators, not spectators."}, {"id": 9, "theme": 1, "glyph": "▲", "statement": "We cannot ask students to be collaborators in systems designed to constrain them."}, {"id": 10, "theme": 1, "glyph": "▲", "statement": "Our job is not to tame the machine, but to awaken the human next to it."}, {"id": 11, "theme": 2, "glyph": "■", "statement": "Transparency is the new integrity."}, {"id": 12, "theme": 2, "glyph": "■", "statement": "Academic judgement is augmented, not automated."}, {"id": 13, "theme": 2, "glyph": "■", "statement": "Institutions must lead ethically, not just efficiently."}, {"id": 14, "theme": 2, "glyph": "■", "statement": "Accountability scales with influence."}, {"id": 15, "theme": 2, "glyph": "■", "statement": "Efficiency is seductive; wisdom lingers."}, {"id": 16, "theme": 2, "glyph": "■", "statement": "There is no “neutral” data - only stories told by systems."}, {"id": 17, "theme": 2, "glyph": "■", "statement": "Prompting is pedagogy."}, {"id": 18, "theme": 2, "glyph": "■", "statement": "GenAI is not one thing - it lives differently in every discipline."}, {"id": 19, "theme": 2, "glyph": "■", "statement": "Writing remains an act of thinking, even when machines hold the pen."}, {"id": 20, "theme": 2, "glyph": "■", "statement": "Ease is not the enemy; uncritical learning is."}, {"id": 21, "theme": 3, "glyph": "●", "statement": "We owe students more than caution - we owe them courage."}, {"id": 22, "theme": 3, "glyph": "●", "statement": "Every technological shift doesn’t just change tools; it changes power."}, {"id": 23, "theme": 3, "glyph": "●", "statement": "Inclusion is not optional."}, {"id": 24, "theme": 3, "glyph": "●", "statement": "Sustainability is a learning outcome."}, {"id": 25, "theme": 3, "glyph": "●", "statement": "Constraint is not the enemy of creativity; it is a catalyst."}, {"id": 26, "theme": 3, "glyph": "●", "statement": "Ethics is a foundation, not a footnote."}, {"id": 27, "theme": 3, "glyph": "●", "statement": "Privacy is practice."}, {"id": 28, "theme": 3, "glyph": "●", "statement": "GenAI challenges us to teach why, not just how."}, {"id": 29, "theme": 3, "glyph": "●", "statement": "The horizon is still ours to shape."}, {"id": 30, "theme": 3, "glyph": "●", "statement": "The future classroom is a conversation, and it can be extraordinary."}];
+  const cfg = window.MANIFESTO_CONFIG || {};
+  const configured = cfg.SUPABASE_URL && !cfg.SUPABASE_URL.includes("YOUR-PROJECT-REF");
+  const loading = document.getElementById("explore-loading");
+  const table = document.getElementById("explore-table");
+  const body = document.getElementById("explore-body");
+
+  let rows = STATEMENTS.map((s) => ({
+    id: s.id, theme: s.theme, glyph: s.glyph, statement: s.statement,
+    count: 0, agreement: null, importance: null, practice: null, gap: null,
+  }));
+
+  function fmt(v) { return v == null ? "–" : Number(v).toFixed(1); }
+
+  function render() {
+    body.innerHTML = rows.map((r) => {
+      const num = String(r.id).padStart(2, "0");
+      return "<tr>" +
+        '<td class="num"><a class="glyph-' + r.theme + '" href="../' + num + '/">' +
+        r.glyph + " " + num + "</a></td>" +
+        '<td class="stmt"><a href="../' + num + '/">' + r.statement + "</a></td>" +
+        '<td class="metric">' + r.count + "</td>" +
+        '<td class="metric">' + fmt(r.agreement) + "</td>" +
+        '<td class="metric">' + fmt(r.importance) + "</td>" +
+        '<td class="metric">' + fmt(r.practice) + "</td>" +
+        '<td class="gap">' + fmt(r.gap) + "</td></tr>";
+    }).join("");
+  }
+
+  let sortKey = "id", sortAsc = true;
+  document.querySelectorAll("th[data-key]").forEach((th) => {
+    th.addEventListener("click", () => {
+      const key = th.dataset.key;
+      sortAsc = key === sortKey ? !sortAsc : (key === "id" || key === "statement");
+      sortKey = key;
+      rows.sort((a, b) => {
+        const va = a[key], vb = b[key];
+        if (va == null && vb == null) return 0;
+        if (va == null) return 1;
+        if (vb == null) return -1;
+        const c = typeof va === "string" ? va.localeCompare(vb) : va - vb;
+        return sortAsc ? c : -c;
+      });
+      document.querySelectorAll("th .arrow").forEach((a) => (a.textContent = ""));
+      th.querySelector(".arrow").textContent = sortAsc ? " ↑" : " ↓";
+      render();
+    });
+  });
+
+  async function load() {
+    if (configured) {
+      try {
+        const db = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+        const { data, error } = await db.rpc("get_all_statement_summaries");
+        if (error) throw error;
+        (data || []).forEach((s) => {
+          const r = rows.find((x) => x.id === s.statement_id);
+          if (!r) return;
+          r.count = s.count || 0;
+          r.agreement = s.agreement_avg;
+          r.importance = s.importance_avg;
+          r.practice = s.practice_avg;
+          r.gap = (s.importance_avg != null && s.practice_avg != null)
+            ? Number((s.importance_avg - s.practice_avg).toFixed(1)) : null;
+        });
+        loading.hidden = true;
+      } catch (e) {
+        console.error(e);
+        loading.textContent = "Responses could not be loaded right now - showing the statements without statistics.";
+      }
+    } else {
+      loading.textContent = "Statistics will appear here once the site is connected to its database.";
+    }
+    table.hidden = false;
+    render();
+  }
+  load();
+})();
+</script>
+</body>
+</html>
