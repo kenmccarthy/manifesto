@@ -1,0 +1,52 @@
+/* ==========================================================================
+   Manifesto for Generative AI in Higher Education — shared base
+   Farrell & McCarthy, GenAI:N3 (2025) · CC BY-SA 4.0
+   --------------------------------------------------------------------------
+   Single source of truth for the whole project:
+   - Self-hosted fonts (no third-party requests; GDPR-friendly)
+   - Theme colours and font-family tokens
+   Load this BEFORE main.css / statement.css on every page.
+   ========================================================================== */
+
+/* --- Self-hosted variable fonts ------------------------------------------ */
+/* Fraunces (display serif) — SIL Open Font License */
+@font-face {
+  font-family: "Fraunces";
+  src: url("fonts/Fraunces-var.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Source Sans 3 (body) — SIL Open Font License */
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("fonts/SourceSans3VF-Upright.ttf.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Source Sans 3";
+  src: url("fonts/SourceSans3VF-Italic.ttf.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* --- Project-wide tokens --------------------------------------------------- */
+:root {
+  /* Manifesto theme colours */
+  --theme-1: #0b5394; /* ▲ Rethinking Teaching and Learning */
+  --theme-2: #e85c41; /* ■ Responsibility, Ethics, and Power */
+  --theme-3: #00796b; /* ● Imagination, Humanity, and the Future */
+
+  /* Lighter companions (used for card headers / number chips on the main page) */
+  --theme-1-light: #5990d0;
+  --theme-2-light: #f0a894;
+  --theme-3-light: #5fa39f;
+
+  /* Typography */
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+}

@@ -5,19 +5,13 @@
    THEME TOKENS — edit only :root to restyle every page.
    ========================================================================== */
 
+/* Theme colours and font families come from base.css (load it first). */
 :root {
   --paper: #f7f6f2;
   --card: #ffffff;
   --ink: #21252e;
   --ink-soft: #565d6b;
   --line: #e3e0d8;
-
-  --theme-1: #0b5394;  /* ▲ Rethinking Teaching and Learning */
-  --theme-2: #e85c41;  /* ■ Responsibility, Ethics, and Power */
-  --theme-3: #00796b;  /* ● Imagination, Humanity, and the Future */
-
-  --font-display: "Fraunces", Georgia, serif;
-  --font-body: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
 }
 
 body[data-theme="1"] { --accent: var(--theme-1); }
@@ -56,7 +50,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .wrap.wide { max-width: 1040px; }
 
 /* --- Site header ---------------------------------------------------------- */
-.topbar { border-bottom: 1px solid var(--line); background: var(--card); }
+.topbar { border-bottom: 3px solid var(--accent, var(--line)); background: var(--card); }
 .topbar .wrap {
   display: flex;
   flex-wrap: wrap;
@@ -86,7 +80,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .hero {
   padding: 2.75rem 0 2.5rem;
   border-bottom: 5px solid var(--accent);
-  background: linear-gradient(180deg, var(--card) 0%, var(--paper) 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--accent) 10%, var(--card)) 0%, var(--paper) 100%);
 }
 .eyebrow {
   display: inline-flex;
@@ -120,6 +114,8 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   color: var(--accent);
   letter-spacing: -0.03em;
 }
+h1.statement strong { color: var(--accent); }
+.stmt-icon { color: var(--accent); margin-right: 1.1rem; font-size: 0.82em; vertical-align: baseline; }
 h1.statement {
   font-family: var(--font-display);
   font-weight: 550;
@@ -131,7 +127,9 @@ h1.statement {
 }
 @media (max-width: 620px) {
   .hero-grid { grid-template-columns: 1fr; gap: 1rem; }
-  h1.statement { border-left: none; padding-left: 0; }
+  h1.statement strong { color: var(--accent); }
+.stmt-icon { color: var(--accent); margin-right: 1.1rem; font-size: 0.82em; vertical-align: baseline; }
+h1.statement { border-left: none; padding-left: 0; }
 }
 
 /* --- Sections --------------------------------------------------------------- */
@@ -161,8 +159,10 @@ h2 {
 
 fieldset.scale-group { border: none; }
 fieldset.scale-group legend { font-weight: 600; margin-bottom: 0.55rem; }
-.scale-row { display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; }
+.scale-row { display: grid; grid-template-columns: 8.7rem repeat(5, auto) auto; align-items: center; gap: 0.55rem; justify-content: start; }
+@media (max-width: 560px) { .scale-row { display: flex; flex-wrap: wrap; } }
 .scale-anchor { font-size: 0.8rem; color: var(--ink-soft); }
+.scale-anchor.low { text-align: right; }
 .scale-anchor.low { margin-right: 0.35rem; }
 .scale-anchor.high { margin-left: 0.35rem; }
 .scale-option { position: relative; }
@@ -177,10 +177,10 @@ fieldset.scale-group legend { font-weight: 600; margin-bottom: 0.55rem; }
   place-items: center;
   width: 2.6rem;
   height: 2.6rem;
-  border: 2px solid var(--accent);
+  border: 1.5px solid var(--accent);
   border-radius: 50%;
   background: var(--card);
-  font-weight: 600;
+  font-weight: 500;
   color: var(--accent-deep);
   cursor: pointer;
   transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease;
