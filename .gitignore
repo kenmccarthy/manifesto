@@ -1,0 +1,17 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+.vscode/
+.idea/
+*.swp
+*~
+
+# Logs and temp
+*.log
+.cache/
+
+# Local environment / secrets (keep real credentials out of git)
+.env
+.env.local
