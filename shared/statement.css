@@ -395,6 +395,8 @@ main.wrap.has-side {
 .side-progress .track { height: 0.4rem; background: var(--accent-soft); margin-top: 0.5rem; }
 .side-progress .track > span { display: block; height: 100%; background: var(--accent); transition: width 0.2s ease; }
 .side-progress .sub { display: block; margin-top: 0.55rem; font-size: 0.82rem; color: var(--ink-soft); }
+.side-progress .track.track-sub { margin-top: 0.4rem; }
+.side-progress .track.track-sub > span { background: color-mix(in srgb, var(--accent) 55%, var(--card)); }
 
 .side-nav .side-title {
   font-size: 0.76rem;

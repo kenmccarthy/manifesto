@@ -82,7 +82,8 @@
       '<div class="side-progress">' +
       '<span><span class="n" id="side-progress-n">0</span> of 30 explored</span>' +
       '<div class="track"><span id="side-progress-bar" style="width:0%"></span></div>' +
-      '<span class="sub"><span class="n" id="side-responded-n">0</span> of 30 responded to</span></div>' +
+      '<span class="sub"><span class="n" id="side-responded-n">0</span> of 30 responded to</span>' +
+      '<div class="track track-sub"><span id="side-responded-bar" style="width:0%"></span></div></div>' +
       '<nav class="side-nav" aria-label="Statements by theme">' +
       '<p class="side-title">Browse the manifesto</p>';
 
@@ -133,6 +134,8 @@
     if (sb) sb.style.width = Math.round((visited / 30) * 100) + "%";
     const rn = document.getElementById("side-responded-n");
     if (rn) rn.textContent = responded;
+    const rb = document.getElementById("side-responded-bar");
+    if (rb) rb.style.width = Math.round((responded / 30) * 100) + "%";
   }
 
   buildSidebar();
