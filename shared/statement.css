@@ -393,7 +393,8 @@ main.wrap.has-side {
 }
 .side-progress .n { font-weight: 700; color: var(--accent-deep); }
 .side-progress .track { height: 0.4rem; background: var(--accent-soft); margin-top: 0.5rem; }
-.side-progress .track > span { display: block; height: 100%; background: var(--accent); }
+.side-progress .track > span { display: block; height: 100%; background: var(--accent); transition: width 0.2s ease; }
+.side-progress .sub { display: block; margin-top: 0.55rem; font-size: 0.82rem; color: var(--ink-soft); }
 
 .side-nav .side-title {
   font-size: 0.76rem;
