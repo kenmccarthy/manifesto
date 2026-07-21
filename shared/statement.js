@@ -73,10 +73,16 @@
     const cur = Number(stmtId);
     const curTheme = themeOf(cur);
 
+    // Visiting a statement page marks it explored (per device).
+    try {
+      localStorage.setItem("manifesto_visited_" + String(cur).padStart(2, "0"), "1");
+    } catch (e) {}
+
     let nav =
       '<div class="side-progress">' +
       '<span><span class="n" id="side-progress-n">0</span> of 30 explored</span>' +
-      '<div class="track"><span id="side-progress-bar" style="width:0%"></span></div></div>' +
+      '<div class="track"><span id="side-progress-bar" style="width:0%"></span></div>' +
+      '<span class="sub"><span class="n" id="side-responded-n">0</span> of 30 responded to</span></div>' +
       '<nav class="side-nav" aria-label="Statements by theme">' +
       '<p class="side-title">Browse the manifesto</p>';
 
@@ -109,19 +115,24 @@
 
   /* ------------- progress note (localStorage only, works regardless) ------- */
   function updateProgress() {
-    let n = 0;
+    let visited = 0;
+    let responded = 0;
     for (let i = 1; i <= 30; i++) {
-      if (localStorage.getItem("manifesto_response_" + String(i).padStart(2, "0"))) n++;
+      const pad = String(i).padStart(2, "0");
+      if (localStorage.getItem("manifesto_visited_" + pad)) visited++;
+      if (localStorage.getItem("manifesto_response_" + pad)) responded++;
     }
     const note = $("#progress-note");
-    if (note && n > 0) {
+    if (note && responded > 0) {
       note.textContent =
-        "You have shared your view on " + n + " of 30 statements.";
+        "You have shared your view on " + responded + " of 30 statements.";
     }
     const sn = document.getElementById("side-progress-n");
-    if (sn) sn.textContent = n;
+    if (sn) sn.textContent = visited;
     const sb = document.getElementById("side-progress-bar");
-    if (sb) sb.style.width = Math.round((n / 30) * 100) + "%";
+    if (sb) sb.style.width = Math.round((visited / 30) * 100) + "%";
+    const rn = document.getElementById("side-responded-n");
+    if (rn) rn.textContent = responded;
   }
 
   buildSidebar();
