@@ -20,19 +20,111 @@
   const listEl = $("#observations-list");
   const submitBtn = $("#submit-response");
 
+  /* ------------- statement manifest (for the sidebar navigator) ------------- */
+  const MANIFEST = [
+    { id: 1, s: "We teach in an age of abundance, not scarcity." },
+    { id: 2, s: "Inquiry has become the new intelligence." },
+    { id: 3, s: "GenAI does not replace thinking - it reveals the cost of not thinking." },
+    { id: 4, s: "Detection chases the past; thoughtful design shapes the future." },
+    { id: 5, s: "Courage opens the door, but resources build the path." },
+    { id: 6, s: "Curiosity surpasses completion." },
+    { id: 7, s: "Students must learn with GenAI before they can question it." },
+    { id: 8, s: "Students are collaborators, not spectators." },
+    { id: 9, s: "We cannot ask students to be collaborators in systems designed to constrain them." },
+    { id: 10, s: "Our job is not to tame the machine, but to awaken the human next to it." },
+    { id: 11, s: "Transparency is the new integrity." },
+    { id: 12, s: "Academic judgement is augmented, not automated." },
+    { id: 13, s: "Institutions must lead ethically, not just efficiently." },
+    { id: 14, s: "Accountability scales with influence." },
+    { id: 15, s: "Efficiency is seductive; wisdom lingers." },
+    { id: 16, s: 'There is no "neutral" data - only stories told by systems.' },
+    { id: 17, s: "Prompting is pedagogy." },
+    { id: 18, s: "GenAI is not one thing - it lives differently in every discipline." },
+    { id: 19, s: "Writing remains an act of thinking, even when machines hold the pen." },
+    { id: 20, s: "Ease is not the enemy; uncritical learning is." },
+    { id: 21, s: "We owe students more than caution - we owe them courage." },
+    { id: 22, s: "Every technological shift doesn't just change tools; it changes power." },
+    { id: 23, s: "Inclusion is not optional." },
+    { id: 24, s: "Sustainability is a learning outcome." },
+    { id: 25, s: "Constraint is not the enemy of creativity; it is a catalyst." },
+    { id: 26, s: "Ethics is a foundation, not a footnote." },
+    { id: 27, s: "Privacy is practice." },
+    { id: 28, s: "GenAI challenges us to teach why, not just how." },
+    { id: 29, s: "The horizon is still ours to shape." },
+    { id: 30, s: "The future classroom is a conversation, and it can be extraordinary." },
+  ];
+  const THEMES = [
+    { n: 1, name: "Rethinking Teaching and Learning" },
+    { n: 2, name: "Responsibility, Ethics, and Power" },
+    { n: 3, name: "Imagination, Humanity, and the Future" },
+  ];
+  const GLYPH_PATH = {
+    1: '<path d="M6 0.9 L11.3 11.1 H0.7 Z"/>',
+    2: '<rect x="1.4" y="1.4" width="9.2" height="9.2"/>',
+    3: '<circle cx="6" cy="6" r="5.1"/>',
+  };
+  const glyph = (t) =>
+    '<svg class="tglyph" viewBox="0 0 12 12" aria-hidden="true">' + GLYPH_PATH[t] + "</svg>";
+  const themeOf = (id) => (id <= 10 ? 1 : id <= 20 ? 2 : 3);
+
+  function buildSidebar() {
+    const main = document.querySelector("main.wrap");
+    if (!main || document.querySelector(".col-side")) return;
+    const cur = Number(stmtId);
+    const curTheme = themeOf(cur);
+
+    let nav =
+      '<div class="side-progress">' +
+      '<span><span class="n" id="side-progress-n">0</span> of 30 explored</span>' +
+      '<div class="track"><span id="side-progress-bar" style="width:0%"></span></div></div>' +
+      '<nav class="side-nav" aria-label="Statements by theme">' +
+      '<p class="side-title">Browse the manifesto</p>';
+
+    THEMES.forEach((th) => {
+      const open = th.n === curTheme ? " open" : "";
+      nav +=
+        "<details" + open + '><summary class="grp-' + th.n + '">' + glyph(th.n) +
+        "<span>" + th.name + '</span><span class="caret" aria-hidden="true">›</span></summary><ul>';
+      MANIFEST.filter((s) => themeOf(s.id) === th.n).forEach((s) => {
+        const num = String(s.id).padStart(2, "0");
+        const acur = s.id === cur ? ' aria-current="true"' : "";
+        nav +=
+          '<li><a href="../' + num + '/"' + acur + '><span class="sn">' + num +
+          '</span><span class="st">' + esc(s.s) + "</span></a></li>";
+      });
+      nav += "</ul></details>";
+    });
+    nav += "</nav>";
+
+    const colMain = document.createElement("div");
+    colMain.className = "col-main";
+    while (main.firstChild) colMain.appendChild(main.firstChild);
+    main.appendChild(colMain);
+    const aside = document.createElement("aside");
+    aside.className = "col-side";
+    aside.innerHTML = nav;
+    main.appendChild(aside);
+    main.classList.add("has-side");
+  }
+
   /* ------------- progress note (localStorage only, works regardless) ------- */
   function updateProgress() {
-    const note = $("#progress-note");
-    if (!note) return;
     let n = 0;
     for (let i = 1; i <= 30; i++) {
       if (localStorage.getItem("manifesto_response_" + String(i).padStart(2, "0"))) n++;
     }
-    if (n > 0) {
+    const note = $("#progress-note");
+    if (note && n > 0) {
       note.textContent =
         "You have shared your view on " + n + " of 30 statements.";
     }
+    const sn = document.getElementById("side-progress-n");
+    if (sn) sn.textContent = n;
+    const sb = document.getElementById("side-progress-bar");
+    if (sb) sb.style.width = Math.round((n / 30) * 100) + "%";
   }
+
+  buildSidebar();
   updateProgress();
 
   if (!configured) {
