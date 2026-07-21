@@ -110,10 +110,10 @@ Questions and comments welcome: [manifesto@genain3.ie](mailto:manifesto@genain3.
 
 ## Known issues / TODO
 
-These are opportunities noted during a review of the repository — see the project discussion for details:
+These are opportunities noted during a review of the repository:
 
-- **Missing `supabase_setup.sql`.** `shared/config.js` refers to it for schema and RLS setup, but it is not in the repo, so the backend cannot be reproduced from source alone.
-- **No `LICENSE` file.** The site declares CC BY‑SA 4.0 but the repository has no licence file.
-- **Encoding artefacts in `index.html`.** The (currently unused) `themeInfo` glyph values are mojibake (`â–²`, `â– `, `â—`) instead of `▲`, `■`, `●`.
+- **Missing `supabase_setup.sql`.** `shared/config.js` refers to it for schema and RLS setup. It is maintained offline and intentionally not committed; keep it in sync with the objects listed under [Backend (Supabase)](#backend-supabase).
 - **Duplicated statement content** across `index.html`, `explore/index.html`, and the 30 statement pages (see [Editing content](#editing-content)).
 - **Third‑party requests.** `base.css` notes fonts are self‑hosted for GDPR friendliness, but pages still load Font Awesome, Supabase, and the analytics script from external CDNs.
+
+Recently addressed: a `LICENSE` file (CC BY‑SA 4.0) has been added, and the mojibake `themeInfo` glyphs in `index.html` (`â–²`/`â– `/`â—`) were corrected to `▲`/`■`/`●`.
