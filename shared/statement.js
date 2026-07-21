@@ -323,6 +323,23 @@
     });
   }
 
+  /* ---------------- Reflection prompt (random, from the database) --------- */
+  async function loadReflectionPrompt() {
+    const el = document.querySelector(".question-block .question");
+    if (!el) return;
+    try {
+      const { data, error } = await db.rpc("get_random_reflection_prompt", { stmt: stmtId });
+      if (error) throw error;
+      if (typeof data === "string" && data.trim()) {
+        el.textContent = data.trim();
+      }
+      // No prompt returned → keep the built-in question already in the HTML.
+    } catch (e) {
+      console.error("Could not load reflection prompt", e);
+    }
+  }
+
   loadSummary();
   loadObservations();
+  loadReflectionPrompt();
 })();
