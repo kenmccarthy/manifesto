@@ -208,7 +208,7 @@
       listEl.innerHTML = rows
         .map((r) => {
           const name = r.display_name ? esc(r.display_name) : "Anonymous";
-          const bits = [r.role, r.country].filter(Boolean).map(esc).join(", ");
+          const bits = [r.role, r.discipline, r.country].filter(Boolean).map(esc).join(", ");
           const date = new Date(r.created_at).toLocaleDateString("en-IE", {
             year: "numeric", month: "short", day: "numeric",
           });
