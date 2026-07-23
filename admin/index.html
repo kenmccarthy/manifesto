@@ -42,7 +42,7 @@
 
   <!-- App -->
   <section id="app-view" hidden>
-    <div class="tabs" role="tablist" aria-label="Moderation queues">
+    <div class="tabs" role="tablist" aria-label="Submissions and moderation queues">
       <button class="tab" role="tab" id="tab-pending" data-tab="pending" aria-selected="true">
         Pending <span class="count" id="count-pending">–</span>
       </button>
@@ -52,10 +52,24 @@
       <button class="tab" role="tab" id="tab-rejected" data-tab="rejected" aria-selected="false">
         Rejected <span class="count" id="count-rejected">–</span>
       </button>
+      <button class="tab" role="tab" id="tab-all" data-tab="all" aria-selected="false">
+        All submissions <span class="count" id="count-all">–</span>
+      </button>
+    </div>
+
+    <div class="all-controls" id="all-controls" hidden>
+      <label for="stmt-filter">Statement</label>
+      <select id="stmt-filter">
+        <option value="">All statements</option>
+      </select>
+      <span class="all-summary" id="all-summary"></span>
     </div>
 
     <p class="status-line" id="app-status" role="status"></p>
     <div class="resp-list" id="resp-list"></div>
+    <div class="load-more-wrap">
+      <button class="btn ghost" id="load-more" hidden>Load more</button>
+    </div>
   </section>
 
 </div>

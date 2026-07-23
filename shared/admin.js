@@ -58,12 +58,25 @@
   const COLS =
     "id, statement_id, observation, agreement, importance, practice, display_name, role, discipline, country, created_at, approved, rejected";
 
-  // Filters that define each queue (all restricted to rows with an observation).
+  // Filters that define each queue. The moderation queues are restricted to
+  // rows with an observation; "all" shows every submission (optionally filtered
+  // by statement) so rating-only submissions are visible too.
   function applyScope(q, tab) {
+    if (tab === "all") {
+      if (allStmt) q = q.eq("statement_id", Number(allStmt));
+      return q;
+    }
     q = q.not("observation", "is", null);
     if (tab === "pending") return q.eq("approved", false).eq("rejected", false);
     if (tab === "published") return q.eq("approved", true);
     return q.eq("rejected", true); // rejected
+  }
+
+  function statusOf(r) {
+    if (r.approved) return { label: "Published", cls: "b-pub" };
+    if (r.rejected) return { label: "Rejected", cls: "b-rej" };
+    if (r.observation != null) return { label: "Pending", cls: "b-pend" };
+    return { label: "Ratings only", cls: "b-rate" };
   }
 
   if (!configured) {
@@ -76,6 +89,9 @@
 
   const db = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
   let currentTab = "pending";
+  let allStmt = ""; // statement filter for the "all" tab
+  let allOffset = 0; // pagination offset for the "all" tab
+  const PAGE = 50;
 
   /* ---------------- View switching ---------------- */
   function showLogin() {
@@ -88,7 +104,21 @@
     appView.hidden = false;
     who.hidden = false;
     $("who-email").textContent = email || "";
+    populateFilter();
     selectTab("pending");
+  }
+
+  function populateFilter() {
+    const sel = $("stmt-filter");
+    if (!sel || sel.dataset.ready) return;
+    for (let i = 1; i <= 30; i++) {
+      const o = document.createElement("option");
+      o.value = String(i);
+      o.textContent =
+        "Statement " + String(i).padStart(2, "0") + " — " + (STMT[i] || "");
+      sel.appendChild(o);
+    }
+    sel.dataset.ready = "1";
   }
   function setAppStatus(msg, err) {
     appStatus.textContent = msg || "";
@@ -151,20 +181,31 @@
     document.querySelectorAll(".tab").forEach((t) => {
       t.setAttribute("aria-selected", t.dataset.tab === tab ? "true" : "false");
     });
+    $("all-controls").hidden = tab !== "all";
+    allOffset = 0;
     loadList();
   }
   document.querySelectorAll(".tab").forEach((t) => {
     t.addEventListener("click", () => selectTab(t.dataset.tab));
   });
 
+  $("stmt-filter").addEventListener("change", (e) => {
+    allStmt = e.target.value;
+    allOffset = 0;
+    loadList();
+  });
+
+  $("load-more").addEventListener("click", () => loadList(true));
+
   /* ---------------- Data ---------------- */
   async function refreshCounts() {
-    for (const tab of ["pending", "published", "rejected"]) {
+    for (const tab of ["pending", "published", "rejected", "all"]) {
       try {
         let q = db
           .from("statement_responses")
           .select("id", { count: "exact", head: true });
-        q = applyScope(q, tab);
+        // The "all" tab count is the overall total, ignoring the statement filter.
+        if (tab !== "all") q = applyScope(q, tab);
         const { count, error } = await q;
         if (!error) $("count-" + tab).textContent = count == null ? "0" : count;
       } catch (e) {
@@ -173,27 +214,73 @@
     }
   }
 
-  async function loadList() {
-    setAppStatus("Loading…");
-    list.innerHTML = "";
+  async function loadSummary() {
+    const box = $("all-summary");
+    if (!box) return;
+    box.textContent = "";
+    try {
+      let cq = db
+        .from("statement_responses")
+        .select("id", { count: "exact", head: true });
+      if (allStmt) cq = cq.eq("statement_id", Number(allStmt));
+      const { count } = await cq;
+      let txt = (count || 0) + (count === 1 ? " submission" : " submissions");
+      if (allStmt) {
+        const { data } = await db.rpc("get_statement_summary", {
+          stmt: Number(allStmt),
+        });
+        if (data && data.count) {
+          const f = (v) => (v == null ? "–" : Number(v).toFixed(1));
+          txt +=
+            " · agreement " + f(data.agreement_avg) +
+            " · importance " + f(data.importance_avg) +
+            " · in practice " + f(data.practice_avg);
+        }
+      }
+      box.textContent = txt;
+    } catch (e) {
+      /* summary is best-effort */
+    }
+  }
+
+  async function loadList(append) {
+    if (!append) {
+      list.innerHTML = "";
+      setAppStatus("Loading…");
+      allOffset = 0; // a fresh (non-append) load always starts at the first page
+    }
     try {
       let q = db.from("statement_responses").select(COLS);
       q = applyScope(q, currentTab).order("created_at", { ascending: false });
+      if (currentTab === "all") q = q.range(allOffset, allOffset + PAGE - 1);
       const { data, error } = await q;
       if (error) throw error;
       setAppStatus("");
-      if (!data || data.length === 0) {
+
+      if ((!data || data.length === 0) && !append) {
         const p = document.createElement("p");
         p.className = "empty";
         p.textContent =
           currentTab === "pending"
             ? "Nothing awaiting review."
+            : currentTab === "all"
+            ? "No submissions yet."
             : "Nothing here.";
         list.appendChild(p);
-      } else {
+      } else if (data) {
         data.forEach((r) => list.appendChild(card(r)));
       }
-      refreshCounts();
+
+      const more = $("load-more");
+      if (currentTab === "all") {
+        allOffset += data ? data.length : 0;
+        more.hidden = !(data && data.length === PAGE);
+        loadSummary();
+      } else {
+        more.hidden = true;
+      }
+
+      if (!append) refreshCounts();
     } catch (e) {
       setAppStatus("Could not load responses: " + (e.message || e), true);
     }
@@ -228,6 +315,13 @@
     const stext = document.createElement("span");
     stext.textContent = STMT[r.statement_id] || "";
     head.appendChild(stext);
+    if (currentTab === "all") {
+      const st = statusOf(r);
+      const badge = document.createElement("span");
+      badge.className = "badge " + st.cls;
+      badge.textContent = st.label;
+      head.appendChild(badge);
+    }
     const meta = [r.display_name, r.role, r.discipline, r.country]
       .filter(Boolean)
       .join(" · ");
@@ -249,8 +343,13 @@
     el.appendChild(head);
 
     const obs = document.createElement("div");
-    obs.className = "resp-obs";
-    obs.textContent = r.observation || "";
+    if (r.observation) {
+      obs.className = "resp-obs";
+      obs.textContent = r.observation;
+    } else {
+      obs.className = "resp-obs muted";
+      obs.textContent = "No written observation.";
+    }
     el.appendChild(obs);
 
     const bits = ratingBits(r);
@@ -277,8 +376,11 @@
     } else if (currentTab === "published") {
       actions.appendChild(actionButton("Un-publish", "ghost warn", () => act(r.id, "unpublish")));
       actions.appendChild(actionButton("Delete", "ghost danger", () => act(r.id, "delete")));
-    } else {
+    } else if (currentTab === "rejected") {
       actions.appendChild(actionButton("Restore to pending", "ghost", () => act(r.id, "restore")));
+      actions.appendChild(actionButton("Delete", "ghost danger", () => act(r.id, "delete")));
+    } else {
+      // all submissions — browse only, with Delete for spam removal
       actions.appendChild(actionButton("Delete", "ghost danger", () => act(r.id, "delete")));
     }
     el.appendChild(actions);
