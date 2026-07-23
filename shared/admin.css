@@ -180,3 +180,37 @@ a { color: var(--admin); }
 
 .resp-obs.muted { color: var(--ink-soft); font-style: italic; }
 .load-more-wrap { margin-top: 1.2rem; text-align: center; }
+
+/* --- Ratings table (one row per response) -------------------------------- */
+.table-wrap { overflow-x: auto; }
+.ratings-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-size: 0.9rem;
+}
+.ratings-table th,
+.ratings-table td {
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  white-space: nowrap;
+}
+.ratings-table th {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  background: var(--paper);
+}
+.ratings-table th:nth-child(2),
+.ratings-table th:nth-child(3),
+.ratings-table th:nth-child(4),
+.ratings-table td.metric { text-align: center; }
+.ratings-table td.num { font-weight: 700; font-variant-numeric: tabular-nums; }
+.ratings-table td.metric { font-variant-numeric: tabular-nums; }
+.ratings-table td.muted { color: var(--ink-soft); }
+.ratings-table td.date { color: var(--ink-soft); }
+.ratings-table td.row-act { text-align: right; }
+.ratings-table tbody tr:last-child td { border-bottom: none; }

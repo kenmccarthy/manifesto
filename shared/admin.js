@@ -62,7 +62,7 @@
   // rows with an observation; "all" shows every submission (optionally filtered
   // by statement) so rating-only submissions are visible too.
   function applyScope(q, tab) {
-    if (tab === "all") {
+    if (tab === "all" || tab === "ratings") {
       if (allStmt) q = q.eq("statement_id", Number(allStmt));
       return q;
     }
@@ -181,7 +181,7 @@
     document.querySelectorAll(".tab").forEach((t) => {
       t.setAttribute("aria-selected", t.dataset.tab === tab ? "true" : "false");
     });
-    $("all-controls").hidden = tab !== "all";
+    $("all-controls").hidden = !(tab === "all" || tab === "ratings");
     allOffset = 0;
     loadList();
   }
@@ -199,13 +199,13 @@
 
   /* ---------------- Data ---------------- */
   async function refreshCounts() {
-    for (const tab of ["pending", "published", "rejected", "all"]) {
+    for (const tab of ["pending", "published", "rejected", "all", "ratings"]) {
       try {
         let q = db
           .from("statement_responses")
           .select("id", { count: "exact", head: true });
-        // The "all" tab count is the overall total, ignoring the statement filter.
-        if (tab !== "all") q = applyScope(q, tab);
+        // The all/ratings counts are the overall total, ignoring the filter.
+        if (tab !== "all" && tab !== "ratings") q = applyScope(q, tab);
         const { count, error } = await q;
         if (!error) $("count-" + tab).textContent = count == null ? "0" : count;
       } catch (e) {
@@ -244,6 +244,7 @@
   }
 
   async function loadList(append) {
+    const paged = currentTab === "all" || currentTab === "ratings";
     if (!append) {
       list.innerHTML = "";
       setAppStatus("Loading…");
@@ -252,7 +253,7 @@
     try {
       let q = db.from("statement_responses").select(COLS);
       q = applyScope(q, currentTab).order("created_at", { ascending: false });
-      if (currentTab === "all") q = q.range(allOffset, allOffset + PAGE - 1);
+      if (paged) q = q.range(allOffset, allOffset + PAGE - 1);
       const { data, error } = await q;
       if (error) throw error;
       setAppStatus("");
@@ -263,16 +264,21 @@
         p.textContent =
           currentTab === "pending"
             ? "Nothing awaiting review."
-            : currentTab === "all"
+            : paged
             ? "No submissions yet."
             : "Nothing here.";
         list.appendChild(p);
-      } else if (data) {
-        data.forEach((r) => list.appendChild(card(r)));
+      } else if (data && data.length) {
+        if (currentTab === "ratings") {
+          const tbody = ensureRatingsTable();
+          data.forEach((r) => tbody.appendChild(ratingRow(r)));
+        } else {
+          data.forEach((r) => list.appendChild(card(r)));
+        }
       }
 
       const more = $("load-more");
-      if (currentTab === "all") {
+      if (paged) {
         allOffset += data ? data.length : 0;
         more.hidden = !(data && data.length === PAGE);
         loadSummary();
@@ -284,6 +290,77 @@
     } catch (e) {
       setAppStatus("Could not load responses: " + (e.message || e), true);
     }
+  }
+
+  /* ---------------- Ratings table (one row per response) ---------------- */
+  function ensureRatingsTable() {
+    let table = list.querySelector("table.ratings-table");
+    if (!table) {
+      const wrap = document.createElement("div");
+      wrap.className = "table-wrap";
+      table = document.createElement("table");
+      table.className = "ratings-table";
+      table.innerHTML =
+        "<thead><tr>" +
+        "<th>#</th><th>Agreement</th><th>Importance</th><th>In practice</th>" +
+        "<th>Observation</th><th>Submitted</th><th></th>" +
+        "</tr></thead><tbody></tbody>";
+      wrap.appendChild(table);
+      list.appendChild(wrap);
+    }
+    return table.querySelector("tbody");
+  }
+
+  function ratingRow(r) {
+    const tr = document.createElement("tr");
+
+    const num = document.createElement("td");
+    num.className = "num";
+    num.textContent = String(r.statement_id).padStart(2, "0");
+    num.title = STMT[r.statement_id] || "";
+    tr.appendChild(num);
+
+    [r.agreement, r.importance, r.practice].forEach((v) => {
+      const td = document.createElement("td");
+      td.className = "metric";
+      td.textContent = v == null ? "–" : v;
+      tr.appendChild(td);
+    });
+
+    const obs = document.createElement("td");
+    if (r.observation) {
+      const st = statusOf(r);
+      const b = document.createElement("span");
+      b.className = "badge " + st.cls;
+      b.textContent = st.label;
+      obs.appendChild(b);
+    } else {
+      obs.className = "muted";
+      obs.textContent = "–";
+    }
+    tr.appendChild(obs);
+
+    const d = document.createElement("td");
+    d.className = "date";
+    try {
+      d.textContent = new Date(r.created_at).toLocaleDateString("en-IE", {
+        year: "numeric", month: "short", day: "numeric",
+      });
+    } catch (e) {
+      d.textContent = r.created_at;
+    }
+    tr.appendChild(d);
+
+    const acts = document.createElement("td");
+    acts.className = "row-act";
+    const del = document.createElement("button");
+    del.className = "btn ghost danger small";
+    del.textContent = "Delete";
+    del.addEventListener("click", () => act(r.id, "delete"));
+    acts.appendChild(del);
+    tr.appendChild(acts);
+
+    return tr;
   }
 
   function ratingBits(r) {
