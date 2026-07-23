@@ -145,3 +145,38 @@ a { color: var(--admin); }
 
 .empty { color: var(--ink-soft); font-style: italic; padding: 1.5rem 0; }
 .hidden { display: none !important; }
+
+/* --- All submissions view ------------------------------------------------ */
+.all-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  margin-bottom: 1.1rem;
+}
+.all-controls label { font-size: 0.85rem; font-weight: 600; }
+.all-controls select {
+  font: inherit;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fff;
+  max-width: 100%;
+}
+.all-summary { font-size: 0.85rem; color: var(--ink-soft); }
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+}
+.badge.b-pub { background: #e2f1e8; color: var(--ok); }
+.badge.b-pend { background: #fdefda; color: var(--warn); }
+.badge.b-rej { background: #f7e0db; color: var(--danger); }
+.badge.b-rate { background: #eceef1; color: var(--ink-soft); }
+
+.resp-obs.muted { color: var(--ink-soft); font-style: italic; }
+.load-more-wrap { margin-top: 1.2rem; text-align: center; }
