@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Moderation — Manifesto for Generative AI in Higher Education</title>
+<link rel="icon" type="image/x-icon" href="../favicon.ico" />
+<link rel="stylesheet" href="../shared/base.css">
+<link rel="stylesheet" href="../shared/admin.css">
+</head>
+
+<body>
+<div class="admin-wrap">
+
+  <div class="admin-top">
+    <h1>Manifesto · Moderation</h1>
+    <div class="who" id="who" hidden>
+      <span id="who-email"></span>
+      <button class="btn ghost small" id="logout">Log out</button>
+    </div>
+  </div>
+
+  <!-- Login -->
+  <section id="login-view">
+    <div class="login-card">
+      <h2>Admin sign in</h2>
+      <form id="login-form">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn" type="submit" id="login-btn">Sign in</button>
+      </form>
+      <p class="status-line" id="login-status" role="status" style="margin-top:1rem;"></p>
+    </div>
+  </section>
+
+  <!-- App -->
+  <section id="app-view" hidden>
+    <div class="tabs" role="tablist" aria-label="Moderation queues">
+      <button class="tab" role="tab" id="tab-pending" data-tab="pending" aria-selected="true">
+        Pending <span class="count" id="count-pending">–</span>
+      </button>
+      <button class="tab" role="tab" id="tab-published" data-tab="published" aria-selected="false">
+        Published <span class="count" id="count-published">–</span>
+      </button>
+      <button class="tab" role="tab" id="tab-rejected" data-tab="rejected" aria-selected="false">
+        Rejected <span class="count" id="count-rejected">–</span>
+      </button>
+    </div>
+
+    <p class="status-line" id="app-status" role="status"></p>
+    <div class="resp-list" id="resp-list"></div>
+  </section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="../shared/config.js"></script>
+<script src="../shared/admin.js"></script>
+</body>
+</html>
