@@ -1,0 +1,399 @@
+/* ==========================================================================
+   Manifesto — Interactive Course
+   Extends the site's visual language (base.css tokens + self-hosted fonts).
+   Load base.css first, then this file.
+   ========================================================================== */
+
+:root {
+  --paper: #f7f6f2;
+  --card: #ffffff;
+  --ink: #21252e;
+  --ink-soft: #565d6b;
+  --line: #e3e0d8;
+  --accent: #1b4f5c; /* course chrome — ties to the main site header */
+  --accent-deep: #123a44;
+  --maxw: 1180px;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+[hidden] { display: none !important; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent-deep); }
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  background: var(--accent);
+  color: #fff;
+  padding: 0.6rem 1rem;
+  z-index: 200;
+}
+.skip:focus { left: 0.5rem; top: 0.5rem; }
+
+/* --- Theme shapes --------------------------------------------------------- */
+.shape { display: inline-block; vertical-align: middle; }
+.shape :where(path, rect, circle) { fill: currentColor; }
+.shape-1 { color: var(--theme-1); }
+.shape-2 { color: var(--theme-2); }
+.shape-3 { color: var(--theme-3); }
+
+/* --- Buttons -------------------------------------------------------------- */
+.c-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font: inherit;
+  font-weight: 600;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-decoration: none;
+  transition: filter 0.15s ease, background 0.15s ease, transform 0.15s ease;
+}
+.c-btn:hover { filter: brightness(1.08); }
+.c-btn.ghost { background: transparent; color: var(--accent); }
+.c-btn.ghost:hover { background: color-mix(in srgb, var(--accent) 8%, transparent); filter: none; }
+.c-btn.small { padding: 0.4rem 0.85rem; font-size: 0.85rem; }
+.c-btn.large { padding: 0.9rem 1.9rem; font-size: 1.05rem; }
+
+/* ==========================================================================
+   WELCOME (index.html)
+   ========================================================================== */
+.welcome {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+}
+.welcome-main {
+  max-width: 44rem;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+  text-align: center;
+  align-self: center;
+}
+.hero-shapes {
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+  margin-bottom: 2.4rem;
+}
+.hero-shapes .shape {
+  width: clamp(2.6rem, 7vw, 3.6rem);
+  height: clamp(2.6rem, 7vw, 3.6rem);
+}
+/* Shapes are visible by default; the entrance is a motion-safe enhancement. */
+@media (prefers-reduced-motion: no-preference) {
+  .hero-shapes .shape { animation: shape-in 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  .hero-shapes .shape-1 { animation-delay: 0.05s; }
+  .hero-shapes .shape-2 { animation-delay: 0.18s; }
+  .hero-shapes .shape-3 { animation-delay: 0.31s; }
+}
+@keyframes shape-in {
+  from { transform: translateY(16px) scale(0.8); }
+  to { transform: none; }
+}
+.welcome h1 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2.3rem, 6vw, 3.8rem);
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+.welcome .tagline {
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  color: var(--ink-soft);
+  margin-top: 1rem;
+}
+.welcome .lede {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 2rem auto 0;
+  max-width: 34em;
+}
+.welcome .lede strong { font-weight: 600; }
+.welcome-actions {
+  margin-top: 2.4rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.outcomes {
+  margin: 2.4rem auto 0;
+  max-width: 34em;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 0.4rem 1.2rem;
+}
+.outcomes summary {
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0.8rem 0;
+  list-style: none;
+}
+.outcomes summary::-webkit-details-marker { display: none; }
+.outcomes summary::before { content: "＋ "; color: var(--accent); }
+.outcomes[open] summary::before { content: "－ "; }
+.outcomes ul { margin: 0 0 1rem 1.2rem; }
+.outcomes li { margin: 0.35rem 0; }
+
+.welcome-top, .welcome-foot {
+  padding: 1.2rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.welcome-foot { text-align: center; border-top: 1px solid var(--line); }
+.welcome-top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; flex-wrap: wrap; }
+.welcome-top .brand { font-family: var(--font-display); font-weight: 600; color: var(--ink); }
+.welcome-top a { text-decoration: none; }
+
+/* ==========================================================================
+   COURSE SHELL (course.html)
+   ========================================================================== */
+.course-header {
+  position: sticky;
+  top: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 1.2rem;
+  background: var(--card);
+  border-bottom: 1px solid var(--line);
+}
+.course-brand {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.02rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.header-actions { margin-left: auto; display: flex; gap: 0.6rem; }
+
+.nav-toggle {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  font: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.4rem 0.7rem;
+  cursor: pointer;
+  color: var(--ink);
+}
+.nav-toggle::before {
+  content: "";
+  width: 1rem;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 5px 0 currentColor, 0 -5px 0 currentColor;
+}
+
+.progress-rail {
+  height: 4px;
+  background: var(--line);
+}
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.35s ease;
+}
+
+.course-app {
+  display: grid;
+  grid-template-columns: 264px 1fr;
+  gap: 2.5rem;
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+/* --- Sidebar navigation --------------------------------------------------- */
+.course-nav {
+  align-self: start;
+  position: sticky;
+  top: 5.2rem;
+  padding: 1.8rem 0;
+}
+.nav-heading {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 0.7rem;
+  padding-left: 0.6rem;
+}
+.nav-list { list-style: none; display: grid; gap: 0.15rem; }
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  color: var(--ink);
+  font-size: 0.92rem;
+  line-height: 1.3;
+}
+.nav-link:hover { background: color-mix(in srgb, var(--accent) 7%, transparent); }
+.nav-link[aria-current="true"] {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  font-weight: 600;
+}
+.nav-marker {
+  flex: none;
+  width: 1.4rem;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+.nav-marker .shape { width: 0.78rem; height: 0.78rem; }
+.nav-num {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.nav-label { flex: 1; }
+.nav-tick { flex: none; width: 1rem; text-align: center; color: var(--theme-3); font-weight: 700; }
+.nav-link.completed .nav-tick::after { content: "✓"; }
+.nav-link.visited:not(.completed) .nav-tick::after { content: "·"; color: var(--ink-soft); }
+
+.nav-footer { margin-top: 1.4rem; padding-left: 0.4rem; }
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 40;
+}
+
+/* --- Section content ------------------------------------------------------ */
+.course-view { padding: 2.4rem 0 4rem; min-height: 70vh; }
+.section-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-deep);
+}
+.section-kicker .kicker-shape { width: 0.85rem; height: 0.85rem; }
+.section-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0.7rem 0 0;
+  outline: none;
+}
+.section-lead {
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  max-width: 40em;
+  margin-top: 1.2rem;
+}
+.section-placeholder {
+  margin-top: 2.2rem;
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 1.4rem 1.5rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  background: color-mix(in srgb, var(--card) 60%, transparent);
+}
+.theme-1 .section-title { color: var(--theme-1); }
+.theme-2 .section-title { color: var(--theme-2); }
+.theme-3 .section-title { color: var(--theme-3); }
+
+.section-pager {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 3rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+}
+.pager-link {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  text-decoration: none;
+  color: var(--ink);
+  max-width: 46%;
+}
+.pager-link.next { text-align: right; }
+.pager-link .dir { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-deep); }
+.pager-link .lbl { font-family: var(--font-display); font-size: 0.98rem; }
+.pager-link:hover .lbl { text-decoration: underline; }
+
+/* ==========================================================================
+   RESPONSIVE — drawer navigation
+   ========================================================================== */
+@media (max-width: 860px) {
+  .nav-toggle { display: inline-flex; }
+  .course-app { grid-template-columns: 1fr; gap: 0; }
+  .course-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: min(80vw, 300px);
+    background: var(--card);
+    border-right: 1px solid var(--line);
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    z-index: 50;
+  }
+  body.nav-open .course-nav { transform: none; }
+  body:not(.nav-open) .nav-overlay { display: none; }
+}
+@media (min-width: 861px) {
+  .nav-overlay { display: none; }
+}
+
+/* ==========================================================================
+   PRINT (expanded in a later phase for the Action Plan)
+   ========================================================================== */
+@media print {
+  .course-header, .course-nav, .nav-overlay, .progress-rail, .section-pager,
+  .section-placeholder, .nav-toggle { display: none !important; }
+  .course-app { display: block; }
+  body { background: #fff; }
+}
