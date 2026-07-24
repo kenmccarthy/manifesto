@@ -2,8 +2,8 @@
    Phase 1: the responsive shell + visual system. Section bodies are intros +
    placeholders; the interaction engine and activities arrive in later phases. */
 
-import { THEMES } from "../data/manifesto.js";
 import { Progress } from "./progress.js";
+import { shapeSvg } from "./shapes.js";
 
 /* ---------------- Sections ---------------- */
 const SECTIONS = [
@@ -66,21 +66,6 @@ const LEADS = {
     lead: "The Manifesto is meant to be questioned, debated, adapted and developed. Here is what you have made your own.",
   },
 };
-
-/* ---------------- Theme shapes ---------------- */
-const SHAPE_PATH = {
-  triangle: '<path d="M6 0.9 L11.3 11.1 H0.7 Z"/>',
-  square: '<rect x="1.4" y="1.4" width="9.2" height="9.2"/>',
-  circle: '<circle cx="6" cy="6" r="5.1"/>',
-};
-function shapeSvg(theme, cls) {
-  const th = THEMES[theme];
-  if (!th) return "";
-  return (
-    '<svg class="shape shape-' + theme + (cls ? " " + cls : "") +
-    '" viewBox="0 0 12 12" aria-hidden="true">' + SHAPE_PATH[th.shape] + "</svg>"
-  );
-}
 
 /* ---------------- DOM refs ---------------- */
 const navEl = document.getElementById("courseNav");
