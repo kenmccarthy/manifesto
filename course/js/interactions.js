@@ -197,6 +197,49 @@ export function selectionCards(options, opts = {}) {
 }
 
 /* ---------------------------------------------------------------------------
+   Sorter — assign each item to a bucket (accessible, click/keyboard, no drag)
+   opts: { buckets:[{id,label}], items:[{label, answer?, feedback?}], onComplete }
+   If an item has `answer`, feedback is corrective/interpretive; otherwise it is
+   treated as reflective (no single right answer).
+--------------------------------------------------------------------------- */
+export function sorter(opts) {
+  const { buckets, items, onComplete } = opts;
+  const wrap = el("div", { class: "sorter" });
+  const done = new Set();
+  items.forEach((it, i) => {
+    const fb = el("p", { class: "sort-fb", "aria-live": "polite" });
+    const btnRow = el("div", { class: "sort-buckets", role: "group", "aria-label": it.label });
+    const row = el("div", { class: "sort-item" }, [
+      el("p", { class: "sort-label", text: it.label }),
+      btnRow,
+      fb,
+    ]);
+    buckets.forEach((b) => {
+      const btn = el("button", { type: "button", class: "sort-btn", "aria-pressed": "false" }, b.label);
+      btn.addEventListener("click", () => {
+        btnRow.querySelectorAll(".sort-btn").forEach((x) => x.setAttribute("aria-pressed", "false"));
+        btn.setAttribute("aria-pressed", "true");
+        let mark = "";
+        if (it.answer) {
+          const right = b.id === it.answer;
+          row.dataset.state = right ? "right" : "rethink";
+          mark = right ? "✓ " : "↺ ";
+        } else {
+          row.dataset.state = "answered";
+        }
+        fb.className = "sort-fb " + (row.dataset.state || "");
+        fb.textContent = mark + (it.feedback || "");
+        done.add(i);
+        if (done.size === items.length && onComplete) onComplete();
+      });
+      btnRow.appendChild(btn);
+    });
+    wrap.appendChild(row);
+  });
+  return wrap;
+}
+
+/* ---------------------------------------------------------------------------
    Multiple choice with per-answer feedback
    q: { prompt, options:[{ label, kind, feedback, correct? }], saveKey? }
 --------------------------------------------------------------------------- */
