@@ -39,6 +39,18 @@ export function el(tag, attrs = {}, children = []) {
 
 const byNumber = (n) => MANIFESTO.find((s) => s.number === n);
 
+/* Section header — kicker (+ theme shape), focusable title, lead. */
+export function sectionHeader(meta) {
+  const kicker = el("p", { class: "section-kicker" });
+  if (meta.theme) kicker.insertAdjacentHTML("beforeend", shapeSvg(meta.theme, "kicker-shape"));
+  kicker.appendChild(el("span", { text: meta.kicker }));
+  return el("header", { class: "section-head" }, [
+    kicker,
+    el("h1", { class: "section-title", id: "sectionTitle", tabindex: "-1", text: meta.title }),
+    meta.lead ? el("p", { class: "section-lead", text: meta.lead }) : null,
+  ]);
+}
+
 /* ---------------------------------------------------------------------------
    Feedback panel
 --------------------------------------------------------------------------- */
