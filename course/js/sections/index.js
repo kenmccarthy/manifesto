@@ -6,6 +6,7 @@ import before from "./before.js";
 import manifesto from "./manifesto.js";
 import theme1 from "./theme1.js";
 import theme2 from "./theme2.js";
+import theme3 from "./theme3.js";
 
 export const SECTION_META = {
   before: {
@@ -58,4 +59,4 @@ export const SECTION_META = {
   },
 };
 
-export const RENDERERS = { before, manifesto, "theme-1": theme1, "theme-2": theme2 };
+export const RENDERERS = { before, manifesto, "theme-1": theme1, "theme-2": theme2, "theme-3": theme3 };

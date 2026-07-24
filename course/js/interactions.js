@@ -338,9 +338,11 @@ export function knowledgeCheck(questions, opts = {}) {
   const nav = el("div", { class: "kcheck-nav" });
   let idx = 0;
   const total = questions.length;
+  const noun = opts.noun || "Question";
+  const nlow = noun.toLowerCase();
 
   function render() {
-    counter.textContent = "Question " + (idx + 1) + " of " + total;
+    counter.textContent = noun + " " + (idx + 1) + " of " + total;
     host.innerHTML = "";
     const q = questions[idx];
     let answered = false;
@@ -355,16 +357,16 @@ export function knowledgeCheck(questions, opts = {}) {
         if (idx < total - 1) { idx++; render(); }
         else finish();
       },
-    }, idx < total - 1 ? "Next question →" : "See summary");
+    }, idx < total - 1 ? "Next " + nlow + " →" : "See summary");
     // Re-evaluate answered state (a question may already be answered on re-render)
     if (answered) nextBtn.disabled = false;
     nav.appendChild(nextBtn);
   }
 
   function finish() {
-    counter.textContent = "Knowledge check complete";
+    counter.textContent = "Complete";
     host.innerHTML = "";
-    host.appendChild(el("p", { class: "kcheck-done", text: "That's the set. These checks are for thinking, not scoring — revisit any question anytime." }));
+    host.appendChild(el("p", { class: "kcheck-done", text: opts.doneText || "That's the set. These are for thinking, not scoring — revisit anytime." }));
     nav.innerHTML = "";
     nav.appendChild(el("button", { type: "button", class: "c-btn ghost small", onclick: () => { idx = 0; render(); } }, "Start again"));
     if (opts.id) Progress.markCompleted(opts.id);
