@@ -305,7 +305,7 @@
     likeBtn.setAttribute("aria-pressed", isLiked(r.id) ? "true" : "false");
     likeBtn.setAttribute("aria-label", "Like this observation");
     likeBtn.innerHTML =
-      '<span class="heart" aria-hidden="true">♥</span> <span class="like-count">' +
+      '<i class="fa-solid fa-thumbs-up" aria-hidden="true"></i> <span class="like-count">' +
       likeCount + "</span>";
     likeBtn.addEventListener("click", () => toggleLike(r.id, likeBtn));
     actions.appendChild(likeBtn);
