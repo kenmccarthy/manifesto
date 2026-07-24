@@ -68,6 +68,16 @@ export const SPOTLIGHT = {
   8: { interpretation: "Decisions about GenAI in education are usually made about students and rarely with them. Yet students often see the tools, the pressures and the shortcuts more clearly than anyone. Treating them as collaborators — in shaping assessment, policy and classroom norms — is not just fairer; it produces better decisions and deeper learning. Collaboration carries weight: it asks students to take responsibility, argue for their views, and live with trade-offs, rather than simply receiving rules. The risk to watch is tokenism, where 'consultation' leaves everything unchanged. Real collaboration means students can point to something that is different because they were in the room." },
   9: { interpretation: "Statement 8 invites students in as partners; this one names the condition that makes the invitation real. Asking students to co-design within structures that will not actually change is not collaboration but performance — and students see through it quickly. Consultation that never alters a decision teaches cynicism: it signals that their voice is decorative. Genuine partnership requires institutions to hold some things loosely enough to be reshaped, and to show where student input actually moved an outcome. That is uncomfortable, because it means ceding a measure of control. But trust is not built by inviting people into a room whose walls cannot move; it is built by letting what they say change the room." },
   10: { interpretation: "It is tempting to frame the whole challenge as control: the right policy, the right detector, the right restriction. But the technology keeps moving regardless, and a purely defensive education spends its energy managing tools instead of developing people. The deeper task is human: nurturing empathy, discernment, curiosity and conscience — the capacities that decide how any tool gets used. This reframes the educator's role from gatekeeper to gardener. We are not here to make the machine safe so much as to help the person beside it become someone who can act wisely, with or without it. The horizon of learning is character, not control." },
+  11: { interpretation: "Integrity used to be policed by detection: catch the copied passage, prove the misconduct. But when human and machine contributions blur, 'was this original?' becomes almost unanswerable — and beside the point. Transparency reframes integrity around honesty of process rather than purity of product. Someone who can say clearly 'here is what I used, and here is how it shaped the work' is demonstrating something more trustworthy than an unverifiable claim of doing it all alone. This shifts the culture from suspicion to disclosure. It asks institutions to make openness safe — because people only tell the truth about their tools when honesty is not punished as if it were cheating." },
+  12: { interpretation: "Generative AI can surface patterns, draft feedback and suggest options — genuinely useful assistance. But assistance is not assessment. Deciding whether a student has met a learning outcome, weighing context and fairness, exercising rigour or mercy: these are acts of professional judgement, accountable to a person. The danger is drift, where a tool meant to inform a decision quietly starts making it, because deferring is easier than deliberating. This statement draws the line: augment the educator's judgement, don't replace it. The measure of good AI use here is not how much it decides, but how much better-informed the human decision becomes." },
+  13: { interpretation: "Efficiency is easy to measure and easy to sell, so it tends to win institutional arguments by default. But choosing a system is never only a procurement decision; it encodes values about privacy, equity, labour and sustainability. When a university hands those choices to whatever is cheapest or fastest, it effectively outsources its conscience to vendors. Leading ethically means making the value trade-offs explicit and owning them — sometimes paying more, or moving slower, to protect something that matters. It also makes staff integrity possible: individuals cannot act ethically inside systems chosen with no ethics in view. Institutional courage is the precondition for everyone else's." },
+  14: { interpretation: "The more a technology shapes — more students, more decisions, more consequence — the greater the duty to justify it. Yet influence and accountability often drift apart: a system quietly steers thousands of choices while no clearly named person answers for it. This statement insists the two travel together. If a tool reaches far, its governance, boundaries and rationale should be visible and open to challenge, not buried in a contract. Accountability here is not the same as blame; it is the willingness to explain, to be questioned, and to put things right. Where power is diffuse, someone still has to be answerable — and the bigger the reach, the clearer that answer must be." },
+  15: { interpretation: "Automation promises to do more, faster — and in a pressured system that promise is hard to resist. But learning is not only a throughput problem. Understanding grows in reflection, conversation, revision and the slow turning of an idea; some of it cannot be sped up without being destroyed. This statement is not anti-efficiency; routine drudgery is worth removing. It is a warning against letting speed become the only value, so that everything which resists acceleration — deliberation, difficulty, dialogue — gets quietly squeezed out. Part of the educator's job now is to protect the tempos where thinking actually happens, even when faster is available." },
+  16: { interpretation: "It is tempting to treat AI output as a view from nowhere — objective because it came from a machine. But every model is trained on data that carries values, gaps and histories, and it reflects the cultures and choices of its makers. What looks like neutral fact is a narrative with an author, even when that author is diffuse. Teaching students to see this is core critical literacy: to ask what a dataset includes and omits, whose experience is centred, and what a confident answer might quietly be leaving out. The goal is not cynicism but discernment — reading outputs as claims to be interrogated rather than truths to be received." },
+  17: { interpretation: "How you ask shapes what you learn. A prompt is not a neutral request; it frames the problem, encodes assumptions and sets the terms of the answer. That makes prompting a teaching act — and a skill worth teaching. Students who learn only to extract slick outputs are learning to be served; students who learn to interrogate their own prompts are learning to think. The educational move is to treat the prompt as an object of study: why this framing, what it presumes, what a different question would surface. Good prompting is really good questioning applied to a machine — and questioning has always been at the heart of education." },
+  18: { interpretation: "A single institutional rule for 'AI use' flattens a landscape that is anything but flat. In computer science, generating and then critiquing code can be the point; in nursing, the same fluency near patient decisions raises safety and accountability stakes; in history, the questions are about sources and interpretation; in music, about authorship and craft. Responsible use is not a universal setting but a disciplinary judgement made in context. This statement argues against one-size-fits-all governance and for plurality: disciplines co-creating their own frameworks with their students and communities. Coherence across an institution is worth having — but it should come from shared principles, not identical rules." },
+  19: { interpretation: "Much of what we call writing is really thinking made visible: choosing, ordering, cutting, discovering what we mean by trying to say it. Generative tools can draft fluent prose, but a fluent draft is not the same as a thought worked through. The risk is that producing text stops requiring thinking at all. The opportunity is different: drafting, interrogating and reshaping AI-assisted text can itself be deep intellectual work — if we design for it. This statement keeps writing central not as a ritual but as cognition. The question for educators is which parts of the struggle we still want students to do, because that struggle is where the thinking lives." },
+  20: { interpretation: "It is easy to romanticise difficulty, as if effort were valuable in itself. It isn't — removing pointless friction is good, and offloading routine work can free attention for what matters. The real problem is not ease but passivity: accepting a fluent answer without scrutiny, mistaking a finished artefact for understanding. This statement refuses the false choice between 'make it hard' and 'let it slide'. When tools lighten the load, the response should be to raise the intellectual ambition — more critical thinking, bolder creation, deeper ethical reasoning — not to lower expectations. Grades should track the depth of human growth, not the smoothness of the shortcut." },
 };
 
 /* Theme 1 activity content (DRAFT). */
@@ -149,6 +159,124 @@ export const THEME1 = {
         { label: "Because AI can sound convincing while being wrong, verifying its output becomes more important.", kind: "interpretive", feedback: "That's an accurate reading, not a misconception — it is exactly Statement 3's point." },
         { label: "“GenAI reveals the cost of not thinking” means students can safely stop thinking for themselves.", kind: "corrective", correct: true, feedback: "Yes — that's the misreading. Statement 3 argues the opposite: fluent, unattributed output makes thinking matter more, not less." },
         { label: "Learning to use GenAI can help students judge when to trust it.", kind: "interpretive", feedback: "That's a fair reading (Statement 7), not a misconception." },
+      ],
+    },
+  ],
+};
+
+/* Theme 2 activity content (DRAFT). */
+export const THEME2 = {
+  opening: {
+    line: "Capability does not remove responsibility. It redistributes it.",
+    body: "Generative AI introduces questions that extend far beyond whether a particular tool works.",
+    questions: [
+      "Who chose the system?",
+      "Whose data shaped it?",
+      "Who benefits?",
+      "Who may be excluded?",
+      "Who is accountable when something goes wrong?",
+      "And which decisions should never simply be handed to a machine?",
+    ],
+  },
+
+  responsibility: {
+    scenario:
+      "A university introduces an AI-powered system that gives students personalised academic advice. If that advice turns out to be wrong, where should responsibility sit? Distribute 100% across those involved — to give more to one, take it from another.",
+    items: [
+      { id: "student", label: "Student" },
+      { id: "lecturer", label: "Lecturer" },
+      { id: "programme", label: "Programme team" },
+      { id: "university", label: "University" },
+      { id: "provider", label: "Technology provider" },
+    ],
+    reveal:
+      "There is no official correct distribution — and that is the point. The harder question is what happens when influence and accountability come apart: when the system shaping the advice sits far from whoever has to answer for it.",
+    statement: 14,
+  },
+
+  spotlights: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
+
+  automate: {
+    intro:
+      "For each task, choose how much you would hand to a machine. There is no single correct answer — the point is to notice where human judgement still needs to sit, and why.",
+    buckets: [
+      { id: "automate", label: "Automate" },
+      { id: "augment", label: "Augment" },
+      { id: "human", label: "Keep human" },
+    ],
+    items: [
+      { label: "Generating formative quiz questions" },
+      { label: "Giving initial feedback on grammar" },
+      { label: "Deciding whether a student has met a learning outcome" },
+      { label: "Identifying students considered ‘at risk’" },
+      { label: "Summarising meeting notes" },
+      { label: "Suggesting alternative explanations" },
+      { label: "Determining a final grade" },
+      { label: "Responding to a distressed student" },
+    ],
+    bucketFeedback: {
+      automate: "Automating this can save real time — but what checks would catch it going wrong, and who would notice if they didn't?",
+      augment: "As an aid this can sharpen your work — but what must you still decide yourself, and how do you avoid quietly deferring to it?",
+      human: "Keeping this human has a cost in time and effort. What would have to be true before you'd trust more of it to a tool?",
+    },
+  },
+
+  transparency: {
+    prompt:
+      "Four students describe how they used GenAI on the same assignment. Which disclosure gives you enough to understand how AI actually contributed?",
+    options: [
+      { label: "“I used ChatGPT.”", kind: "interpretive", feedback: "Honest, but almost uninformative. It names a tool without saying what it did — for which parts, to what extent, or how the student checked it. Transparency is about understanding the contribution, not just admitting one." },
+      { label: "“I used AI to help with my essay.”", kind: "interpretive", feedback: "Slightly fuller, but still vague. 'Help with' could mean anything from brainstorming to writing the whole thing. It doesn't let a reader judge what the student actually did." },
+      { label: "“I used ChatGPT for grammar and to fix my references.”", kind: "interpretive", feedback: "More specific and genuinely useful — you now know roughly where it was used. But it is silent on the thinking: were ideas, structure or arguments AI-shaped, and did the student verify the output?" },
+      { label: "“I used ChatGPT to suggest alternative structures for my introduction. I chose one, rewrote it in my own words, and checked every factual claim against the sources I cite.”", kind: "corrective", correct: true, feedback: "Yes. This tells you what the tool did, what the student decided, and how they took responsibility for accuracy. That is transparency doing its real job — making the process legible, not policing whether a tool was touched." },
+    ],
+    conclusion:
+      "Notice we never asked whether using AI was allowed. Transparency is about making the process legible, so trust can rest on what actually happened.",
+  },
+
+  discipline: {
+    intro: "Would responsible GenAI use look identical in all four? Open each to compare.",
+    items: [
+      { title: "Computer Science", body: "Generating code and then reading, testing and critiquing it can be central to the learning — the AI output is raw material for judgement, not the finished answer." },
+      { title: "Nursing", body: "Near clinical decisions, a fluent but wrong suggestion can be dangerous. Accountability and patient safety push much more firmly toward keeping the human in charge." },
+      { title: "Music", body: "Questions turn on authorship, craft and voice: what does it mean to compose or perform with a generative tool, and where does the human artist remain essential?" },
+      { title: "History", body: "The discipline lives on sources and interpretation. The sharpest skills here are provenance and critique — asking where a claim came from and whose story a dataset tells." },
+    ],
+    conclusion: "Same tool, four different questions. That is why one universal rule struggles.",
+    statement: 18,
+  },
+
+  knowledgeCheck: [
+    {
+      prompt: "A department buys an AI tutoring tool because it is cheaper and faster than expanding staff support. Which statement most directly challenges 'cheaper and faster' as the deciding factor?",
+      options: [
+        { label: "Institutions must lead ethically, not just efficiently.", kind: "corrective", correct: true, feedback: "Yes — Statement 13 warns against letting cost and speed override values like equity, privacy and educational quality." },
+        { label: "Prompting is pedagogy.", kind: "interpretive", feedback: "Relevant to how the tool is used, but not to the procurement decision itself." },
+        { label: "Curiosity surpasses completion.", kind: "interpretive", feedback: "A Theme 1 idea about learning, not about how institutions weigh efficiency against ethics." },
+      ],
+    },
+    {
+      prompt: "An AI system flags students as ‘at risk’ of failing so staff can offer support earlier. This one has more than one defensible answer — which concern would you prioritise?",
+      options: [
+        { label: "Accuracy and bias — who gets wrongly flagged, and who gets missed?", kind: "interpretive", feedback: "A strong concern: the flag reflects the data's histories and gaps (Statement 16), and errors fall unevenly. Reasonable people would also weigh the priorities below." },
+        { label: "Transparency — do students and staff know how the flag is produced and used?", kind: "interpretive", feedback: "Also strong: accountability should scale with the system's influence (Statement 14), and hidden logic is hard to challenge. The other concerns are defensible too." },
+        { label: "Human judgement — is the flag informing a person, or quietly making the decision?", kind: "interpretive", feedback: "Also defensible: augmentation, not automation (Statement 12) — the risk is deferring to the score. None of these is the single right answer." },
+      ],
+    },
+    {
+      prompt: "A lecturer says: “I let students use AI however they like, and I don't ask about it — it's their business.” Which statement most complicates this stance?",
+      options: [
+        { label: "Transparency is the new integrity.", kind: "corrective", correct: true, feedback: "Yes — Statement 11 suggests that not asking about process forgoes the openness on which trust and integrity now depend." },
+        { label: "Sustainability is a learning outcome.", kind: "interpretive", feedback: "A Theme 3 concern about environmental impact, not about disclosure of use." },
+        { label: "Ease is not the enemy; uncritical learning is.", kind: "interpretive", feedback: "Related — it warns against uncritical use — but the sharper challenge to 'don't ask' is transparency (Statement 11)." },
+      ],
+    },
+    {
+      prompt: "Which of these misreads “Academic judgement is augmented, not automated”?",
+      options: [
+        { label: "AI can help generate feedback, but a person should decide the grade.", kind: "interpretive", feedback: "That's a faithful reading, not a misconception." },
+        { label: "Because AI is augmenting judgement, it's fine to let it set final grades automatically to save time.", kind: "corrective", correct: true, feedback: "Yes — that's the misreading. 'Augmented, not automated' draws the line precisely at handing the decision itself to the machine (Statement 12)." },
+        { label: "Human context and fairness should shape assessment decisions.", kind: "interpretive", feedback: "That's consistent with the statement, not a misreading." },
       ],
     },
   ],
