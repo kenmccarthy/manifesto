@@ -227,8 +227,11 @@ export function sorter(opts) {
         } else {
           row.dataset.state = "answered";
         }
+        let text = it.feedback;
+        if (it.feedbackByBucket && it.feedbackByBucket[b.id] != null) text = it.feedbackByBucket[b.id];
+        else if (!it.answer && opts.bucketFeedback && opts.bucketFeedback[b.id] != null) text = opts.bucketFeedback[b.id];
         fb.className = "sort-fb " + (row.dataset.state || "");
-        fb.textContent = mark + (it.feedback || "");
+        fb.textContent = mark + (text || "");
         done.add(i);
         if (done.size === items.length && onComplete) onComplete();
       });
@@ -236,6 +239,56 @@ export function sorter(opts) {
     });
     wrap.appendChild(row);
   });
+  return wrap;
+}
+
+/* ---------------------------------------------------------------------------
+   Allocator — distribute a fixed budget with +/- controls (no drag)
+   opts: { items:[{id,label}], total=100, step=5, start?, onChange(values,sum) }
+   The total can never exceed `total`; give more to one by taking from another.
+--------------------------------------------------------------------------- */
+export function allocator(opts) {
+  const { items, total = 100, step = 5, start, onChange } = opts;
+  const values = {};
+  items.forEach((it) => (values[it.id] = start && start[it.id] != null ? start[it.id] : Math.round(total / items.length)));
+  const rows = {};
+  const plusBtns = [];
+  const wrap = el("div", { class: "allocator" });
+  const totalEl = el("p", { class: "alloc-total", "aria-live": "polite" });
+  const sum = () => Object.values(values).reduce((a, b) => a + b, 0);
+
+  function refresh(fire) {
+    items.forEach((it) => {
+      rows[it.id].val.textContent = values[it.id] + "%";
+      rows[it.id].fill.style.width = values[it.id] + "%";
+    });
+    const s = sum();
+    totalEl.textContent = "Allocated " + s + "% of " + total + "%" + (s === total ? " — balanced" : "");
+    totalEl.classList.toggle("balanced", s === total);
+    plusBtns.forEach((b) => (b.disabled = s >= total));
+    if (fire && onChange) onChange({ ...values }, s);
+  }
+
+  items.forEach((it) => {
+    const val = el("span", { class: "alloc-val" });
+    const fill = el("span", { class: "alloc-bar-fill" });
+    const minus = el("button", { type: "button", class: "alloc-btn", "aria-label": "Decrease " + it.label }, "−");
+    const plus = el("button", { type: "button", class: "alloc-btn", "aria-label": "Increase " + it.label }, "+");
+    minus.addEventListener("click", () => { values[it.id] = Math.max(0, values[it.id] - step); refresh(true); });
+    plus.addEventListener("click", () => { if (sum() < total) { values[it.id] = Math.min(total, values[it.id] + step); refresh(true); } });
+    plusBtns.push(plus);
+    rows[it.id] = { val, fill };
+    wrap.appendChild(
+      el("div", { class: "alloc-row" }, [
+        el("span", { class: "alloc-label", text: it.label }),
+        el("span", { class: "alloc-bar" }, [fill]),
+        val,
+        el("span", { class: "alloc-ctrls" }, [minus, plus]),
+      ])
+    );
+  });
+  wrap.appendChild(totalEl);
+  refresh(false);
   return wrap;
 }
 

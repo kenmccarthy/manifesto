@@ -595,6 +595,28 @@ a { color: var(--accent-deep); }
 .sort-fb.right { color: #1f7a4d; }
 .sort-fb.rethink { color: #b0532f; }
 
+/* Opening question list */
+.question-list { margin: 1rem 0 0 1.1rem; display: grid; gap: 0.4rem; }
+.question-list li { font-family: var(--font-display); font-size: 1.05rem; line-height: 1.4; }
+
+/* Allocator */
+.allocator { display: grid; gap: 0.6rem; }
+.alloc-row { display: grid; grid-template-columns: 12rem 1fr auto auto; gap: 0.9rem; align-items: center; }
+.alloc-label { font-weight: 600; font-size: 0.95rem; }
+.alloc-bar { height: 0.5rem; background: var(--paper); border-radius: 999px; overflow: hidden; }
+.alloc-bar-fill { display: block; height: 100%; background: var(--accent); width: 0; transition: width 0.12s ease; }
+.alloc-val { font-variant-numeric: tabular-nums; font-weight: 700; min-width: 3rem; text-align: right; }
+.alloc-ctrls { display: flex; gap: 0.3rem; }
+.alloc-btn { width: 2rem; height: 2rem; border: 1.5px solid var(--line); background: var(--card); border-radius: 6px; font-size: 1.1rem; line-height: 1; cursor: pointer; }
+.alloc-btn:hover { border-color: var(--accent); }
+.alloc-btn:disabled { opacity: 0.4; cursor: default; }
+.alloc-total { margin-top: 0.4rem; color: var(--ink-soft); font-size: 0.9rem; }
+.alloc-total.balanced { color: #1f7a4d; font-weight: 600; }
+@media (max-width: 620px) {
+  .alloc-row { grid-template-columns: 1fr auto auto; }
+  .alloc-bar { grid-column: 1 / -1; order: 5; }
+}
+
 /* ==========================================================================
    PRINT (expanded in a later phase for the Action Plan)
    ========================================================================== */
