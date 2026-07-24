@@ -78,6 +78,16 @@ export const SPOTLIGHT = {
   18: { interpretation: "A single institutional rule for 'AI use' flattens a landscape that is anything but flat. In computer science, generating and then critiquing code can be the point; in nursing, the same fluency near patient decisions raises safety and accountability stakes; in history, the questions are about sources and interpretation; in music, about authorship and craft. Responsible use is not a universal setting but a disciplinary judgement made in context. This statement argues against one-size-fits-all governance and for plurality: disciplines co-creating their own frameworks with their students and communities. Coherence across an institution is worth having — but it should come from shared principles, not identical rules." },
   19: { interpretation: "Much of what we call writing is really thinking made visible: choosing, ordering, cutting, discovering what we mean by trying to say it. Generative tools can draft fluent prose, but a fluent draft is not the same as a thought worked through. The risk is that producing text stops requiring thinking at all. The opportunity is different: drafting, interrogating and reshaping AI-assisted text can itself be deep intellectual work — if we design for it. This statement keeps writing central not as a ritual but as cognition. The question for educators is which parts of the struggle we still want students to do, because that struggle is where the thinking lives." },
   20: { interpretation: "It is easy to romanticise difficulty, as if effort were valuable in itself. It isn't — removing pointless friction is good, and offloading routine work can free attention for what matters. The real problem is not ease but passivity: accepting a fluent answer without scrutiny, mistaking a finished artefact for understanding. This statement refuses the false choice between 'make it hard' and 'let it slide'. When tools lighten the load, the response should be to raise the intellectual ambition — more critical thinking, bolder creation, deeper ethical reasoning — not to lower expectations. Grades should track the depth of human growth, not the smoothness of the shortcut." },
+  21: { interpretation: "Fear is a natural first response to a powerful, unpredictable technology, and caution has its place. But an education built mainly on warnings teaches students to be wary, not capable. Courage here is not recklessness; it is the willingness to experiment thoughtfully, to sit with uncertainty, and to trust learners to act responsibly with the tools of their time. Students learn courage by seeing it modelled — by teachers who try things that might not work and reflect openly when they don't. What we model, they remember. If we meet the future only defensively, we hand students our anxiety; if we meet it with critical courage, we hand them a way to act." },
+  22: { interpretation: "It is comforting to treat a new technology as a neutral instrument — just a faster way to do what we already did. But tools redistribute advantage: they change who can do what, whose work is valued, and who gets left behind. Generative AI is no exception, carrying economic, political and social consequences into every classroom that adopts it. Education can make these visible or leave them invisible, and silence is not neutral — it quietly sides with whoever already benefits. Teaching critically means asking, out loud and with students, who gains and who loses from a given change, and treating that question as part of the subject, not a distraction from it." },
+  23: { interpretation: "When a system works better in some languages, for some abilities, or within some cultural assumptions, it builds inequity into the everyday experience of learning — often invisibly, for the people least able to object. Inclusion is not a feature to add at the end; it is a design stance from the start, asking who might be excluded by a tool or a task and changing the design so that all voices can take part. This is demanding, because it means noticing gaps that don't affect us and treating access and belonging as non-negotiable rather than nice-to-have. A future worth building is one that more people can actually enter." },
+  24: { interpretation: "The environmental cost of generative AI — energy, water, hardware — is real but easy to keep offstage, precisely because it happens far from the screen. Treating sustainability as a learning outcome means bringing that cost into view as part of digital literacy, not a separate module bolted on at the end. It asks students to weigh benefit against impact and to see technological choices as choices with consequences for a shared world. This is not about guilt or refusal; it is about awareness and responsibility becoming ordinary parts of how we reason about tools. What we treat as worth measuring signals what we treat as worth caring about." },
+  25: { interpretation: "Unlimited possibility can be paralysing; a blank page with no rules rarely produces the best work. Constraints focus attention — they turn 'do anything' into 'do something well, within these limits' — and generative tools have limits worth working with rather than against. A well-chosen constraint (time, medium, what the AI may and may not do) becomes a canvas: it provokes ingenuity, forces judgement, and often produces more original results than boundless freedom would. For educators, this reframes design: instead of asking how to stop students misusing a tool, ask what constraints would make it a spur to human creativity rather than a substitute for it." },
+  26: { interpretation: "Ethics is too often the last slide, the closing paragraph, the compliance box ticked once the real decisions are made. But by then the decisions are made. Treating ethics as a foundation means bringing it into the design stage — of a policy, a course, a prompt, a dataset — where it can actually shape outcomes rather than merely label them. This is more demanding than compliance, because it asks 'should we?' before 'can we?' and keeps asking as circumstances change. The most trustworthy systems are those that started with conscience, not the ones that added it afterwards. Where ethics lives in a process tells you how seriously it is taken." },
+  27: { interpretation: "Privacy is not a policy you read once; it is a habit enacted in small, repeated choices — what data you hand over for convenience, what you ask a tool to remember, what you quietly collect about students. Understanding those trades is part of digital literacy, and educators teach it most powerfully by living it: using tools transparently, anonymising where they can, questioning what is gathered and why. When privacy is treated as practice rather than paperwork, students learn to make informed choices instead of clicking 'accept'. The everyday example a teacher sets — careful or careless — teaches more about privacy than any single lesson on it ever will." },
+  28: { interpretation: "It has never been easier to become fluent in how a tool works, and never less sufficient. Technical skill without judgement produces people who can operate anything and question nothing. Teaching 'why' means pairing capability with purpose: understanding what a tool is for, what it costs, and — crucially — when not to use it. That last judgement is the hard one, and the most human: knowing that just because a task can be automated does not mean it should be. Meaningful AI literacy joins skill to meaning, so that students leave able not only to use these systems but to decide, wisely, whether they should." },
+  29: { interpretation: "For all its power, generative AI does not rewrite the purpose of education; it changes the tools, not the point. The future classroom is not a contest between minds and machines but a space where human creativity, conscience and care keep growing — if we choose to build it that way. This statement is an antidote to determinism, the belief that technology simply happens to us. It insists on agency: the horizon is not fixed by the tools but shaped by the countless ordinary decisions educators and students make. The legacy will not be the machine we adopted, but the minds we helped form alongside it." },
+  30: { interpretation: "Learning has always been dialogue — between teachers and students, ideas and objections, questions and responses — and generative AI adds new voices to that exchange without needing to dominate it. The risk is that the machine talks and we listen; the opportunity is a richer conversation in which technology contributes without speaking for us. An extraordinary classroom is not defined by the tools it contains but by the quality of the exchange it makes possible: the curiosity it provokes, the disagreement it can hold, the trust that lets people think out loud. The future is not something to be delivered to students. It is something to be talked into being, together." },
 };
 
 /* Theme 1 activity content (DRAFT). */
@@ -277,6 +287,114 @@ export const THEME2 = {
         { label: "AI can help generate feedback, but a person should decide the grade.", kind: "interpretive", feedback: "That's a faithful reading, not a misconception." },
         { label: "Because AI is augmenting judgement, it's fine to let it set final grades automatically to save time.", kind: "corrective", correct: true, feedback: "Yes — that's the misreading. 'Augmented, not automated' draws the line precisely at handing the decision itself to the machine (Statement 12)." },
         { label: "Human context and fairness should shape assessment decisions.", kind: "interpretive", feedback: "That's consistent with the statement, not a misreading." },
+      ],
+    },
+  ],
+};
+
+/* Theme 3 activity content (DRAFT). */
+export const THEME3 = {
+  opening: {
+    line: "The future is not something technology does to us.",
+    body: "Technology changes what becomes possible. People still decide what becomes desirable. This theme moves beyond immediate questions of tools and policies to the university we are creating.",
+  },
+
+  remainHuman: {
+    prompt: "As GenAI becomes more capable, what part of education must remain deeply human?",
+    concepts: ["care", "curiosity", "judgement", "belonging", "dialogue", "empathy", "imagination", "uncertainty", "challenge", "relationships"],
+  },
+
+  spotlights: [21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+
+  futureUniversity: {
+    intro: "Five design decisions for a future university. Choose between competing priorities — the feedback connects each choice back to the Manifesto. There are no scored answers.",
+    decisions: [
+      {
+        prompt: "AI systems should primarily be selected because they:",
+        options: [
+          { label: "reduce institutional costs", kind: "interpretive", feedback: "Cost matters, but making it the primary driver is exactly what Statement 13 warns against — leading efficiently rather than ethically, letting the cheapest option set educational values." },
+          { label: "improve the educational experience", kind: "interpretive", feedback: "This aligns with the Manifesto's values — though in the real world cost can't be ignored; the skill is keeping educational value the deciding factor when the two conflict (Statements 13, 15)." },
+          { label: "do both — but educational value stays the deciding factor", kind: "interpretive", feedback: "A pragmatic stance: acknowledge cost, but let educational value decide the close calls. Statements 13 and 15 both push this way — resisting efficiency as the default arbiter." },
+        ],
+      },
+      {
+        prompt: "Students should encounter GenAI:",
+        options: [
+          { label: "only after mastering foundational skills", kind: "interpretive", feedback: "There's a real worry about skipping foundations — but a blanket 'not until later' can delay the critical literacy Statement 7 says comes from using the tool. Timing isn't one-size-fits-all." },
+          { label: "from the beginning of their studies", kind: "interpretive", feedback: "Early exposure builds familiarity and critical distance (Statement 7), but 'from day one, everywhere' ignores that GenAI lives differently in every discipline (Statement 18) and every stage." },
+          { label: "differently depending on discipline, stage and learning outcome", kind: "interpretive", feedback: "This matches Statements 7, 18 and 28: learn with the tool, but calibrate to discipline, stage and purpose. The judgement is when it helps and when to hold off." },
+        ],
+      },
+      {
+        prompt: "When GenAI can draft almost any assignment, assessment should mainly:",
+        options: [
+          { label: "move to closed, in-person conditions", kind: "interpretive", feedback: "Controlled conditions suit some outcomes, but as a default they narrow what education can assess and treat every task as a security problem — chasing detection rather than design (Statement 4)." },
+          { label: "focus on process, reasoning and reflection", kind: "interpretive", feedback: "Assessing process fits Statements 4 and 19 — it makes this student's thinking visible — though it takes design effort and clear criteria to stay fair." },
+          { label: "mix both, matched to what each module must evidence", kind: "interpretive", feedback: "Often the realistic answer: some outcomes need controlled conditions, others need visible process. Human judgement about what each module must evidence stays central (Statement 12)." },
+        ],
+      },
+      {
+        prompt: "Who should set the rules for GenAI use? The institution should:",
+        options: [
+          { label: "issue one clear university-wide policy", kind: "interpretive", feedback: "Consistency is genuinely valuable — students deserve fairness across modules — but a single rule flattens real disciplinary differences (Statement 18) and can be blunt where nuance is needed." },
+          { label: "let each discipline set its own approach", kind: "interpretive", feedback: "Disciplinary autonomy respects Statement 18, but pure localism risks incoherence, inequity between students, and gaps in accountability (Statement 14)." },
+          { label: "agree shared principles centrally, interpreted locally", kind: "interpretive", feedback: "This tries to hold both: institutional accountability and ethical leadership (Statements 13, 14) alongside disciplinary plurality (Statement 18). Harder to run, but it refuses a false choice." },
+        ],
+      },
+      {
+        prompt: "Faced with GenAI, the university's first investment should go to:",
+        options: [
+          { label: "detection and enforcement tools", kind: "interpretive", feedback: "Detection spending is reactive and quickly outdated (Statement 4); it rarely improves learning and can erode trust. It may feel urgent, but it builds little." },
+          { label: "staff time and development to redesign teaching", kind: "interpretive", feedback: "Investing in staff time matches Statement 5 — courage needs resources — and is what makes thoughtful redesign real rather than rhetorical." },
+          { label: "student-facing AI tools and access", kind: "interpretive", feedback: "Access matters for inclusion (Statement 23), and unequal access creates new divides — though tools without redesigned teaching can underdeliver. The order you'd fund these in reveals the priorities." },
+        ],
+      },
+    ],
+  },
+
+  constraint: {
+    intro: "Constraint is not the enemy of creativity; it is a catalyst. Here is a deliberately constrained challenge.",
+    challenge: "Redesign one learning activity so that GenAI contributes meaningfully, but a human judgement stays at its heart.",
+    constraints: [
+      "It should take a student no more than 20 minutes.",
+      "Students may not use GenAI to produce the final answer.",
+      "GenAI must contribute something meaningful along the way.",
+      "Students must make at least one important judgement themselves.",
+    ],
+    prompt: "Describe your activity in two sentences.",
+  },
+
+  knowledgeCheck: [
+    {
+      prompt: "A university drafting its ten-year strategy worries it is reacting to each new tool instead of deciding what it wants education to be. Which statement most directly speaks to that dilemma?",
+      options: [
+        { label: "The horizon is still ours to shape.", kind: "corrective", correct: true, feedback: "Yes — Statement 29 insists the future is shaped by our choices, not dictated by the tools; a direct answer to feeling led by technology." },
+        { label: "Privacy is practice.", kind: "interpretive", feedback: "Important, but about everyday data habits, not the strategic question of who shapes the future." },
+        { label: "Ease is not the enemy; uncritical learning is.", kind: "interpretive", feedback: "A Theme 2 idea about standards and passivity, not about long-term agency over the future." },
+      ],
+    },
+    {
+      prompt: "A course team wants students to weigh the environmental cost of the AI tools they use. Which statement best supports building this in?",
+      options: [
+        { label: "Sustainability is a learning outcome.", kind: "corrective", correct: true, feedback: "Yes — Statement 24 makes environmental awareness part of the learning, not a footnote to it." },
+        { label: "Inclusion is not optional.", kind: "interpretive", feedback: "Vital, but about access and belonging rather than environmental impact." },
+        { label: "Constraint is not the enemy of creativity.", kind: "interpretive", feedback: "A creativity idea; not the sustainability point." },
+      ],
+    },
+    {
+      prompt: "“We owe students more than caution — we owe them courage.” A colleague reads this as 'anything goes — let students use AI freely.' What is the better reading?",
+      options: [
+        { label: "Courage means modelling thoughtful, critical experimentation — not removing all limits.", kind: "corrective", correct: true, feedback: "Yes — Statement 21 is about critical courage, not a free-for-all; it pairs boldness with reflection and responsibility." },
+        { label: "It means banning nothing, since caution is the problem.", kind: "interpretive", feedback: "That mistakes courage for the absence of judgement — the statement values bold and critical practice together." },
+        { label: "It means avoiding GenAI until students are cautious enough.", kind: "interpretive", feedback: "That inverts the statement, which argues against letting caution dominate pedagogy." },
+      ],
+    },
+    {
+      prompt: "Which reading best captures “GenAI challenges us to teach why, not just how”?",
+      options: [
+        { label: "Once students can operate the tools well, the teaching job is essentially done.", kind: "interpretive", feedback: "That's the view the statement pushes against — fluency without purpose is exactly the gap it names." },
+        { label: "Students should understand a tool's purpose and limits, including when not to use it.", kind: "corrective", correct: true, feedback: "Yes — Statement 28 joins skill to judgement, and the hardest, most human part is knowing when to hold off." },
+        { label: "Teaching 'why' means dropping technical skills entirely.", kind: "interpretive", feedback: "Not quite — it's about joining skill to purpose, not abandoning skill." },
       ],
     },
   ],
