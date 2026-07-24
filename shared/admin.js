@@ -212,6 +212,16 @@
         /* leave the placeholder */
       }
     }
+    try {
+      const { count, error } = await db
+        .from("observation_replies")
+        .select("id", { count: "exact", head: true })
+        .eq("approved", false)
+        .eq("rejected", false);
+      if (!error) $("count-replies").textContent = count == null ? "0" : count;
+    } catch (e) {
+      /* leave the placeholder */
+    }
   }
 
   async function loadSummary() {
@@ -244,6 +254,7 @@
   }
 
   async function loadList(append) {
+    if (currentTab === "replies") return loadReplies();
     const paged = currentTab === "all" || currentTab === "ratings";
     if (!append) {
       list.innerHTML = "";
@@ -492,6 +503,117 @@
       }
       if (error) throw error;
       loadList();
+    } catch (e) {
+      setAppStatus("Action failed: " + (e.message || e), true);
+    }
+  }
+
+  /* ---------------- Replies moderation ---------------- */
+  async function loadReplies() {
+    list.innerHTML = "";
+    setAppStatus("Loading…");
+    $("load-more").hidden = true;
+    try {
+      const { data, error } = await db
+        .from("observation_replies")
+        .select(
+          "id, parent_id, reply, display_name, created_at, statement_responses(statement_id, observation)"
+        )
+        .eq("approved", false)
+        .eq("rejected", false)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      setAppStatus("");
+      if (!data || data.length === 0) {
+        const p = document.createElement("p");
+        p.className = "empty";
+        p.textContent = "No replies awaiting review.";
+        list.appendChild(p);
+      } else {
+        data.forEach((r) => list.appendChild(replyCard(r)));
+      }
+      refreshCounts();
+    } catch (e) {
+      setAppStatus("Could not load replies: " + (e.message || e), true);
+    }
+  }
+
+  function replyCard(r) {
+    const parent = r.statement_responses || {};
+    const el = document.createElement("article");
+    el.className = "resp";
+
+    const head = document.createElement("div");
+    head.className = "resp-head";
+    const s = document.createElement("span");
+    s.className = "stmt";
+    s.textContent =
+      "Reply · Statement " +
+      (parent.statement_id ? String(parent.statement_id).padStart(2, "0") : "?");
+    head.appendChild(s);
+    if (parent.observation) {
+      const ob = document.createElement("span");
+      const snip =
+        parent.observation.length > 90
+          ? parent.observation.slice(0, 90) + "…"
+          : parent.observation;
+      ob.textContent = "on: “" + snip + "”";
+      head.appendChild(ob);
+    }
+    if (r.display_name) {
+      const nm = document.createElement("span");
+      nm.textContent = r.display_name;
+      head.appendChild(nm);
+    }
+    const date = document.createElement("span");
+    try {
+      date.textContent = new Date(r.created_at).toLocaleString("en-IE", {
+        dateStyle: "medium",
+        timeStyle: "short",
+      });
+    } catch (e) {
+      date.textContent = r.created_at;
+    }
+    head.appendChild(date);
+    el.appendChild(head);
+
+    const body = document.createElement("div");
+    body.className = "resp-obs";
+    body.textContent = r.reply;
+    el.appendChild(body);
+
+    const actions = document.createElement("div");
+    actions.className = "resp-actions";
+    actions.appendChild(actionButton("Approve", "ok", () => actReply(r.id, "approve")));
+    actions.appendChild(actionButton("Reject", "ghost warn", () => actReply(r.id, "reject")));
+    actions.appendChild(actionButton("Delete", "ghost danger", () => actReply(r.id, "delete")));
+    el.appendChild(actions);
+    return el;
+  }
+
+  async function actReply(id, type) {
+    if (
+      type === "delete" &&
+      !window.confirm("Permanently delete this reply? This cannot be undone.")
+    ) {
+      return;
+    }
+    const patch = {
+      approve: { approved: true, rejected: false },
+      reject: { rejected: true, approved: false },
+    }[type];
+    try {
+      let error;
+      if (type === "delete") {
+        ({ error } = await db.from("observation_replies").delete().eq("id", id));
+      } else {
+        ({ error } = await db
+          .from("observation_replies")
+          .update(patch)
+          .eq("id", id));
+      }
+      if (error) throw error;
+      loadReplies();
     } catch (e) {
       setAppStatus("Action failed: " + (e.message || e), true);
     }

@@ -200,7 +200,7 @@
     }
   }
 
-  /* ---------------- Published observations ---------------- */
+  /* ---------------- Published observations, likes & replies ---------------- */
 
   function esc(str) {
     const d = document.createElement("div");
@@ -208,35 +208,236 @@
     return d.innerHTML;
   }
 
+  function fmtDate(ts) {
+    try {
+      return new Date(ts).toLocaleDateString("en-IE", {
+        year: "numeric", month: "short", day: "numeric",
+      });
+    } catch (e) {
+      return ts;
+    }
+  }
+
+  // Stable per-device token for likes; liked state is remembered per device.
+  function voterToken() {
+    let t = localStorage.getItem("manifesto_voter");
+    if (!t) {
+      t =
+        window.crypto && crypto.randomUUID
+          ? crypto.randomUUID()
+          : "v-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+      localStorage.setItem("manifesto_voter", t);
+    }
+    return t;
+  }
+  const isLiked = (id) => localStorage.getItem("manifesto_liked_" + id) === "1";
+  function setLiked(id, on) {
+    if (on) localStorage.setItem("manifesto_liked_" + id, "1");
+    else localStorage.removeItem("manifesto_liked_" + id);
+  }
+
   async function loadObservations() {
     if (!listEl) return;
     try {
-      const { data, error } = await db.rpc("get_published_observations", { stmt: stmtId });
-      if (error) throw error;
-      const rows = data || [];
+      const [obsRes, likeRes, replyRes] = await Promise.all([
+        db.rpc("get_published_observations", { stmt: stmtId }),
+        db.rpc("get_like_counts", { stmt: stmtId }),
+        db.rpc("get_published_replies", { stmt: stmtId }),
+      ]);
+      if (obsRes.error) throw obsRes.error;
+      const rows = obsRes.data || [];
+
+      const likeMap = {};
+      (likeRes.data || []).forEach((l) => (likeMap[l.observation_id] = l.likes));
+      const replyMap = {};
+      (replyRes.data || []).forEach((rp) => {
+        (replyMap[rp.parent_id] = replyMap[rp.parent_id] || []).push(rp);
+      });
+
+      listEl.innerHTML = "";
       if (rows.length === 0) {
         listEl.innerHTML =
           '<p class="empty-state">No published observations yet.</p>';
         return;
       }
-      listEl.innerHTML = rows
-        .map((r) => {
-          const name = r.display_name ? esc(r.display_name) : "Anonymous";
-          const bits = [r.role, r.discipline, r.country].filter(Boolean).map(esc).join(", ");
-          const date = new Date(r.created_at).toLocaleDateString("en-IE", {
-            year: "numeric", month: "short", day: "numeric",
-          });
-          return (
-            '<article class="observation"><div class="meta"><span class="name">' +
-            name + "</span>" + (bits ? "<span>" + bits + "</span>" : "") +
-            "<span>" + date + "</span></div><p>" + esc(r.observation) + "</p></article>"
-          );
-        })
-        .join("");
+      rows.forEach((r) =>
+        listEl.appendChild(observationEl(r, likeMap[r.id] || 0, replyMap[r.id] || []))
+      );
     } catch (e) {
       console.error("Could not load observations", e);
       listEl.innerHTML =
         '<p class="empty-state">Observations could not be loaded right now.</p>';
+    }
+  }
+
+  function observationEl(r, likeCount, replies) {
+    const art = document.createElement("article");
+    art.className = "observation";
+
+    const meta = document.createElement("div");
+    meta.className = "meta";
+    const nm = document.createElement("span");
+    nm.className = "name";
+    nm.textContent = r.display_name || "Anonymous";
+    meta.appendChild(nm);
+    const bits = [r.role, r.discipline, r.country].filter(Boolean).join(", ");
+    if (bits) {
+      const b = document.createElement("span");
+      b.textContent = bits;
+      meta.appendChild(b);
+    }
+    const dt = document.createElement("span");
+    dt.textContent = fmtDate(r.created_at);
+    meta.appendChild(dt);
+    art.appendChild(meta);
+
+    const p = document.createElement("p");
+    p.textContent = r.observation;
+    art.appendChild(p);
+
+    // Actions: like + reply toggle
+    const actions = document.createElement("div");
+    actions.className = "obs-actions";
+
+    const likeBtn = document.createElement("button");
+    likeBtn.type = "button";
+    likeBtn.className = "like-btn" + (isLiked(r.id) ? " liked" : "");
+    likeBtn.setAttribute("aria-pressed", isLiked(r.id) ? "true" : "false");
+    likeBtn.setAttribute("aria-label", "Like this observation");
+    likeBtn.innerHTML =
+      '<span class="heart" aria-hidden="true">♥</span> <span class="like-count">' +
+      likeCount + "</span>";
+    likeBtn.addEventListener("click", () => toggleLike(r.id, likeBtn));
+    actions.appendChild(likeBtn);
+
+    const replyToggle = document.createElement("button");
+    replyToggle.type = "button";
+    replyToggle.className = "reply-toggle";
+    replyToggle.textContent = "Reply";
+    replyToggle.setAttribute("aria-expanded", "false");
+    actions.appendChild(replyToggle);
+    art.appendChild(actions);
+
+    // Existing replies
+    const repliesWrap = document.createElement("div");
+    repliesWrap.className = "replies";
+    replies.forEach((rp) => repliesWrap.appendChild(replyEl(rp)));
+    art.appendChild(repliesWrap);
+
+    // Reply form — hidden until "Reply" is clicked
+    const form = buildReplyForm(r.id);
+    replyToggle.addEventListener("click", () => {
+      const willShow = form.hidden;
+      form.hidden = !willShow;
+      replyToggle.setAttribute("aria-expanded", willShow ? "true" : "false");
+      if (willShow) {
+        const ta = form.querySelector("textarea");
+        if (ta) ta.focus();
+      }
+    });
+    art.appendChild(form);
+
+    return art;
+  }
+
+  function replyEl(rp) {
+    const el = document.createElement("div");
+    el.className = "reply";
+    const m = document.createElement("div");
+    m.className = "reply-meta";
+    const nm = document.createElement("span");
+    nm.className = "name";
+    nm.textContent = rp.display_name || "Anonymous";
+    m.appendChild(nm);
+    const dt = document.createElement("span");
+    dt.textContent = fmtDate(rp.created_at);
+    m.appendChild(dt);
+    el.appendChild(m);
+    const p = document.createElement("p");
+    p.textContent = rp.reply;
+    el.appendChild(p);
+    return el;
+  }
+
+  function buildReplyForm(parentId) {
+    const form = document.createElement("form");
+    form.className = "reply-form";
+    form.hidden = true;
+    form.innerHTML =
+      '<label class="rf-text">Your reply' +
+      '<textarea maxlength="1000" required placeholder="Add a thoughtful reply…"></textarea></label>' +
+      '<label class="rf-name">Name <span class="optional">(optional)</span>' +
+      '<input type="text" maxlength="60" autocomplete="name"></label>' +
+      '<div class="hp-field" aria-hidden="true"><label>Website' +
+      '<input type="text" class="hp" tabindex="-1" autocomplete="off"></label></div>' +
+      '<label class="rf-consent"><input type="checkbox" class="consent"> ' +
+      "I consent to my reply being published on this site after moderation.</label>" +
+      '<div class="rf-actions"><button type="submit" class="btn rf-submit">Submit reply</button>' +
+      '<span class="rf-status" role="status"></span></div>';
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = form.querySelector(".rf-status");
+      const setS = (msg, cls) => {
+        status.textContent = msg;
+        status.className = "rf-status" + (cls ? " " + cls : "");
+      };
+      // Honeypot: pretend success for bots.
+      if (form.querySelector(".hp").value) {
+        setS("Thank you.", "ok");
+        return;
+      }
+      const text = form.querySelector("textarea").value.trim();
+      const name = form.querySelector(".rf-name input").value.trim();
+      const consent = form.querySelector(".consent").checked;
+      if (!consent) return setS("Please tick the consent box to submit.", "err");
+      if (text.length < 3) return setS("Please write a longer reply.", "err");
+
+      const btn = form.querySelector(".rf-submit");
+      btn.disabled = true;
+      setS("Sending…");
+      try {
+        const { error } = await db.from("observation_replies").insert({
+          parent_id: parentId,
+          reply: text,
+          display_name: name || null,
+          consent: true,
+        });
+        if (error) throw error;
+        form.querySelector("textarea").value = "";
+        form.querySelector(".rf-name input").value = "";
+        form.querySelector(".consent").checked = false;
+        setS("Thank you — your reply will appear once reviewed.", "ok");
+      } catch (err) {
+        console.error(err);
+        setS("Something went wrong. Please try again.", "err");
+        btn.disabled = false;
+      }
+    });
+
+    return form;
+  }
+
+  async function toggleLike(id, btn) {
+    const countEl = btn.querySelector(".like-count");
+    btn.disabled = true;
+    try {
+      const { data, error } = await db.rpc("toggle_observation_like", {
+        obs: id,
+        voter: voterToken(),
+      });
+      if (error) throw error;
+      if (data) {
+        const liked = !!data.liked;
+        countEl.textContent = data.count;
+        btn.classList.toggle("liked", liked);
+        btn.setAttribute("aria-pressed", liked ? "true" : "false");
+        setLiked(id, liked);
+      }
+    } catch (e) {
+      console.error("Like failed", e);
+    } finally {
+      btn.disabled = false;
     }
   }
 

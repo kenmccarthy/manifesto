@@ -294,6 +294,98 @@ fieldset.scale-group legend { font-weight: 600; margin-bottom: 0.55rem; }
 .observation p { font-size: 0.98rem; }
 .empty-state { color: var(--ink-soft); font-style: italic; }
 
+/* --- Likes & replies ---------------------------------------------------------- */
+.obs-actions { display: flex; align-items: center; gap: 0.6rem; margin-top: 0.85rem; }
+.like-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink-soft);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+.like-btn .heart { line-height: 1; }
+.like-btn:hover { border-color: var(--accent); color: var(--accent-deep); }
+.like-btn.liked { color: #c0392b; border-color: #c0392b; }
+.reply-toggle {
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border: none;
+  background: none;
+  color: var(--accent-deep);
+  cursor: pointer;
+  border-radius: 4px;
+}
+.reply-toggle:hover { text-decoration: underline; }
+
+.replies { margin-top: 0.7rem; display: grid; gap: 0.6rem; }
+.replies:empty { display: none; }
+.reply {
+  border-left: 2px solid var(--line);
+  padding: 0.35rem 0 0.35rem 0.9rem;
+  margin-left: 0.5rem;
+}
+.reply-meta {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-bottom: 0.2rem;
+}
+.reply-meta .name { font-weight: 700; color: var(--ink); }
+.reply p { font-size: 0.92rem; }
+
+.reply-form {
+  position: relative;
+  margin-top: 0.85rem;
+  display: grid;
+  gap: 0.7rem;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.9rem 1rem;
+  max-width: 34rem;
+}
+.reply-form label { display: block; font-weight: 600; font-size: 0.9rem; }
+.reply-form .optional { font-weight: 400; color: var(--ink-soft); }
+.reply-form textarea,
+.reply-form input[type="text"] {
+  font: inherit;
+  width: 100%;
+  margin-top: 0.3rem;
+  padding: 0.55rem 0.7rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+}
+.reply-form textarea { min-height: 4.5rem; resize: vertical; }
+.reply-form textarea:focus,
+.reply-form input:focus { border-color: var(--accent); outline: none; }
+.reply-form .rf-consent {
+  font-weight: 400;
+  font-size: 0.85rem;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+.reply-form .rf-consent input { margin-top: 0.2rem; accent-color: var(--accent); }
+.reply-form .rf-actions { display: flex; align-items: center; gap: 0.8rem; }
+.reply-form .btn { justify-self: start; padding: 0.55rem 1.2rem; }
+.reply-form .rf-status { font-size: 0.85rem; }
+.reply-form .rf-status.ok { color: var(--accent-deep); font-weight: 600; }
+.reply-form .rf-status.err { color: #a13030; font-weight: 600; }
+.reply-form .hp-field { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
 /* --- Pager & progress ---------------------------------------------------------- */
 .pager {
   display: grid;
