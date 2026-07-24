@@ -4,6 +4,8 @@
 
 import { Progress } from "./progress.js";
 import { shapeSvg } from "./shapes.js";
+import { el, sectionHeader } from "./interactions.js";
+import { SECTION_META, RENDERERS } from "./sections/index.js";
 
 /* ---------------- Sections ---------------- */
 const SECTIONS = [
@@ -17,55 +19,6 @@ const SECTIONS = [
   { id: "practice", label: "Your Practice" },
   { id: "continues", label: "The Conversation Continues" },
 ];
-
-// Short section intros (drafts) so the shell reads as a real experience.
-const LEADS = {
-  before: {
-    kicker: "Before We Begin",
-    title: "Where are you starting from?",
-    lead: "A moment to notice where you stand before we explore the statements. There are no right answers here — only your honest starting point.",
-  },
-  manifesto: {
-    kicker: "The Manifesto",
-    title: "This is not a rulebook.",
-    lead: "The Manifesto is an invitation to think, question and act with intention — 30 statements across three interconnected themes.",
-  },
-  "theme-1": {
-    kicker: "Theme 1",
-    title: "Rethinking Teaching and Learning",
-    lead: "For generations, education was organised around scarce information. What changes when explanations, examples and answers become almost instant?",
-  },
-  "theme-2": {
-    kicker: "Theme 2",
-    title: "Responsibility, Ethics, and Power",
-    lead: "Capability does not remove responsibility. It redistributes it. Who chose the system? Whose data shaped it? Who is accountable?",
-  },
-  "theme-3": {
-    kicker: "Theme 3",
-    title: "Imagination, Humanity, and the Future",
-    lead: "The future is not something technology does to us. Technology changes what becomes possible; people still decide what becomes desirable.",
-  },
-  connecting: {
-    kicker: "Connecting the Manifesto",
-    title: "The statements don't live alone.",
-    lead: "The three themes are deliberately intertwined. Questions about teaching quickly become questions about power, judgement and value.",
-  },
-  action: {
-    kicker: "Manifesto in Action",
-    title: "Principles become meaningful when choices become difficult.",
-    lead: "Work through branching scenarios drawn from real institutional dilemmas — and see which statements shaped your decisions.",
-  },
-  practice: {
-    kicker: "Your Practice",
-    title: "From Manifesto to Practice",
-    lead: "Turn reflection into intention: the statements you want to carry forward, and one small change you could realistically make.",
-  },
-  continues: {
-    kicker: "The Conversation Continues",
-    title: "The end of the course — but not the Manifesto.",
-    lead: "The Manifesto is meant to be questioned, debated, adapted and developed. Here is what you have made your own.",
-  },
-};
 
 /* ---------------- DOM refs ---------------- */
 const navEl = document.getElementById("courseNav");
@@ -133,34 +86,39 @@ function updateProgressBar() {
 }
 
 /* ---------------- Section rendering ---------------- */
-function pager(id) {
+function pagerEl(id) {
   const idx = SECTIONS.findIndex((s) => s.id === id);
   const prev = SECTIONS[idx - 1];
   const next = SECTIONS[idx + 1];
-  let html = '<nav class="section-pager" aria-label="Between sections">';
-  html += prev
-    ? '<a class="pager-link prev" href="#/' + prev.id + '"><span class="dir">← Previous</span><span class="lbl">' + prev.label + "</span></a>"
-    : "<span></span>";
-  html += next
-    ? '<a class="pager-link next" href="#/' + next.id + '"><span class="dir">Next →</span><span class="lbl">' + next.label + "</span></a>"
-    : "<span></span>";
-  html += "</nav>";
-  return html;
+  const link = (s, dir, cls) =>
+    el("a", { class: "pager-link " + cls, href: "#/" + s.id }, [
+      el("span", { class: "dir", text: dir }),
+      el("span", { class: "lbl", text: s.label }),
+    ]);
+  return el("nav", { class: "section-pager", "aria-label": "Between sections" }, [
+    prev ? link(prev, "← Previous", "prev") : el("span"),
+    next ? link(next, "Next →", "next") : el("span"),
+  ]);
+}
+
+function placeholder(meta) {
+  const frag = document.createDocumentFragment();
+  frag.appendChild(sectionHeader(meta));
+  frag.appendChild(
+    el("div", { class: "section-placeholder" }, [
+      el("p", { text: "The activities for this section are being built." }),
+    ])
+  );
+  return frag;
 }
 
 function renderView(id) {
   const s = sectionById(id);
-  const meta = LEADS[id];
-  const article = document.createElement("article");
-  article.className = "section" + (s.theme ? " theme-" + s.theme : "");
-  article.innerHTML =
-    '<p class="section-kicker">' +
-    (s.theme ? shapeSvg(s.theme, "kicker-shape") : "") +
-    "<span>" + meta.kicker + "</span></p>" +
-    '<h1 class="section-title" id="sectionTitle" tabindex="-1">' + meta.title + "</h1>" +
-    '<p class="section-lead">' + meta.lead + "</p>" +
-    '<div class="section-placeholder"><p>The activities for this section are being built. This is the Phase&nbsp;1 shell — navigation, progress and the visual system.</p></div>' +
-    pager(id);
+  const meta = SECTION_META[id];
+  const article = el("article", { class: "section" + (s.theme ? " theme-" + s.theme : "") });
+  const renderer = RENDERERS[id];
+  article.appendChild(renderer ? renderer({ section: s, meta }) : placeholder(meta));
+  article.appendChild(pagerEl(id));
   viewEl.innerHTML = "";
   viewEl.appendChild(article);
 }
@@ -171,7 +129,7 @@ function showSection(id) {
   Progress.markVisited(id);
   refreshNavState(id);
   updateProgressBar();
-  document.title = LEADS[id].title + " · Manifesto Course";
+  document.title = SECTION_META[id].title + " · Manifesto Course";
   closeNav();
   // Move focus to the section title for screen-reader + keyboard users.
   const title = document.getElementById("sectionTitle");
