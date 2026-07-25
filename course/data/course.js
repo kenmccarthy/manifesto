@@ -292,6 +292,50 @@ export const THEME2 = {
   ],
 };
 
+/* "Your Practice" section content (DRAFT).
+   The payoff of the course: choose five statements to carry forward, name the
+   one that anchors your practice, and commit to one realistic change. */
+export const PRACTICE = {
+  opening: {
+    line: "A manifesto you disagree with changes nothing. A manifesto you make your own changes how you teach.",
+    body: "You have questioned thirty provocations. Now the course asks something harder than agreement: commitment. Not to all thirty — to the few that speak to your context, your discipline, your students. This is where reflection becomes intention.",
+  },
+
+  choose: {
+    title: "Choose your five",
+    intro:
+      "From the thirty, select up to five statements you want to carry into your own practice. Not the five you admire most in the abstract — the five you would actually act on. Choosing is the point: leaving twenty-five behind is what makes the five mean something.",
+    limit: 5,
+    seedPrompt: "you marked earlier while exploring",
+    empty: "Nothing chosen yet. Pick the ones you'd defend in a staff meeting.",
+    counter: (n, limit) =>
+      n === 0
+        ? "Choose up to " + limit + "."
+        : n + " of " + limit + " chosen" + (n === limit ? " — your manifesto is full." : "."),
+    full: "Your manifesto holds five — remove one to make room for another.",
+  },
+
+  anchor: {
+    title: "Name your anchor",
+    intro:
+      "Of your chosen statements, which one matters most — the principle you would keep if you could keep only one? This is your anchor: the idea you return to when a decision is genuinely hard.",
+    prompt: "Your anchor statement",
+    empty: "Choose your five above first, then return here to pick the one that matters most.",
+    reveal: "This is the sentence to pin above your desk. Everything else is commentary on it.",
+  },
+
+  change: {
+    title: "One small change",
+    intro:
+      "Principles are easy to hold and hard to enact. So make it concrete and make it small. Name one change you could realistically make in the next four weeks — a single assessment redesigned, one conversation with students, one policy questioned. Small and real beats grand and hypothetical.",
+    prompt: "In the next four weeks, I will…",
+    placeholder: "One specific, achievable change — a sentence is plenty.",
+  },
+
+  closing:
+    "That is the work. Five statements, one anchor, one change. In the final section you'll see everything you've made — and revisit the feeling you started with.",
+};
+
 /* Theme 3 activity content (DRAFT). */
 export const THEME3 = {
   opening: {
