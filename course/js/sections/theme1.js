@@ -30,12 +30,12 @@ export default function renderTheme1({ meta }) {
     ])
   );
 
-  /* Scarcity → abundance sorter */
+  /* Scarcity, abundance, or both? sorter */
   const sortConcl = el("p", { class: "reveal", hidden: true, text: THEME1.sort.conclusion });
   frag.appendChild(
     activity(
-      "Scarcity → abundance",
-      "When information was scarce, some things mattered a great deal. As it becomes abundant, the emphasis shifts. Place each one.",
+      THEME1.sort.heading,
+      THEME1.sort.intro,
       [sorter({ buckets: THEME1.sort.buckets, items: THEME1.sort.items, onComplete: () => (sortConcl.hidden = false) }), sortConcl]
     )
   );

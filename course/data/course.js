@@ -99,20 +99,24 @@ export const THEME1 = {
   spotlights: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
 
   sort: {
+    heading: "Scarcity, abundance, or both?",
+    intro:
+      "Some things mattered most when information was scarce. Others matter more now that it is abundant. And some matter in either world. Place each one — there is often a case for “both”.",
     buckets: [
-      { id: "then", label: "Then · scarcity" },
-      { id: "now", label: "Now · abundance" },
+      { id: "scarcity", label: "More strongly associated with scarcity" },
+      { id: "abundance", label: "More important in abundance" },
+      { id: "both", label: "Essential in both" },
     ],
     items: [
-      { label: "Memorising information", answer: "then", feedback: "In scarcity, holding facts in your head was valuable because retrieving them was hard." },
-      { label: "Locating trustworthy sources", answer: "then", feedback: "Finding reliable material was itself a skill when it was scarce and scattered." },
-      { label: "Reproducing what experts knew", answer: "then", feedback: "Faithful reproduction was a reasonable proxy for learning when knowledge was hard to reach." },
-      { label: "The instructor as primary source", answer: "then", feedback: "When knowledge was scarce, the lecturer was often the main route to it." },
-      { label: "Evaluating information", answer: "now", feedback: "When content is abundant, judging quality and reliability becomes the core skill." },
-      { label: "Framing good questions", answer: "now", feedback: "Abundance rewards those who can ask precisely, not just retrieve." },
-      { label: "Verifying outputs", answer: "now", feedback: "Fluent generated text still has to be checked against reality." },
-      { label: "Connecting ideas", answer: "now", feedback: "Value shifts to synthesis — linking things the tools present in isolation." },
-      { label: "The instructor as designer, challenger and guide", answer: "now", feedback: "The educator's role moves from delivering content to designing experiences and provoking thought." },
+      { label: "Reproducing what experts knew", answer: "scarcity", feedback: "Reproduction once served as a stronger proxy for learning when authoritative information was harder to access. It may still matter, but it tells us less on its own in an environment of abundant generated content." },
+      { label: "Instructor as primary source of information", answer: "scarcity", feedback: "Lecturers remain sources of expertise, but they are no longer the only or necessarily the fastest route to information." },
+      { label: "Verifying generated outputs", answer: "abundance", feedback: "Generated content can be immediate and persuasive. Verification becomes increasingly visible as a learning practice." },
+      { label: "Judging whether an answer is trustworthy", answer: "abundance", feedback: "Abundance shifts attention from simply obtaining information towards judging provenance, quality and reliability." },
+      { label: "Framing good questions", answer: "both", feedback: "Good questions were never unimportant. GenAI makes their value more visible because the framing of the question strongly shapes the response." },
+      { label: "Locating trustworthy sources", answer: "both", feedback: "Access has changed, but provenance has not stopped mattering. In an environment containing synthetic and generated information, source judgement may matter more than ever." },
+      { label: "Connecting ideas", answer: "both", feedback: "Synthesis has always been central to higher learning. Abundance changes the volume of available material, not the need to make meaningful connections." },
+      { label: "Foundational disciplinary knowledge", answer: "both", feedback: "Judgement requires something against which to judge. External tools do not remove the need for disciplinary understanding." },
+      { label: "Instructor as designer, challenger and guide", answer: "both", feedback: "These roles are not new, but they become more visible when information delivery is no longer the educator's primary source of value." },
     ],
     conclusion:
       "This does not mean knowledge no longer matters. Quite the opposite. Judgement depends upon having something against which to judge.",
@@ -148,11 +152,11 @@ export const THEME1 = {
       ],
     },
     {
-      prompt: "Complete the statement: “Detection chases the past; thoughtful design shapes the ______.”",
+      prompt: "A lecturer has redesigned an assignment so students submit an AI-assisted draft, annotate where they accepted or rejected suggestions, and explain three important decisions they made. Which Manifesto idea is most clearly being put into practice?",
       options: [
-        { label: "future", kind: "corrective", correct: true, feedback: "Yes — the contrast is between reacting with the tools of the past and designing for what's ahead." },
-        { label: "answer", kind: "interpretive", feedback: "A tempting fit, but the statement is about design shaping the future, not the answer." },
-        { label: "syllabus", kind: "interpretive", feedback: "Not quite — the word is 'future'; the point is forward-looking design." },
+        { label: "Detection chases the past; thoughtful design shapes the future.", kind: "corrective", correct: true, feedback: "The assessment is no longer trying primarily to determine whether AI was used. It is redesigning the task so that student reasoning and judgement become visible (Statement 4)." },
+        { label: "Curiosity surpasses completion.", kind: "interpretive", feedback: "Curiosity is in the room, but the sharper move here is the redesign itself: the task now surfaces the student's reasoning rather than trying to detect a tool (Statement 4)." },
+        { label: "Students are collaborators, not spectators.", kind: "interpretive", feedback: "There is a collaborative flavour, but what is most clearly modelled is assessment designed to make the student's thinking visible — Statement 4." },
       ],
     },
     {
@@ -191,7 +195,7 @@ export const THEME2 = {
 
   responsibility: {
     scenario:
-      "A university introduces an AI-powered system that gives students personalised academic advice. If that advice turns out to be wrong, where should responsibility sit? Distribute 100% across those involved — to give more to one, take it from another.",
+      "A university introduces an AI-powered system that gives students personalised academic advice. If that advice causes harm or leads a student badly astray, where should responsibility sit? Distribute 100% across those involved — to give more to one, take it from another.",
     items: [
       { id: "student", label: "Student" },
       { id: "lecturer", label: "Lecturer" },
@@ -199,36 +203,98 @@ export const THEME2 = {
       { id: "university", label: "University" },
       { id: "provider", label: "Technology provider" },
     ],
+    highestLabel: "You placed the greatest responsibility with the {x}.",
+    highestTie: "You spread responsibility fairly evenly, without a single clear holder.",
+    followPrompt:
+      "Does the organisation or person with the greatest responsibility also hold the greatest influence over the system?",
+    followOptions: [
+      { label: "Yes", kind: "reflective", feedback: "Often they do — the body that selects and deploys the system usually holds real influence over it. Statement 14 asks us to keep testing whether that alignment actually holds." },
+      { label: "No", kind: "reflective", feedback: "That gap is exactly what Statement 14 is concerned with: the people answering for a system are not always the ones shaping it." },
+      { label: "Not necessarily", kind: "reflective", feedback: "A careful reading. Influence and accountability often travel together, but not always — and where they diverge, responsibility can fall through the gaps." },
+    ],
     reveal:
-      "There is no official correct distribution — and that is the point. The harder question is what happens when influence and accountability come apart: when the system shaping the advice sits far from whoever has to answer for it.",
+      "There may be no perfect distribution. The harder question is what happens when influence and accountability come apart — when the system shaping the advice sits far from whoever has to answer for it.",
     statement: 14,
+    reflection:
+      "What happens when the people carrying the consequences have less influence than the people designing or selecting the system?",
   },
 
   spotlights: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
 
   automate: {
     intro:
-      "For each task, choose how much you would hand to a machine. There is no single correct answer — the point is to notice where human judgement still needs to sit, and why.",
+      "For each task, choose how much you would hand to a machine. Several responses may be defensible depending on context — the point is to notice where human judgement still needs to sit, and why.",
     buckets: [
       { id: "automate", label: "Automate" },
       { id: "augment", label: "Augment" },
       { id: "human", label: "Keep human" },
     ],
     items: [
-      { label: "Generating formative quiz questions" },
-      { label: "Giving initial feedback on grammar" },
-      { label: "Deciding whether a student has met a learning outcome" },
-      { label: "Identifying students considered ‘at risk’" },
-      { label: "Summarising meeting notes" },
-      { label: "Suggesting alternative explanations" },
-      { label: "Determining a final grade" },
-      { label: "Responding to a distressed student" },
+      {
+        label: "Generating formative quiz questions",
+        feedbackByBucket: {
+          automate: "Low-stakes and repetitive, so a reasonable candidate for automation — provided you review the questions for accuracy and alignment before students see them. What would you check before trusting a generated set?",
+          augment: "Drafting questions you then curate can save time while keeping quality in your hands. Which questions would you still want to write yourself, and why?",
+          human: "Writing every question yourself guarantees fit, but at a real cost in time. Is there a subset here you'd be comfortable letting a tool draft for you to check?",
+        },
+      },
+      {
+        label: "Giving initial feedback on grammar",
+        feedbackByBucket: {
+          automate: "Grammar is among the more automatable feedback, but tone and dialect vary, and a tool can 'correct' voice as well as error. Who checks that the feedback respects how the student writes?",
+          augment: "A tool can flag surface issues so your attention goes to argument and ideas. What would you want the student to learn from a correction, rather than simply receive?",
+          human: "Keeping this human is thorough but time-consuming for something a tool handles reasonably well. Would automating the surface layer free you for the feedback that matters more?",
+        },
+      },
+      {
+        label: "Deciding whether a student has met a learning outcome",
+        feedbackByBucket: {
+          automate: "This is a judgement with consequences for the student, and a tool cannot hold the context or fairness it needs (Statement 12). What would have to be true before you'd trust a machine with a verdict like this?",
+          augment: "AI might surface evidence or patterns, but the determination stays yours. What would you refuse to let the tool decide, even as it informs you?",
+          human: "Keeping this human protects professional judgement and accountability. Is there a supporting role a tool could play without touching the decision itself?",
+        },
+      },
+      {
+        label: "Identifying students considered ‘at risk’",
+        feedbackByBucket: {
+          automate: "Automated flags can reach students earlier, but the data carries histories and gaps, and errors fall unevenly across groups (Statements 16, 23). Who notices when the system is wrong, and about whom?",
+          augment: "As a prompt for a human to look closer, a flag can help — as long as staff question it rather than defer to it. What stops a flag from quietly becoming a decision?",
+          human: "Relying on human judgement avoids automated bias, but may miss students a wider net would catch. What safeguards would let you trust a tool to help here?",
+        },
+      },
+      {
+        label: "Summarising meeting notes",
+        feedbackByBucket: {
+          automate: "A good candidate for automation where the stakes are relatively low, provided someone checks what has been omitted or misrepresented. Who remains responsible for the official record?",
+          augment: "Letting a tool draft the summary for you to correct is often the pragmatic middle — quick, but with a human owning the final version. Which errors would you specifically watch for?",
+          human: "Keeping this entirely human preserves contextual judgement, but it also consumes time that a tool may genuinely save. Is this a place where retaining full human effort adds enough value to justify the cost?",
+        },
+      },
+      {
+        label: "Suggesting alternative explanations",
+        feedbackByBucket: {
+          automate: "Generating alternatives is a genuine strength of these tools, though not every explanation will be accurate or pitched right for your students. How would you check one before passing it on?",
+          augment: "Used as a source of options you then select and adapt, this can enrich your teaching. Which explanation fits this cohort — and who is best placed to judge that?",
+          human: "Your own explanations carry your knowledge of the students, but a tool can widen the range you consider. Would seeing alternatives sharpen your own, even if you don't use them?",
+        },
+      },
+      {
+        label: "Determining a final grade",
+        feedbackByBucket: {
+          automate: "A final grade is high-stakes, accountable and often contested — automating it hands a consequential judgement to a system that cannot answer for it (Statements 12, 14). What would ever make this defensible?",
+          augment: "A tool might assemble marks or flag inconsistencies, but the grade remains a human decision. Where exactly would you draw the line between assistance and the decision itself?",
+          human: "Keeping the grade human protects fairness and accountability. Could a tool still reduce the administrative load around grading without shaping the grade?",
+        },
+      },
+      {
+        label: "Responding to a distressed student",
+        feedbackByBucket: {
+          automate: "Speed and availability may help, but distress can involve ambiguity, vulnerability and risk that a system may not recognise. What must trigger immediate human involvement?",
+          augment: "AI might help surface resources or draft an initial response, but the relationship and responsibility remain human. Which parts of this interaction would you refuse to delegate?",
+          human: "This protects relationship and professional judgement. Could automation still support something around the interaction without replacing the interaction itself?",
+        },
+      },
     ],
-    bucketFeedback: {
-      automate: "Automating this can save real time — but what checks would catch it going wrong, and who would notice if they didn't?",
-      augment: "As an aid this can sharpen your work — but what must you still decide yourself, and how do you avoid quietly deferring to it?",
-      human: "Keeping this human has a cost in time and effort. What would have to be true before you'd trust more of it to a tool?",
-    },
   },
 
   transparency: {

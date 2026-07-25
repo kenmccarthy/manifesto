@@ -29,20 +29,50 @@ export default function renderTheme2({ meta }) {
     ])
   );
 
-  /* Who holds responsibility? — allocator */
+  /* Who holds responsibility? — allocator + influence follow-up + Statement 14 */
   const r = THEME2.responsibility;
-  const reveal = el("div", { class: "reveal-block", hidden: Progress.getActivity("whoHoldsResponsibility") == null });
-  reveal.appendChild(el("p", { class: "reveal", text: r.reveal }));
-  reveal.appendChild(el("div", { class: "card-row" }, [statementCard(r.statement, { link: true })]));
+  const idToLabel = Object.fromEntries(r.items.map((i) => [i.id, i.label]));
+  const savedAlloc = Progress.getActivity("whoHoldsResponsibility");
+
+  const highestEl = el("p", { class: "reveal alloc-highest", role: "status", "aria-live": "polite", hidden: savedAlloc == null });
+
+  /* Statement 14 reveal + reflection, shown once the follow-up is answered. */
+  const revealBlock = el("div", { class: "reveal-block", hidden: Progress.getActivity("responsibilityInfluence") == null }, [
+    el("p", { class: "reveal", text: r.reveal }),
+    el("div", { class: "card-row" }, [statementCard(r.statement, { link: true })]),
+    el("p", { class: "scenario-conclusion", text: r.reflection }),
+  ]);
+  const followMcq = multipleChoice(
+    { prompt: r.followPrompt, options: r.followOptions, saveKey: "responsibilityInfluence" },
+    { onAnswer: () => (revealBlock.hidden = false) }
+  );
+  const followHost = el("div", { class: "reveal-block", hidden: savedAlloc == null }, [followMcq, revealBlock]);
+
+  function highest(values) {
+    let best = null, bestV = -1, tie = false;
+    for (const [k, v] of Object.entries(values)) {
+      if (v > bestV) { bestV = v; best = k; tie = false; }
+      else if (v === bestV) tie = true;
+    }
+    return { best, tie, bestV };
+  }
+  function showHighest(values) {
+    const { best, tie, bestV } = highest(values);
+    highestEl.textContent = (tie || bestV <= 0) ? r.highestTie : r.highestLabel.replace("{x}", idToLabel[best]);
+  }
+  if (savedAlloc) showHighest(savedAlloc);
+
   const alloc = allocator({
     items: r.items,
-    start: Progress.getActivity("whoHoldsResponsibility") || null,
+    start: savedAlloc || null,
     onChange: (values) => {
       Progress.saveActivity("whoHoldsResponsibility", values);
-      reveal.hidden = false;
+      showHighest(values);
+      highestEl.hidden = false;
+      followHost.hidden = false;
     },
   });
-  frag.appendChild(activity("Who holds responsibility?", r.scenario, [alloc, reveal]));
+  frag.appendChild(activity("Who holds responsibility?", r.scenario, [alloc, highestEl, followHost]));
 
   /* Statement spotlights */
   const keptMsg = el("p", { class: "kept-counter", role: "status", "aria-live": "polite" });
@@ -54,11 +84,11 @@ export default function renderTheme2({ meta }) {
     activity("Statement spotlights", "Read the short take on each, then open “Explore further” for the fuller interpretation. Keep the ones you want to carry forward.", [keptMsg, spots])
   );
 
-  /* Automate or augment? — sorter */
+  /* Automate, augment or keep human? — sorter with task-specific feedback */
   const a = THEME2.automate;
   frag.appendChild(
-    activity("Automate or augment?", a.intro, [
-      sorter({ buckets: a.buckets, items: a.items, bucketFeedback: a.bucketFeedback }),
+    activity("Automate, augment or keep human?", a.intro, [
+      sorter({ buckets: a.buckets, items: a.items }),
     ])
   );
 
