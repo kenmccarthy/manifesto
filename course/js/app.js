@@ -4,7 +4,7 @@
 
 import { Progress } from "./progress.js";
 import { shapeSvg } from "./shapes.js";
-import { el, sectionHeader } from "./interactions.js";
+import { el, sectionHeader, modal } from "./interactions.js";
 import { SECTION_META, RENDERERS } from "./sections/index.js";
 
 /* ---------------- Sections ---------------- */
@@ -57,6 +57,12 @@ function buildNav() {
 
   const footer = document.createElement("div");
   footer.className = "nav-footer";
+  const reflections = document.createElement("button");
+  reflections.className = "c-btn ghost small";
+  reflections.type = "button";
+  reflections.textContent = "My Reflections";
+  reflections.addEventListener("click", openReflections);
+  footer.appendChild(reflections);
   const reset = document.createElement("button");
   reset.className = "c-btn ghost small";
   reset.type = "button";
@@ -64,6 +70,109 @@ function buildNav() {
   reset.addEventListener("click", resetProgress);
   footer.appendChild(reset);
   navEl.appendChild(footer);
+}
+
+/* ---------------- My Reflections notebook ---------------- */
+/* Aggregates the learner's written responses from across the course. Each
+   source is either a reflections-notebook entry, a top-level state field, or
+   the final-thinking note. Editable and deletable in place. */
+const REFLECTION_FIELDS = [
+  { id: "chooseProvocationWhy", type: "reflection", label: "On the provocation that most challenges conventional teaching" },
+  { id: "whatMustRemainHuman", type: "reflection", label: "On what must remain deeply human" },
+  { id: "constraintCreates", type: "reflection", label: "Your constrained learning-activity design" },
+  { id: "statementTension", type: "reflection", label: "On two statements that pull against each other" },
+  { id: "stopAction", type: "field", label: "What you'll stop" },
+  { id: "startAction", type: "field", label: "What you'll start" },
+  { id: "continueAction", type: "field", label: "What you'll continue protecting" },
+  { id: "oneSmallChange", type: "reflection", label: "Your one small change" },
+  { id: "finalNote", type: "finalNote", label: "What you're leaving with that you weren't expecting" },
+  { id: "statement31", type: "field", label: "Your Statement 31" },
+];
+
+function getReflection(f) {
+  const s = Progress.get();
+  if (f.type === "reflection") return (s.reflections || {})[f.id] || "";
+  if (f.type === "field") return s[f.id] || "";
+  if (f.type === "finalNote") return (s.finalThinking || {}).note || "";
+  return "";
+}
+
+function setReflection(f, val) {
+  const v = (val || "").trim();
+  if (f.type === "reflection") Progress.saveReflection(f.id, v);
+  else if (f.type === "field") Progress.update({ [f.id]: v || null });
+  else if (f.type === "finalNote") {
+    const ft = Progress.get().finalThinking || {};
+    Progress.update({ finalThinking: Object.assign({}, ft, { note: v || null }) });
+  }
+}
+
+function reflectionsText() {
+  return REFLECTION_FIELDS
+    .filter((f) => getReflection(f).trim())
+    .map((f) => f.label + "\n" + getReflection(f))
+    .join("\n\n");
+}
+
+function reflectionsBody() {
+  const wrap = el("div", { class: "reflections-panel" });
+  const list = el("div", { class: "reflections-list" });
+  const emptyMsg = el("p", { class: "reflections-empty", text: "You haven't written any reflections yet. As you work through the course, your written responses collect here." });
+
+  function refreshEmpty() {
+    const any = list.querySelector(".reflection-entry");
+    emptyMsg.hidden = !!any;
+  }
+
+  REFLECTION_FIELDS.filter((f) => getReflection(f).trim()).forEach((f) => {
+    const entry = el("div", { class: "reflection-entry" });
+    const taId = "refl-" + f.id;
+    const ta = el("textarea", { id: taId, class: "reflect-ta", maxlength: 1000 });
+    ta.value = getReflection(f);
+    let t;
+    ta.addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => setReflection(f, ta.value), 400); });
+    const del = el("button", { type: "button", class: "c-btn ghost small", text: "Delete" });
+    del.addEventListener("click", () => { setReflection(f, ""); entry.remove(); refreshEmpty(); });
+    entry.append(
+      el("label", { class: "reflection-label", for: taId, text: f.label }),
+      ta,
+      el("div", { class: "reflection-actions" }, [del])
+    );
+    list.appendChild(entry);
+  });
+
+  const status = el("span", { class: "reflections-status", role: "status", "aria-live": "polite" });
+  const copyAll = el("button", { type: "button", class: "c-btn small" }, "Copy all");
+  copyAll.addEventListener("click", async () => {
+    const text = reflectionsText();
+    if (!text) { status.textContent = "Nothing to copy yet."; return; }
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
+      else throw new Error("no clipboard");
+      status.textContent = "Copied to this device's clipboard";
+    } catch (e) {
+      status.textContent = "Couldn't copy automatically — select the text to copy it.";
+    }
+  });
+
+  wrap.append(
+    emptyMsg,
+    list,
+    el("div", { class: "reflections-foot" }, [copyAll, status]),
+    el("p", { class: "reflections-note", text: "Your reflections are stored only in this browser and are not submitted." })
+  );
+  refreshEmpty();
+  return wrap;
+}
+
+function openReflections() {
+  const existing = document.getElementById("reflectionsModal");
+  if (existing) existing.remove();
+  closeNav();
+  const m = modal({ title: "My Reflections", body: reflectionsBody() });
+  m.element.id = "reflectionsModal";
+  document.body.appendChild(m.element);
+  m.open();
 }
 
 function refreshNavState(activeId) {

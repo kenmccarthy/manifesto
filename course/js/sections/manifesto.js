@@ -101,28 +101,53 @@ function exploreLandscape() {
 
 function findTheme() {
   const wrap = el("section", { class: "activity" });
-  wrap.appendChild(el("h2", { class: "activity-title", text: "Knowledge check: find the theme" }));
+  wrap.appendChild(el("h2", { class: "activity-title", text: "Find the theme" }));
   wrap.appendChild(
     el("p", {
       class: "activity-intro",
-      text: "Six statements, one at a time. Which theme does each belong to? You'll get an explanation either way — and you can retry as often as you like.",
+      text: "Six statements — two from each theme — one at a time. Which theme does each belong to? This is for orientation, not a score: you'll get an explanation either way, and you can try another six whenever you like.",
     })
   );
 
-  const picks = [...MANIFESTO].sort(() => Math.random() - 0.5).slice(0, 6);
-  const questions = picks.map((s) => ({
-    prompt: "“" + s.statement + "”",
-    options: [1, 2, 3].map((t) => ({
-      label: THEMES[t].name,
-      kind: t === s.theme ? "corrective" : "interpretive",
-      correct: t === s.theme,
-      feedback:
-        t === s.theme
-          ? "Yes — " + THEME_REASON[s.number]
-          : "Not quite. This one sits in " + THEMES[s.theme].name + ", because " + THEME_REASON[s.number],
-    })),
-  }));
-  wrap.appendChild(knowledgeCheck(questions, { id: "kc-find-theme", title: "Find the theme" }));
+  /* Two statements from each theme, in a shuffled order. */
+  function pickSix() {
+    const picks = [];
+    [1, 2, 3].forEach((t) => {
+      const pool = MANIFESTO.filter((s) => s.theme === t).sort(() => Math.random() - 0.5).slice(0, 2);
+      picks.push(...pool);
+    });
+    return picks.sort(() => Math.random() - 0.5);
+  }
+
+  const host = el("div", { class: "kcheck-host-outer" });
+  function build() {
+    host.innerHTML = "";
+    const questions = pickSix().map((s) => ({
+      prompt: "“" + s.statement + "”",
+      options: [1, 2, 3].map((t) => ({
+        label: THEMES[t].name,
+        kind: t === s.theme ? "corrective" : "interpretive",
+        correct: t === s.theme,
+        feedback:
+          t === s.theme
+            ? "Yes — " + THEME_REASON[s.number]
+            : "Not quite. This one sits in " + THEMES[s.theme].name + ", because " + THEME_REASON[s.number],
+      })),
+    }));
+    host.appendChild(
+      knowledgeCheck(questions, {
+        id: "kc-find-theme",
+        title: "Find the theme",
+        doneText: "That's six. This was orientation, not a score — try another six if you'd like more practice.",
+      })
+    );
+  }
+  build();
+
+  const more = el("button", { type: "button", class: "c-btn ghost small" }, "Try six more");
+  more.addEventListener("click", build);
+
+  wrap.append(host, el("div", { class: "find-theme-more" }, [more]));
   return wrap;
 }
 

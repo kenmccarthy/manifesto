@@ -162,6 +162,9 @@ a { color: var(--accent-deep); }
 .outcomes[open] summary::before { content: "－ "; }
 .outcomes ul { margin: 0 0 1rem 1.2rem; }
 .outcomes li { margin: 0.35rem 0; }
+.outcomes-subhead { font-family: var(--font-display); font-size: 1.05rem; margin: 0.4rem 0 0.6rem; }
+.outcomes-formal { margin: 0 0 1rem 1.2rem; }
+.outcomes-formal li { margin: 0.4rem 0; }
 
 .welcome-top, .welcome-foot {
   padding: 1.2rem 1.5rem;
@@ -478,6 +481,17 @@ a { color: var(--accent-deep); }
 .kept-counter { min-height: 1.2rem; margin-bottom: 0.7rem; font-size: 0.9rem; color: var(--ink-soft); }
 .kept-counter:empty { min-height: 0; margin: 0; }
 
+/* --- My Reflections notebook ---------------------------------------------- */
+.find-theme-more { margin-top: 1rem; }
+.reflections-list { display: grid; gap: 1.1rem; }
+.reflection-entry { display: grid; gap: 0.4rem; }
+.reflection-label { font-weight: 600; font-size: 0.95rem; }
+.reflection-actions { display: flex; justify-content: flex-end; }
+.reflections-empty { color: var(--ink-soft); font-style: italic; }
+.reflections-foot { display: flex; align-items: center; gap: 0.8rem; margin-top: 1.2rem; }
+.reflections-status { font-size: 0.9rem; color: var(--accent-deep); }
+.reflections-note { margin-top: 0.8rem; font-size: 0.85rem; color: var(--ink-soft); }
+
 /* --- Where statements pull apart (tension) -------------------------------- */
 .tension-pickers { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
 .tension-field { display: flex; flex-direction: column; gap: 0.3rem; }
@@ -771,18 +785,43 @@ a { color: var(--accent-deep); }
 .recap-notebook { display: grid; gap: 1rem; }
 .notebook-entry { display: grid; gap: 0.4rem; }
 .notebook-q { margin: 0; font-weight: 600; font-size: 0.95rem; }
-.takeaway-actions { margin-top: 0.4rem; }
+.recap-value { line-height: 1.55; }
+.sentiment-start { font-size: 0.9rem; color: var(--ink-soft); }
+.takeaway-actions { margin-top: 0.4rem; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.takeaway-status { display: inline-block; margin-top: 0.5rem; font-size: 0.9rem; color: var(--accent-deep); min-height: 1.1rem; }
 .takeaway-hint { margin-top: 0.6rem; font-size: 0.85rem; color: var(--ink-soft); }
+.activity-subtitle { font-family: var(--font-display); font-size: 1.15rem; margin-bottom: 0.6rem; }
+.final-thinking { margin-top: 1.1rem; }
+
+/* --- Statement 31 --------------------------------------------------------- */
+.statement31 { border-top: 2px solid var(--accent); }
+.s31-unwritten { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 700; }
+.s31-copy { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.5; margin: 0.2rem 0; }
+.s31-guidance { font-size: 0.85rem; color: var(--ink-soft); margin-top: 0.4rem; }
+.s31-note { font-family: var(--font-display); font-size: 1.1rem; margin-top: 0.8rem; color: var(--accent-deep); }
+
+/* --- Action Plan (exportable summary) ------------------------------------- */
+.action-plan { margin-top: 1.4rem; background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.3rem 1.4rem; }
+.ap-title { font-family: var(--font-display); font-size: 1.4rem; margin-bottom: 1rem; }
+.ap-block { margin-bottom: 1rem; }
+.ap-label { font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 700; margin-bottom: 0.3rem; }
+.ap-value { line-height: 1.55; }
+.ap-list { margin: 0; padding-left: 1.2rem; }
+.ap-list li { margin: 0.15rem 0; line-height: 1.45; }
+.ap-footer { margin-top: 1.2rem; padding-top: 0.9rem; border-top: 1px solid var(--line); font-size: 0.85rem; color: var(--ink-soft); }
+.ap-footer p { margin: 0.1rem 0; }
+
 .course-coda { margin-top: 1.4rem; padding-top: 1.6rem; border-top: 1px solid var(--line); text-align: center; }
 .course-coda .coda-line { font-size: 1.5rem; }
 .course-coda .c-btn { margin-top: 0.6rem; }
 
 @media print {
+  /* Print only the Action Plan — hide chrome and every interactive block. */
   .course-header, .course-nav, .nav-overlay, .progress-rail, .section-pager,
   .section-placeholder, .nav-toggle,
-  .takeaway-actions, .takeaway-hint, .course-coda .c-btn { display: none !important; }
+  .section-head, .activity { display: none !important; }
   .course-app { display: block; }
   body { background: #fff; }
-  .recap-quote { border-left-color: #555; background: none; }
-  .statement-card, .recap-quote { break-inside: avoid; }
+  .action-plan { display: block !important; border: none; padding: 0; margin: 0; }
+  .action-plan, .ap-block { break-inside: avoid; }
 }

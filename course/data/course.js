@@ -786,6 +786,20 @@ export const CONTINUES = {
     },
   },
 
+  startReadout: (label) => "You started here: " + label + ".",
+
+  finalThinking: {
+    title: "What happened to your thinking?",
+    options: [
+      { id: "changed", label: "My position changed" },
+      { id: "clearer", label: "My position became clearer" },
+      { id: "complicated", label: "My position became more complicated" },
+      { id: "all", label: "A bit of all three" },
+    ],
+    prompt: "What are you leaving with that you were not expecting?",
+    placeholder: "Optional — a thought, a question, a doubt you didn't arrive with…",
+  },
+
   recap: {
     title: "What you've made your own",
     intro:
@@ -796,22 +810,83 @@ export const CONTINUES = {
     fiveLabel: "The statements you're carrying forward",
     changeLabel: "The change you'll make in the next four weeks",
     changeEmpty: "You haven't named a change yet — Your Practice is where to set one.",
+    stopLabel: "What you'll stop",
+    startLabel: "What you'll start",
+    continueLabel: "What you'll continue protecting",
+    stakeholdersLabel: "Who needs to be part of it",
     notebookLabel: "From your reflections",
     /* Labels for the freeform notebook entries, keyed by reflection id. */
     notebook: {
       chooseProvocationWhy: "On the provocation that most challenges conventional teaching",
       whatMustRemainHuman: "On what must remain deeply human",
       constraintCreates: "Your constrained learning-activity design",
+      statementTension: "On two statements that pull against each other",
       oneSmallChange: "The change you'll make",
     },
+  },
+
+  statement31: {
+    unwritten: "One statement remains unwritten.",
+    title: "31. What's missing?",
+    copy: [
+      "You've encountered thirty provocations.",
+      "Add something they do not say.",
+      "Challenge something they assume.",
+      "Or take one of their ideas somewhere new.",
+    ],
+    label: "Your thirty-first statement",
+    guidance: "Aim for one sentence.",
+    placeholder: "31. …",
+    saveNote: "The future classroom is a conversation. Add your voice.",
+  },
+
+  courseTransparency: {
+    title: "One last disclosure",
+    body: [
+      "This course was itself developed with assistance from generative AI.",
+      "The learning design and direction came from the Manifesto project. Generative AI was used to help prototype, draft and refine parts of the interactive experience, which were then reviewed and revised.",
+    ],
+    question: "Does knowing that change how you read the course?",
+    options: [
+      { id: "yes", label: "Yes" },
+      { id: "no", label: "No" },
+      { id: "unsure", label: "I'm not sure" },
+    ],
+    revealStatement: 11,
+    revealNote:
+      "Transparency does not tell you what judgement to make. It gives you information that allows you to make the judgement yourself.",
   },
 
   takeaway: {
     title: "Take it with you",
     intro:
-      "Save a copy of your manifesto, your anchor and your reflections — to keep, to share with a colleague, or to bring to a conversation about practice.",
+      "Save or copy your Action Plan — your five statements, your anchor, what you'll change and your own statement — to keep, to share with a colleague, or to bring to a conversation about practice.",
     printLabel: "Print or save as PDF",
     printHint: "Opens your browser's print dialogue — choose “Save as PDF” to keep a copy.",
+    copyLabel: "Copy my Action Plan",
+    copied: "Copied to this device's clipboard",
+    copyFailed: "Couldn't copy automatically — select the text to copy it.",
+  },
+
+  actionPlan: {
+    title: "My Manifesto in Action",
+    labels: {
+      five: "My Five Statements",
+      anchor: "My Anchor Statement",
+      stop: "What I Will Stop",
+      start: "What I Will Start",
+      continue: "What I Will Continue Protecting",
+      change: "My One Small Change",
+      stakeholders: "Who Needs to Be Part of the Conversation",
+      complicated: "What Became More Complicated",
+      statement31: "My Statement 31",
+    },
+    empty: "—",
+    footer: [
+      "Manifesto for Generative AI in Higher Education",
+      "GenAI:N3",
+      "https://manifesto.genain3.ie",
+    ],
   },
 
   closing: {
