@@ -26,6 +26,18 @@ An interactive, static website presenting the **GenAI:N3 Manifesto for Generativ
 │   └── index.html      # Aggregate "Explore Responses" table (agreement, importance, practice gap)
 ├── 01/ … 30/
 │   └── index.html      # One page per statement: rationale, reflection question, response form
+├── course/             # Self-paced interactive course (see "The interactive course")
+│   ├── index.html      # Course welcome / landing
+│   ├── course.html     # The course app shell (nav, progress, section view)
+│   ├── css/course.css  # Course styles (tokens inherited from shared/base.css)
+│   ├── data/           # Content & data, separate from logic
+│   │   ├── manifesto.js  #   the 30 statements (single source of truth)
+│   │   └── course.js     #   authored course copy (intros, prompts, activities)
+│   └── js/             # ES modules: app shell, interaction engine, sections
+│       ├── app.js        #   orchestrator: routing, nav, progress
+│       ├── interactions.js # reusable accessible components
+│       ├── progress.js   #   localStorage persistence (no PII)
+│       └── sections/     #   one renderer per course section
 ├── shared/
 │   ├── base.css        # Self-hosted fonts + design tokens (load first)
 │   ├── main.css        # Styles for the landing page
@@ -43,6 +55,31 @@ This is a **plain static site** — no build step, bundler, or framework. HTML i
 - **Landing page (`index.html`):** The 30 statements are defined inline as a `statements` array (text, theme, Font Awesome icon, and rationale). Client‑side JavaScript renders the cards and powers search, theme filtering, and the detail modal.
 - **Statement pages (`01/`–`30/`):** Each page carries its own statement text, "why this matters" rationale, and a reflection question. `shared/statement.js` handles the rating scales (agreement / importance / practice), the free‑text observation, demographics, and submission.
 - **Explore page (`explore/`):** Loads aggregate summaries and renders a sortable table, including the **practice gap** (importance minus current practice).
+
+## The interactive course
+
+`course/` is a self‑paced companion to the Manifesto: a guided journey through all 30 statements and three themes, with reflective activities, knowledge checks, realistic institutional dilemmas, and a personal "manifesto" the learner builds and takes away. Start at **`course/index.html`** (the welcome page); the course itself runs in **`course/course.html`**.
+
+Like the rest of the site it is a **plain static site with no build step** — just ES modules, HTML and CSS. Its design tokens and self‑hosted fonts come from `shared/base.css`; everything else lives under `course/`.
+
+**Nine sections**, in order: *Before We Begin · The Manifesto · Rethinking Teaching and Learning (Theme 1) · Responsibility, Ethics, and Power (Theme 2) · Imagination, Humanity, and the Future (Theme 3) · Connecting the Manifesto · Manifesto in Action · Your Practice · The Conversation Continues.*
+
+How it is organised — **content, presentation and logic are kept separate**:
+
+| Concern | Where |
+|---------|-------|
+| The 30 statements (text, rationale, reflection, theme) | `course/data/manifesto.js` |
+| Authored course copy (intros, prompts, activity content, feedback) | `course/data/course.js` |
+| Reusable UI components (spotlights, sorter, allocator, multiple‑choice, knowledge check, reflection, slider, accordion, modal…) | `course/js/interactions.js` |
+| Per‑section renderers | `course/js/sections/*.js` |
+| Routing, navigation, progress bar, focus management | `course/js/app.js` |
+| Progress & persistence (localStorage, **no PII, nothing sent anywhere**) | `course/js/progress.js` |
+
+**Editing course content:** in almost all cases you only need `course/data/course.js` (wording of activities) and `course/data/manifesto.js` (statement text). The renderers read from these, so copy can be revised without touching logic.
+
+**Progress** is stored in a single versioned `localStorage` key (`manifesto_course_v1`) on the learner's device — visited/completed sections, activity choices, the reflection notebook, the personal five statements and anchor, and the opening/closing sentiment. Nothing is transmitted; "Reset progress" clears it. The closing section can print (or save as PDF) the learner's personal manifesto and reflections.
+
+> **Note:** the course collects no data and does **not** use the Supabase backend below; that backend serves the statement pages and the Explore view only.
 
 ### Backend (Supabase)
 
@@ -85,7 +122,9 @@ python3 -m http.server 8000
 # then visit http://localhost:8000/
 ```
 
-Without valid Supabase credentials in `shared/config.js`, the site renders fully but response forms and statistics stay disabled.
+Without valid Supabase credentials in `shared/config.js`, the site renders fully but response forms and statistics stay disabled. The interactive course needs no backend at all — with the server running, visit `http://localhost:8000/course/`.
+
+> Because the course uses ES modules and `fetch`, it must be served over HTTP (as above) rather than opened as a `file://` URL.
 
 ## Deploying
 
@@ -93,11 +132,12 @@ The site is static and can be hosted on any static host (GitHub Pages, Netlify, 
 
 ## Editing content
 
-Statement text currently lives in **three** places that must be kept in sync when a statement changes:
+Statement text currently lives in **four** places that must be kept in sync when a statement changes:
 
 1. `index.html` — the `statements` array (text, icon, rationale).
 2. `explore/index.html` — the `STATEMENTS` array (plain + HTML text).
 3. `NN/index.html` — the individual statement page.
+4. `course/data/manifesto.js` — the course's `MANIFESTO` array (text, rationale, reflection).
 
 ## Credits
 
