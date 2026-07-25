@@ -575,6 +575,14 @@ a { color: var(--accent-deep); }
 .explore-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
 .explore-grid .empty { color: var(--ink-soft); font-style: italic; grid-column: 1 / -1; }
 
+/* Your Practice */
+.practice-seed { margin-bottom: 0.9rem; }
+.explore-counter.full { color: var(--accent-deep); font-weight: 600; }
+.anchor-host { margin-top: 0.4rem; }
+.anchor-host .empty { color: var(--ink-soft); font-style: italic; }
+.anchor-host .select-label { font-family: var(--font-display); font-size: 1.05rem; line-height: 1.35; }
+.practice-closing { margin-top: 1.6rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
+
 /* Spotlights, cards, scenario conclusion */
 .spotlight-stack { display: grid; gap: 0.7rem; }
 .card-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-top: 1rem; }
