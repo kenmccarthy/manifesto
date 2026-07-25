@@ -9,6 +9,7 @@ import theme2 from "./theme2.js";
 import theme3 from "./theme3.js";
 import practice from "./practice.js";
 import continues from "./continues.js";
+import connecting from "./connecting.js";
 
 export const SECTION_META = {
   before: {
@@ -61,4 +62,4 @@ export const SECTION_META = {
   },
 };
 
-export const RENDERERS = { before, manifesto, "theme-1": theme1, "theme-2": theme2, "theme-3": theme3, practice, continues };
+export const RENDERERS = { before, manifesto, "theme-1": theme1, "theme-2": theme2, "theme-3": theme3, practice, continues, connecting };
