@@ -26,15 +26,15 @@ function exploreLandscape() {
   wrap.appendChild(
     el("p", {
       class: "activity-intro",
-      text: "All 30 provocations. Filter, search, and mark the ones you want to return to. You don't need to read every rationale yet.",
+      text: "All 30 provocations. Filter, search, and keep the ones you want to carry forward. You don't need to read every rationale yet — the statements you keep here follow you into Your Practice.",
     })
   );
 
-  const marked = new Set(Progress.getActivity("exploreMarked") || []);
+  const marked = new Set(Progress.savedStatements());
   const counter = el("p", { class: "explore-counter", "aria-live": "polite" });
   const updateCounter = () => {
     counter.textContent =
-      "30 provocations. " + (marked.size ? marked.size + " marked to explore." : "How many will stay with you?");
+      "30 provocations. " + (marked.size ? marked.size + " kept so far." : "How many will stay with you?");
   };
 
   let filter = 0;
@@ -56,9 +56,8 @@ function exploreLandscape() {
           selected: marked.has(s.number),
           link: true,
           onToggle: (n, on) => {
-            if (on) marked.add(n);
-            else marked.delete(n);
-            Progress.saveActivity("exploreMarked", [...marked]);
+            if (on) { marked.add(n); if (!Progress.isSaved(n)) Progress.toggleSaved(n); }
+            else { marked.delete(n); Progress.removeSaved(n); }
             updateCounter();
           },
         })

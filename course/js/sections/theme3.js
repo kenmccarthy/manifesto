@@ -1,7 +1,7 @@
 /* Section 6 — Theme 3: Imagination, Humanity, and the Future. */
 
 import {
-  sectionHeader, statementSpotlight, reflectionPrompt, knowledgeCheck, el,
+  sectionHeader, statementSpotlight, reflectionPrompt, knowledgeCheck, keptCounterText, el,
 } from "../interactions.js";
 import { Progress } from "../progress.js";
 import { SPOTLIGHT, THEME3 } from "../../data/course.js";
@@ -39,10 +39,13 @@ export default function renderTheme3({ meta }) {
   frag.appendChild(activity("What must remain human?", null, [rp, chips]));
 
   /* Statement spotlights */
+  const keptMsg = el("p", { class: "kept-counter", role: "status", "aria-live": "polite" });
+  const syncKept = () => (keptMsg.textContent = keptCounterText(Progress.savedCount()));
   const spots = el("div", { class: "spotlight-stack" });
-  THEME3.spotlights.forEach((n) => spots.appendChild(statementSpotlight(n, SPOTLIGHT[n])));
+  THEME3.spotlights.forEach((n) => spots.appendChild(statementSpotlight(n, SPOTLIGHT[n], { onKeep: syncKept })));
+  syncKept();
   frag.appendChild(
-    activity("Statement spotlights", "Open these in any order. Each gives an interpretation, why it matters, and a question to sit with.", [spots])
+    activity("Statement spotlights", "Read the short take on each, then open “Explore further” for the fuller interpretation. Keep the ones you want to carry forward.", [keptMsg, spots])
   );
 
   /* The future university */

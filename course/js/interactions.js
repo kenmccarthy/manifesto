@@ -114,26 +114,60 @@ export function statementCard(statement, opts = {}) {
 }
 
 /* ---------------------------------------------------------------------------
-   Statement spotlight — progressive disclosure
-   content: { interpretation, why, reflection?, link? }  (reflection defaults
-   to the statement's own reflection question)
+   Keep this statement — an accessible toggle button writing to the unified
+   saved-statements list. onChange(kept, count) fires after each toggle.
 --------------------------------------------------------------------------- */
-export function statementSpotlight(number, content = {}) {
+export function keepButton(number, onChange) {
+  const btn = el("button", { type: "button", class: "keep-btn" }, [
+    el("span", { class: "keep-heart", "aria-hidden": "true" }),
+    el("span", { class: "keep-label" }),
+  ]);
+  const heart = btn.querySelector(".keep-heart");
+  const label = btn.querySelector(".keep-label");
+  const sync = (kept) => {
+    btn.setAttribute("aria-pressed", kept ? "true" : "false");
+    btn.classList.toggle("kept", kept);
+    heart.textContent = kept ? "♥" : "♡";
+    label.textContent = kept ? "Kept" : "Keep this statement";
+    btn.setAttribute(
+      "aria-label",
+      kept ? "Remove statement " + number + " from your kept statements"
+           : "Keep statement " + number
+    );
+  };
+  sync(Progress.isSaved(number));
+  btn.addEventListener("click", () => {
+    const kept = Progress.toggleSaved(number);
+    sync(kept);
+    if (onChange) onChange(kept, Progress.savedCount());
+  });
+  return btn;
+}
+
+/* A subtle running message for how many statements have been kept. */
+export function keptCounterText(n) {
+  if (n === 0) return "Keep the statements you want to carry forward — you can narrow them down later.";
+  return "You've kept " + n + " statement" + (n === 1 ? "" : "s") + " so far.";
+}
+
+/* ---------------------------------------------------------------------------
+   Statement spotlight — number + statement + short interpretation always
+   visible; the longer interpretation, rationale and reflection sit behind
+   "Explore further"; a "Keep this statement" control saves it for later.
+   content: { short, interpretation, why?, reflection? }
+   opts: { onKeep(kept, count) }
+--------------------------------------------------------------------------- */
+export function statementSpotlight(number, content = {}, opts = {}) {
   const s = byNumber(number);
-  const th = THEMES[s.theme];
   const id = uid("spot");
   const panelId = id + "-panel";
 
-  const toggle = el("button", {
-    type: "button",
-    class: "spot-toggle",
-    "aria-expanded": "false",
-    "aria-controls": panelId,
-  }, [
+  const head = el("div", { class: "spot-head" }, [
     el("span", { class: "spot-num", html: shapeSvg(s.theme) + "<b>" + String(s.number).padStart(2, "0") + "</b>" }),
-    el("span", { class: "spot-statement", text: s.statement }),
-    el("span", { class: "spot-caret", "aria-hidden": "true", text: "＋" }),
+    el("p", { class: "spot-statement", text: s.statement }),
   ]);
+
+  const short = content.short ? el("p", { class: "spot-short", text: content.short }) : null;
 
   const panel = el("div", { class: "spot-panel", id: panelId, hidden: true });
   if (content.interpretation) panel.appendChild(el("p", { class: "spot-interp", text: content.interpretation }));
@@ -147,14 +181,26 @@ export function statementSpotlight(number, content = {}) {
   );
   panel.appendChild(el("a", { class: "spot-link", href: s.url, target: "_blank", rel: "noopener" }, "Explore this statement on the Manifesto website ↗"));
 
-  toggle.addEventListener("click", () => {
-    const open = toggle.getAttribute("aria-expanded") === "true";
-    toggle.setAttribute("aria-expanded", open ? "false" : "true");
-    toggle.querySelector(".spot-caret").textContent = open ? "＋" : "－";
+  const moreBtn = el("button", {
+    type: "button",
+    class: "spot-more",
+    "aria-expanded": "false",
+    "aria-controls": panelId,
+  }, [
+    el("span", { class: "spot-more-label", text: "Explore further" }),
+    el("span", { class: "spot-caret", "aria-hidden": "true", text: "＋" }),
+  ]);
+  moreBtn.addEventListener("click", () => {
+    const open = moreBtn.getAttribute("aria-expanded") === "true";
+    moreBtn.setAttribute("aria-expanded", open ? "false" : "true");
+    moreBtn.querySelector(".spot-more-label").textContent = open ? "Explore further" : "Show less";
+    moreBtn.querySelector(".spot-caret").textContent = open ? "＋" : "－";
     panel.hidden = open;
   });
 
-  return el("div", { class: "spotlight theme-" + s.theme, dataset: { number: s.number } }, [toggle, panel]);
+  const actions = el("div", { class: "spot-actions" }, [moreBtn, keepButton(s.number, opts.onKeep)]);
+
+  return el("div", { class: "spotlight theme-" + s.theme, dataset: { number: s.number } }, [head, short, actions, panel]);
 }
 
 /* ---------------------------------------------------------------------------

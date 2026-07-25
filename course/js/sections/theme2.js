@@ -2,7 +2,7 @@
 
 import {
   sectionHeader, statementSpotlight, statementCard, allocator, sorter,
-  multipleChoice, accordion, knowledgeCheck, el,
+  multipleChoice, accordion, knowledgeCheck, keptCounterText, el,
 } from "../interactions.js";
 import { Progress } from "../progress.js";
 import { SPOTLIGHT, THEME2 } from "../../data/course.js";
@@ -45,10 +45,13 @@ export default function renderTheme2({ meta }) {
   frag.appendChild(activity("Who holds responsibility?", r.scenario, [alloc, reveal]));
 
   /* Statement spotlights */
+  const keptMsg = el("p", { class: "kept-counter", role: "status", "aria-live": "polite" });
+  const syncKept = () => (keptMsg.textContent = keptCounterText(Progress.savedCount()));
   const spots = el("div", { class: "spotlight-stack" });
-  THEME2.spotlights.forEach((n) => spots.appendChild(statementSpotlight(n, SPOTLIGHT[n])));
+  THEME2.spotlights.forEach((n) => spots.appendChild(statementSpotlight(n, SPOTLIGHT[n], { onKeep: syncKept })));
+  syncKept();
   frag.appendChild(
-    activity("Statement spotlights", "Open these in any order. Each gives an interpretation, why it matters, and a question to sit with.", [spots])
+    activity("Statement spotlights", "Read the short take on each, then open “Explore further” for the fuller interpretation. Keep the ones you want to carry forward.", [keptMsg, spots])
   );
 
   /* Automate or augment? — sorter */

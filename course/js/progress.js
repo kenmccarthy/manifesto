@@ -1,11 +1,18 @@
 /* Progress & persistence — localStorage only, no PII, nothing sent anywhere.
    One namespaced, versioned key holds the learner's whole journey so they can
-   leave and return. */
+   leave and return.
+
+   State is versioned. Version 1 (the original live course) is migrated on read
+   into the Version 2 shape below — no field is dropped, and new fields simply
+   default when absent. The storage key is unchanged so existing learners keep
+   their progress. See migrate(). */
 
 const KEY = "manifesto_course_v1";
+const STATE_VERSION = 2;
 
 function defaults() {
   return {
+    version: STATE_VERSION,
     startedAt: null,
     lastSection: null,
     visited: {}, // sectionId -> true
@@ -16,13 +23,43 @@ function defaults() {
     anchor: null, // the one statement that matters most
     sentimentStart: null,
     sentimentEnd: null,
+
+    /* --- Version 2 additions --- */
+    savedStatements: [], // "Keep this statement" — kept as you explore (unified
+    // with the old Manifesto-section "mark to explore" list)
+    stopAction: null, // Stop / Start / Continue Protecting (Your Practice)
+    startAction: null,
+    continueAction: null,
+    stakeholders: [], // who needs to be part of the change
+    statementTension: null, // { a, b, priority, change } — Where statements pull apart
+    finalThinking: null, // { movement, note } — What happened to your thinking
+    statement31: null, // the learner's own 31st statement
+    completedScenarios: [], // branching scenario ids completed in Manifesto in Action
+    scenarioPaths: {}, // scenarioId -> [decision indices taken]
   };
+}
+
+/* Bring an older stored state up to the current version, non-destructively.
+   Anything unrecognised is preserved; anything missing defaults. */
+function migrate(raw) {
+  const s = Object.assign(defaults(), raw);
+  if ((raw.version || 1) < 2) {
+    // Unify the old "mark to explore" bookmarks into the new kept list so
+    // returning learners keep continuity in Your Practice.
+    const marked = (raw.activities && raw.activities.exploreMarked) || [];
+    const kept = Array.isArray(s.savedStatements) ? s.savedStatements.slice() : [];
+    marked.forEach((n) => { if (typeof n === "number" && !kept.includes(n)) kept.push(n); });
+    s.savedStatements = kept;
+  }
+  s.version = STATE_VERSION;
+  return s;
 }
 
 function read() {
   try {
     const raw = JSON.parse(localStorage.getItem(KEY));
-    return raw ? Object.assign(defaults(), raw) : defaults();
+    if (!raw || typeof raw !== "object") return defaults();
+    return migrate(raw);
   } catch (e) {
     return defaults();
   }
@@ -92,6 +129,39 @@ export const Progress = {
     else delete s.reflections[key];
     write(s);
     return s;
+  },
+
+  /* "Keep this statement" — the unified kept list. */
+  savedStatements() {
+    return (read().savedStatements || []).slice();
+  },
+
+  isSaved(n) {
+    return (read().savedStatements || []).includes(n);
+  },
+
+  /** Toggle a statement in/out of the kept list. Returns the new kept state. */
+  toggleSaved(n) {
+    const s = read();
+    const arr = Array.isArray(s.savedStatements) ? s.savedStatements : [];
+    const i = arr.indexOf(n);
+    let kept;
+    if (i === -1) { arr.push(n); kept = true; }
+    else { arr.splice(i, 1); kept = false; }
+    s.savedStatements = arr;
+    write(s);
+    return kept;
+  },
+
+  removeSaved(n) {
+    const s = read();
+    s.savedStatements = (s.savedStatements || []).filter((x) => x !== n);
+    write(s);
+    return s;
+  },
+
+  savedCount() {
+    return (read().savedStatements || []).length;
   },
 
   hasStarted() {
