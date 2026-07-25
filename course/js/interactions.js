@@ -528,20 +528,23 @@ export function branchingScenario(sc, opts = {}) {
 export function reflectionPrompt(opts = {}) {
   const id = opts.id || uid("reflect");
   const taId = id + "-ta";
-  const stored = Progress.get().reflections[id] || "";
+  /* By default the entry lives in the reflections notebook keyed by id; pass
+     opts.value + opts.save to target a dedicated state field instead. */
+  const stored = opts.value != null ? opts.value : (Progress.get().reflections[id] || "");
   const ta = el("textarea", {
     id: taId,
     class: "reflect-ta",
     maxlength: opts.maxlength || 1000,
     placeholder: opts.placeholder || "Type your thoughts…",
   });
-  ta.value = stored;
+  ta.value = stored || "";
   const status = el("span", { class: "reflect-status", role: "status", "aria-live": "polite" });
   let t;
   ta.addEventListener("input", () => {
     clearTimeout(t);
     t = setTimeout(() => {
-      Progress.saveReflection(id, ta.value);
+      if (opts.save) opts.save(ta.value);
+      else Progress.saveReflection(id, ta.value);
       status.textContent = ta.value.trim() ? "Saved on this device" : "";
     }, 500);
   });

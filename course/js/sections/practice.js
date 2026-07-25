@@ -1,6 +1,7 @@
-/* Section 8 — Your Practice: choose five statements, name an anchor, commit to
-   one small change. The course's payoff. Everything persists so the final
-   section can reflect it back. */
+/* Section 8 — Your Practice: narrow the statements you kept down to five, name
+   an anchor, decide what to stop/start/protect, commit to one small change,
+   and note who needs to be part of it. The course's payoff; everything
+   persists so the final section can reflect it back. */
 
 import {
   sectionHeader, statementCard, selectionCards, reflectionPrompt, toast, el,
@@ -27,9 +28,8 @@ export default function renderPractice({ meta }) {
   const C = PRACTICE.choose;
   const limit = C.limit;
 
-  /* Selection is the source of truth for both the anchor chooser and the
-     completion state; keep it in a Set and persist on every change. */
   const chosen = new Set((state.selectedStatements || []).filter((n) => byNumber(n)));
+  const saved = Progress.savedStatements().filter((n) => byNumber(n));
 
   /* Opening */
   const op = PRACTICE.opening;
@@ -42,73 +42,96 @@ export default function renderPractice({ meta }) {
 
   /* ---- Choose your five ---- */
   const counter = el("p", { class: "explore-counter", "aria-live": "polite" });
-  const grid = el("div", { class: "explore-grid" });
+  const chooseRoot = el("div", { class: "choose-root" });
 
-  function persist() {
-    Progress.update({ selectedStatements: [...chosen] });
-  }
-  function updateCounter() {
+  const persist = () => Progress.update({ selectedStatements: [...chosen] });
+  const updateCounter = () => {
     counter.textContent = C.counter(chosen.size, limit);
     counter.classList.toggle("full", chosen.size === limit);
-  }
+  };
+  const findCard = (n) => chooseRoot.querySelector('.statement-card[data-number="' + n + '"]');
+  const setCard = (n, on) => {
+    const card = findCard(n);
+    if (!card) return;
+    card.classList.toggle("selected", on);
+    const b = card.querySelector(".sc-select");
+    if (b) {
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.setAttribute("aria-label", (on ? "Deselect" : "Select") + " statement " + n);
+    }
+  };
 
-  MANIFESTO.forEach((s) => {
-    grid.appendChild(
-      statementCard(s, {
-        selectable: true,
-        selected: chosen.has(s.number),
-        link: true,
-        onToggle: (n, on) => {
-          if (on && chosen.size >= limit) {
-            // Over the cap: revert the card the engine just pressed.
-            const card = grid.querySelector('.statement-card[data-number="' + n + '"]');
-            if (card) {
-              card.classList.remove("selected");
-              const btn = card.querySelector(".sc-select");
-              if (btn) {
-                btn.setAttribute("aria-pressed", "false");
-                btn.setAttribute("aria-label", "Select statement " + n);
-              }
-            }
-            toast(C.full);
-            return;
-          }
-          if (on) chosen.add(n);
-          else chosen.delete(n);
-          persist();
-          updateCounter();
-          renderAnchor();
-        },
-      })
-    );
-  });
-
-  /* Optional continuity: seed from statements marked in the Manifesto section. */
-  const marked = (Progress.getActivity("exploreMarked") || []).filter((n) => byNumber(n));
-  const seedRow = el("div", { class: "practice-seed" });
-  if (chosen.size === 0 && marked.length) {
-    const btn = el("button", { type: "button", class: "c-btn ghost small" },
-      "Start from the " + Math.min(marked.length, limit) + " " + C.seedPrompt + " →");
-    btn.addEventListener("click", () => {
-      marked.slice(0, limit).forEach((n) => chosen.add(n));
-      persist();
-      // Reflect the seeded state onto the cards.
-      chosen.forEach((n) => {
-        const card = grid.querySelector('.statement-card[data-number="' + n + '"]');
-        if (card) {
-          card.classList.add("selected");
-          const b = card.querySelector(".sc-select");
-          if (b) { b.setAttribute("aria-pressed", "true"); b.setAttribute("aria-label", "Deselect statement " + n); }
+  function makeCard(n) {
+    return statementCard(byNumber(n), {
+      selectable: true,
+      selected: chosen.has(n),
+      link: true,
+      onToggle: (num, on) => {
+        if (on && chosen.size >= limit) {
+          setCard(num, false); // revert — over the cap
+          toast(C.full);
+          return;
         }
-      });
-      seedRow.remove();
-      updateCounter();
-      renderAnchor();
+        if (on) chosen.add(num);
+        else chosen.delete(num);
+        persist();
+        updateCounter();
+        renderAnchor();
+      },
     });
-    seedRow.appendChild(btn);
   }
 
-  frag.appendChild(activity(C.title, C.intro, [seedRow, counter, grid]));
+  const grids = [];
+  function grid(numbers) {
+    const g = el("div", { class: "explore-grid" });
+    numbers.forEach((n) => g.appendChild(makeCard(n)));
+    grids.push(g);
+    return g;
+  }
+
+  if (saved.length) {
+    /* Kept statements first. */
+    PRACTICE.choose.savedIntroLines(saved.length).forEach((line, i) =>
+      chooseRoot.appendChild(el("p", { class: i === 0 ? "activity-intro" : "choose-line", text: line }))
+    );
+    chooseRoot.appendChild(el("p", { class: "recap-label", text: C.keptLabel }));
+    chooseRoot.appendChild(counter);
+    chooseRoot.appendChild(grid(saved));
+
+    /* The rest — expanded automatically if fewer than five were kept,
+       otherwise tucked behind a "Browse all 30" control. */
+    const remaining = MANIFESTO.map((s) => s.number).filter((n) => !saved.includes(n));
+    const otherLabel = el("p", { class: "recap-label", text: C.otherLabel });
+    const otherGrid = grid(remaining);
+    const otherWrap = el("div", {}, [otherLabel, otherGrid]);
+    const autoShow = saved.length < limit;
+    otherWrap.hidden = !autoShow;
+
+    const browse = el("button", {
+      type: "button",
+      class: "c-btn ghost small browse-toggle",
+      "aria-expanded": autoShow ? "true" : "false",
+    }, autoShow ? C.browseHide : C.browseLabel);
+    browse.addEventListener("click", () => {
+      const open = browse.getAttribute("aria-expanded") === "true";
+      browse.setAttribute("aria-expanded", open ? "false" : "true");
+      browse.textContent = open ? C.browseLabel : C.browseHide;
+      otherWrap.hidden = open;
+    });
+    chooseRoot.append(browse, otherWrap);
+  } else {
+    /* No kept statements — choose from all thirty. */
+    chooseRoot.appendChild(el("p", { class: "activity-intro", text: C.intro }));
+    chooseRoot.appendChild(counter);
+    chooseRoot.appendChild(grid(MANIFESTO.map((s) => s.number)));
+  }
+
+  frag.appendChild(
+    el("section", { class: "activity" }, [
+      el("h2", { class: "activity-title", text: C.title }),
+      chooseRoot,
+    ])
+  );
   updateCounter();
 
   /* ---- Name your anchor ---- */
@@ -124,7 +147,6 @@ export default function renderPractice({ meta }) {
       anchorHost.appendChild(el("p", { class: "empty", text: A.empty }));
       return;
     }
-    // Drop a stale anchor that is no longer among the chosen five.
     let anchor = Progress.get().anchor;
     if (anchor != null && !chosen.has(anchor)) { anchor = null; Progress.update({ anchor: null }); }
 
@@ -151,11 +173,48 @@ export default function renderPractice({ meta }) {
   frag.appendChild(activity(A.title, A.intro, [anchorHost, anchorReveal]));
   renderAnchor();
 
+  /* ---- What might change? — Stop / Start / Continue Protecting ---- */
+  const W = PRACTICE.whatChanges;
+  const field = (stateKey, label, prompt, placeholder) =>
+    el("div", { class: "ssc-field" }, [
+      el("p", { class: "ssc-label", text: label }),
+      reflectionPrompt({
+        id: "field-" + stateKey,
+        label: prompt,
+        placeholder,
+        value: state[stateKey] || "",
+        save: (v) => Progress.update({ [stateKey]: v.trim() ? v.trim() : null }),
+      }),
+    ]);
+  frag.appendChild(
+    activity(W.title, W.intro, [
+      el("div", { class: "ssc-grid" }, [
+        field("stopAction", W.stopLabel, W.stopPrompt, W.stopPlaceholder),
+        field("startAction", W.startLabel, W.startPrompt, W.startPlaceholder),
+        field("continueAction", W.continueLabel, W.continuePrompt, W.continuePlaceholder),
+      ]),
+    ])
+  );
+
   /* ---- One small change ---- */
   const CH = PRACTICE.change;
   frag.appendChild(
     activity(CH.title, CH.intro, [
       reflectionPrompt({ id: "oneSmallChange", label: CH.prompt, placeholder: CH.placeholder }),
+    ])
+  );
+
+  /* ---- Who needs to be part of this? ---- */
+  const SK = PRACTICE.stakeholders;
+  frag.appendChild(
+    activity(SK.title, SK.intro, [
+      selectionCards(SK.options, {
+        multi: true,
+        selected: state.stakeholders || [],
+        label: SK.title,
+        columns: 2,
+        onChange: (ids) => Progress.update({ stakeholders: ids }),
+      }),
     ])
   );
 

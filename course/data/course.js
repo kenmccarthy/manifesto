@@ -371,8 +371,16 @@ export const PRACTICE = {
     title: "Choose your five",
     intro:
       "From the thirty, select up to five statements you want to carry into your own practice. Not the five you admire most in the abstract — the five you would actually act on. Choosing is the point: leaving twenty-five behind is what makes the five mean something.",
+    savedIntroLines: (n) => [
+      "You kept " + n + " statement" + (n === 1 ? "" : "s") + " as you explored the Manifesto.",
+      "Now comes the difficult part.",
+      "Choose five.",
+    ],
+    keptLabel: "The statements you kept",
+    otherLabel: "The other statements",
+    browseLabel: "Browse all 30",
+    browseHide: "Hide the other statements",
     limit: 5,
-    seedPrompt: "you marked earlier while exploring",
     empty: "Nothing chosen yet. Pick the ones you'd defend in a staff meeting.",
     counter: (n, limit) =>
       n === 0
@@ -390,6 +398,21 @@ export const PRACTICE = {
     reveal: "This is the statement you chose to return to when the choices get difficult.",
   },
 
+  whatChanges: {
+    title: "What might change?",
+    intro:
+      "Change does not always mean adding something new. Sometimes progress means stopping a practice that no longer serves learning, beginning something different, or deliberately protecting something that already matters.",
+    stopLabel: "Stop",
+    stopPrompt: "What might you stop doing?",
+    stopPlaceholder: "A practice that no longer serves learning…",
+    startLabel: "Start",
+    startPrompt: "What might you begin doing?",
+    startPlaceholder: "Something different worth trying…",
+    continueLabel: "Continue protecting",
+    continuePrompt: "What is already valuable that you do not want GenAI to erode?",
+    continuePlaceholder: "Something worth defending…",
+  },
+
   change: {
     title: "One small change",
     intro:
@@ -398,8 +421,22 @@ export const PRACTICE = {
     placeholder: "One specific, achievable change — a sentence is plenty.",
   },
 
+  stakeholders: {
+    title: "Who needs to be part of this?",
+    intro: "Few changes happen alone. Who would need to be involved for this to work?",
+    options: [
+      { id: "students", label: "Students" },
+      { id: "colleagues", label: "Colleagues" },
+      { id: "programme", label: "Programme team" },
+      { id: "academic-leadership", label: "Academic leadership" },
+      { id: "professional-services", label: "Professional services" },
+      { id: "senior-leadership", label: "Senior leadership" },
+      { id: "someone-else", label: "Someone else" },
+    ],
+  },
+
   closing:
-    "That is the work. Five statements, one anchor, one change. In the final section you'll see everything you've made — and revisit the feeling you started with.",
+    "That is the work: the statements you're carrying, what you'll stop, start and protect, and one small change to begin. In the final section you'll see everything you've made — and revisit the feeling you started with.",
 };
 
 /* "Manifesto in Action" content.
