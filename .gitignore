@@ -12,6 +12,12 @@ Thumbs.db
 *.log
 .cache/
 
+# Node (local dev/test tooling only — not part of the course build)
+node_modules/
+package.json
+package-lock.json
+_smoke.mjs
+
 # Local environment / secrets (keep real credentials out of git)
 .env
 .env.local

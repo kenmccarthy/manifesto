@@ -2,7 +2,7 @@
 
 import {
   sectionHeader, statementSpotlight, statementCard, selectionCards,
-  multipleChoice, knowledgeCheck, sorter, reflectionPrompt, el,
+  multipleChoice, knowledgeCheck, sorter, reflectionPrompt, keptCounterText, el,
 } from "../interactions.js";
 import { Progress } from "../progress.js";
 import { MANIFESTO } from "../../data/manifesto.js";
@@ -30,24 +30,27 @@ export default function renderTheme1({ meta }) {
     ])
   );
 
-  /* Scarcity → abundance sorter */
+  /* Scarcity, abundance, or both? sorter */
   const sortConcl = el("p", { class: "reveal", hidden: true, text: THEME1.sort.conclusion });
   frag.appendChild(
     activity(
-      "Scarcity → abundance",
-      "When information was scarce, some things mattered a great deal. As it becomes abundant, the emphasis shifts. Place each one.",
+      THEME1.sort.heading,
+      THEME1.sort.intro,
       [sorter({ buckets: THEME1.sort.buckets, items: THEME1.sort.items, onComplete: () => (sortConcl.hidden = false) }), sortConcl]
     )
   );
 
   /* Statement spotlights */
+  const keptMsg = el("p", { class: "kept-counter", role: "status", "aria-live": "polite" });
+  const syncKept = () => (keptMsg.textContent = keptCounterText(Progress.savedCount()));
   const spots = el("div", { class: "spotlight-stack" });
-  THEME1.spotlights.forEach((n) => spots.appendChild(statementSpotlight(n, SPOTLIGHT[n])));
+  THEME1.spotlights.forEach((n) => spots.appendChild(statementSpotlight(n, SPOTLIGHT[n], { onKeep: syncKept })));
+  syncKept();
   frag.appendChild(
     activity(
       "Statement spotlights",
-      "Open these in any order. Each gives an interpretation, why it matters, and a question to sit with.",
-      [spots]
+      "Read the short take on each, then open “Explore further” if you want the fuller interpretation. Keep the ones you want to carry forward.",
+      [keptMsg, spots]
     )
   );
 
