@@ -650,9 +650,31 @@ a { color: var(--accent-deep); }
 /* ==========================================================================
    PRINT (expanded in a later phase for the Action Plan)
    ========================================================================== */
+/* --- The Conversation Continues (recap / takeaway / coda) ----------------- */
+.sentiment-move { line-height: 1.6; }
+.recap { display: grid; gap: 1.6rem; }
+.recap-block { display: grid; gap: 0.6rem; }
+.recap-label { font-size: 0.76rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 700; margin: 0; }
+.recap-anchor .statement-card { box-shadow: 0 0 0 2px var(--c) inset; }
+.recap-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.9rem; }
+.recap-quote { margin: 0; padding: 0.7rem 1rem; border-left: 3px solid var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--card)); border-radius: 0 6px 6px 0; font-family: var(--font-display); font-size: 1.05rem; line-height: 1.5; }
+.recap-empty { color: var(--ink-soft); font-style: italic; }
+.recap-empty a { font-style: normal; font-weight: 600; white-space: nowrap; }
+.recap-notebook { display: grid; gap: 1rem; }
+.notebook-entry { display: grid; gap: 0.4rem; }
+.notebook-q { margin: 0; font-weight: 600; font-size: 0.95rem; }
+.takeaway-actions { margin-top: 0.4rem; }
+.takeaway-hint { margin-top: 0.6rem; font-size: 0.85rem; color: var(--ink-soft); }
+.course-coda { margin-top: 1.4rem; padding-top: 1.6rem; border-top: 1px solid var(--line); text-align: center; }
+.course-coda .coda-line { font-size: 1.5rem; }
+.course-coda .c-btn { margin-top: 0.6rem; }
+
 @media print {
   .course-header, .course-nav, .nav-overlay, .progress-rail, .section-pager,
-  .section-placeholder, .nav-toggle { display: none !important; }
+  .section-placeholder, .nav-toggle,
+  .takeaway-actions, .takeaway-hint, .course-coda .c-btn { display: none !important; }
   .course-app { display: block; }
   body { background: #fff; }
+  .recap-quote { border-left-color: #555; background: none; }
+  .statement-card, .recap-quote { break-inside: avoid; }
 }
