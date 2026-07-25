@@ -336,6 +336,72 @@ export const PRACTICE = {
     "That is the work. Five statements, one anchor, one change. In the final section you'll see everything you've made — and revisit the feeling you started with.",
 };
 
+/* "Manifesto in Action" content (DRAFT).
+   Single-decision institutional dilemmas — no scored answers. Each option is
+   defensible; the feedback weighs the trade-off and names the statements in
+   play. The point is to practise bringing the Manifesto to a hard choice. */
+export const ACTION = {
+  opening: {
+    line: "A principle you never have to act on costs you nothing.",
+    body: "The Manifesto is easy to admire in the abstract. It earns its keep when a decision is genuinely hard — when every option has a cost and the clock is running. Below are four dilemmas drawn from real institutional life. None has a right answer. Choose, read what your choice trades away, and notice which statements were pulling on you.",
+  },
+
+  intro:
+    "For each dilemma, make the call you'd actually make. The feedback weighs what that choice gains and gives up — and the tags show which statements bear on it.",
+
+  statementsLabel: "Statements in play",
+
+  dilemmas: [
+    {
+      scenario:
+        "A final-year module's major essay can now be produced competently by widely available GenAI. The exam board meets in three weeks — too soon for a full redesign. What do you advance as the immediate response?",
+      prompt: "Your call:",
+      statements: [4, 11, 12, 19],
+      options: [
+        { label: "Switch to a closed, invigilated exam for this cycle.", kind: "interpretive", feedback: "It restores integrity quickly and is defensible under time pressure. But it narrows what you can assess to what fits an exam hall, treats the task as a security problem, and buys a year without answering what the assessment is for (Statement 4). A stopgap, not a fix." },
+        { label: "Keep the essay, but add a short oral defence of the submitted work.", kind: "interpretive", feedback: "Often the most realistic three-week move: a viva makes this student's reasoning visible without discarding the essay, and it's hard to fake understanding you don't have (Statements 4, 19). It costs staff time and needs clear, fair criteria — but it rebuilds the evidence of learning the essay lost." },
+        { label: "Allow GenAI openly and require a disclosed process log.", kind: "interpretive", feedback: "Honest about the tool's presence, and it can work — but only if you're precise about what the log must evidence and who judges it (Statements 11, 12). Without that, 'use anything and log it' risks a pile of process that still doesn't show the student thought." },
+      ],
+    },
+    {
+      scenario:
+        "Your institution wants every programme to publish an identical, university-wide 'AI use' rule, in the name of consistency and fairness to students. You chair a discipline the template doesn't fit. What do you argue for at the working group?",
+      prompt: "Your position:",
+      statements: [13, 14, 18],
+      options: [
+        { label: "Accept the single rule — consistency is fairer to students.", kind: "interpretive", feedback: "Fairness across modules is a real good, and students do deserve not to face a different regime in every class. But one rule flattens genuine disciplinary difference — GenAI sits differently in nursing, history and computer science (Statement 18) — and a rule that fits none well can be quietly ignored by all." },
+        { label: "Reject central rules; let each module set its own.", kind: "interpretive", feedback: "This respects disciplinary judgement (Statement 18), but pure localism has costs: students meet incoherence and inequity, and when no one owns the overall approach, accountability falls through the gaps (Statement 14)." },
+        { label: "Argue for shared principles set centrally, interpreted by each discipline.", kind: "interpretive", feedback: "This refuses the false choice: institutional accountability and ethical leadership (Statements 13, 14) holding hands with disciplinary plurality (Statement 18). It's harder to run and harder to explain than a single rule — but it's the option that takes both fairness and difference seriously." },
+      ],
+    },
+    {
+      scenario:
+        "A vendor offers a tool that flags students as 'at risk' early, so staff can intervene. It's accurate on average, but noticeably less accurate for some student groups, and the vendor won't fully explain how it scores. Budget is tight and the need is real. Your decision?",
+      prompt: "Your decision:",
+      statements: [12, 14, 16, 23],
+      options: [
+        { label: "Adopt it — early support helps students, and no tool is perfect.", kind: "interpretive", feedback: "The benefit is genuine and lives could be improved. But uneven accuracy builds inequity into everyday practice for the students least able to object (Statements 16, 23), and you cannot answer for logic you're not allowed to see (Statement 14). 'No tool is perfect' shouldn't become 'so we needn't ask whom it fails'." },
+        { label: "Decline until the scoring is explainable and the bias is addressed.", kind: "interpretive", feedback: "This protects accountability and inclusion (Statements 14, 16, 23) and refuses to normalise a black box. The honest cost: support that could have reached struggling students earlier is delayed. Caution has a price too — the question is which risk you can better defend." },
+        { label: "Pilot it strictly as an aid to staff judgement, never an automated decision, while pressing the vendor on transparency and bias.", kind: "interpretive", feedback: "Augmentation, not automation (Statement 12): a human stays responsible while you test in the open. It's a principled middle path — but it only holds if staff don't quietly start deferring to the score, and if 'pressing the vendor' has teeth rather than becoming permanent acceptance." },
+      ],
+    },
+    {
+      scenario:
+        "A student tells you — honestly, unprompted — that they used GenAI to write most of an assignment and now realise they don't understand the topic. Nothing in your module rules forbade it. How do you respond?",
+      prompt: "You:",
+      statements: [3, 11, 19, 28],
+      options: [
+        { label: "Note that no rule was broken, and move on.", kind: "interpretive", feedback: "Technically fair — and it avoids punishing honesty. But it steps past the real issue: the learning that didn't happen (Statements 3, 19). Doing nothing also wastes a rare thing — a student telling you the truth about their process (Statement 11)." },
+        { label: "Treat the honesty as an opening: set a short task where they rebuild the understanding themselves, tool optional.", kind: "interpretive", feedback: "This turns a gap into learning and rewards disclosure rather than punishing it (Statements 3, 11, 28). It asks a little more of you now, but it's the response most likely to make the next student honest too — and to leave this one actually understanding the topic." },
+        { label: "Refer it as a possible integrity issue, to be safe.", kind: "interpretive", feedback: "Understandable caution — but there's no rule to breach here, and referring an honest, unprompted disclosure teaches students that admitting AI use is dangerous (Statement 11). That drives the very behaviour transparency is meant to surface underground." },
+      ],
+    },
+  ],
+
+  closing:
+    "Notice what never happened: you were never told the right answer. That's the point. The Manifesto doesn't remove hard choices — it gives you sharper questions, and a clearer sense of what each choice is really trading away.",
+};
+
 /* "Connecting the Manifesto" content (DRAFT).
    The themes are deliberately intertwined. These activities make the seams
    visible: one situation pulling in statements from all three themes, and

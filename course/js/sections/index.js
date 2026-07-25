@@ -10,6 +10,7 @@ import theme3 from "./theme3.js";
 import practice from "./practice.js";
 import continues from "./continues.js";
 import connecting from "./connecting.js";
+import action from "./action.js";
 
 export const SECTION_META = {
   before: {
@@ -48,7 +49,7 @@ export const SECTION_META = {
   action: {
     kicker: "Manifesto in Action",
     title: "Principles become meaningful when choices become difficult.",
-    lead: "Work through branching scenarios drawn from real institutional dilemmas — and see which statements shaped your decisions.",
+    lead: "Work through real institutional dilemmas — assessment, policy, procurement, the everyday — and see which statements bear on each decision. There are no scored answers, only better questions.",
   },
   practice: {
     kicker: "Your Practice",
@@ -62,4 +63,4 @@ export const SECTION_META = {
   },
 };
 
-export const RENDERERS = { before, manifesto, "theme-1": theme1, "theme-2": theme2, "theme-3": theme3, practice, continues, connecting };
+export const RENDERERS = { before, manifesto, "theme-1": theme1, "theme-2": theme2, "theme-3": theme3, practice, continues, connecting, action };
