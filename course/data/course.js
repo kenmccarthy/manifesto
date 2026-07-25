@@ -336,6 +336,89 @@ export const PRACTICE = {
     "That is the work. Five statements, one anchor, one change. In the final section you'll see everything you've made — and revisit the feeling you started with.",
 };
 
+/* "Connecting the Manifesto" content (DRAFT).
+   The themes are deliberately intertwined. These activities make the seams
+   visible: one situation pulling in statements from all three themes, and
+   knowledge checks that ask which statements deepen or complete one another. */
+export const CONNECTING = {
+  opening: {
+    line: "No statement stands alone.",
+    body: "The three themes are a convenience, not a wall. A question that begins as 'how should I assess this?' (Theme 1) becomes 'who is accountable, and whose values decide?' (Theme 2), and then 'what future are we building?' (Theme 3). Real decisions rarely sit inside one theme. This section makes the connections visible.",
+  },
+
+  threads: {
+    title: "One situation, three themes",
+    intro:
+      "Open each situation to see how a single, ordinary decision pulls in statements from all three themes at once. The seams are where the real thinking happens.",
+    items: [
+      {
+        situation: "A programme decides to let students use GenAI on a major essay — and wants to do it well.",
+        links: [
+          { n: 4, note: "Rather than police the tool, redesign the task so the reasoning and process are what's assessed." },
+          { n: 11, note: "Ask students to disclose how they used it — trust rests on a legible process, not a ban." },
+          { n: 21, note: "Choosing to allow it thoughtfully, rather than forbidding it out of fear, is itself an act of critical courage." },
+        ],
+      },
+      {
+        situation: "A university is choosing an AI tutoring system that will reach thousands of students.",
+        links: [
+          { n: 8, note: "The students who'll use it are partners in the decision, not just its subjects." },
+          { n: 13, note: "Don't let 'cheapest and fastest' quietly decide — the choice encodes values about equity and quality." },
+          { n: 23, note: "Ask who the system works less well for; inclusion is a design stance, not an afterthought." },
+        ],
+      },
+      {
+        situation: "A student submits fluent, AI-assisted work — and isn't sure they actually understand it.",
+        links: [
+          { n: 3, note: "The fluency is a mirror: it reveals how easily coherence gets mistaken for understanding." },
+          { n: 19, note: "Writing was where the thinking happened; if the tool did the writing, what did the student think?" },
+          { n: 28, note: "The gap here is 'why', not 'how' — capability without judgement or purpose." },
+        ],
+      },
+    ],
+  },
+
+  connect: {
+    title: "Trace the connection",
+    intro:
+      "Each question links statements across themes. There's usually a strongest pairing, but the near-misses are worth weighing too — feedback on every answer.",
+    questions: [
+      {
+        prompt: "“Let students use AI — but ask them to show how they did.” Which two statements, from different themes, does this combine?",
+        options: [
+          { label: "Detection chases the past; design shapes the future (T1) + Transparency is the new integrity (T2).", kind: "corrective", correct: true, feedback: "Yes. Redesigning the task instead of policing it (4) pairs naturally with asking for honest disclosure of process (11). Together they replace suspicion with design and openness." },
+          { label: "Sustainability is a learning outcome (T3) + Inclusion is not optional (T3).", kind: "interpretive", feedback: "Both are important Theme 3 commitments, but they're within one theme and neither is about disclosure of AI use." },
+          { label: "Prompting is pedagogy (T2) + Constraint catalyses creativity (T3).", kind: "interpretive", feedback: "A defensible pairing about how students use the tool, but it doesn't capture the disclosure move — 'show me how' is a transparency idea (11)." },
+        ],
+      },
+      {
+        prompt: "A colleague argues: “The AI tutor is cheaper, so we should adopt it.” Which pair of statements together forms the strongest reply?",
+        options: [
+          { label: "Institutions must lead ethically, not just efficiently (T2) + Efficiency is seductive; wisdom lingers (T2).", kind: "corrective", correct: true, feedback: "Yes. 13 refuses to let cost be the deciding value; 15 warns that speed can quietly crowd out the slow work of understanding. Together they answer 'cheaper' with 'at what cost?'" },
+          { label: "Curiosity surpasses completion (T1) + Constraint catalyses creativity (T3).", kind: "interpretive", feedback: "Both are about learning, but neither speaks to a procurement decision driven by cost." },
+          { label: "Privacy is practice (T3) + Prompting is pedagogy (T2).", kind: "interpretive", feedback: "Relevant to using a tool well, but not to the question of whether cost should decide adoption." },
+        ],
+      },
+      {
+        prompt: "The Manifesto asks to be read as a whole. Which statement about the themes is a misreading?",
+        options: [
+          { label: "A question about assessment design often turns into a question about accountability and power.", kind: "interpretive", feedback: "That's a faithful reading — exactly the kind of seam this section is about." },
+          { label: "Because the themes are connected, engaging seriously with one lets you skip the others.", kind: "corrective", correct: true, feedback: "Yes — that's the misreading. Interconnection means the themes pull on each other; it's a reason to hold all three, not a shortcut to ignore two." },
+          { label: "What we decide must remain human shapes how we redesign teaching and assessment.", kind: "interpretive", feedback: "That's a faithful reading — Theme 3 commitments feed straight back into Theme 1 practice." },
+        ],
+      },
+    ],
+  },
+
+  tension: {
+    title: "Where statements pull apart",
+    intro:
+      "Connection isn't always agreement. Some statements sit in genuine tension — and holding that tension is part of thinking well.",
+    prompt: "Choose two statements from different themes that you think pull against each other. Which two, and what does the tension teach?",
+    placeholder: "e.g. 'Windows not walls' invites early use, but 'the cost of not thinking' warns where that goes wrong when…",
+  },
+};
+
 /* "The Conversation Continues" — the closing section (DRAFT).
    Reflects the whole journey back: a closing sentiment reading against the
    opening one, and a recap of everything the learner made. */
