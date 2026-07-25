@@ -336,6 +336,70 @@ export const PRACTICE = {
     "That is the work. Five statements, one anchor, one change. In the final section you'll see everything you've made — and revisit the feeling you started with.",
 };
 
+/* "The Conversation Continues" — the closing section (DRAFT).
+   Reflects the whole journey back: a closing sentiment reading against the
+   opening one, and a recap of everything the learner made. */
+export const CONTINUES = {
+  opening: {
+    line: "This is the end of the course — but not the end of the conversation.",
+    body: "The Manifesto was never a set of conclusions to accept. It was an invitation to think, and thinking doesn't finish. What you've built here is yours to keep questioning, adapting and arguing with — in your teaching, with your colleagues, and with your students.",
+  },
+
+  sentiment: {
+    title: "Where are you now?",
+    intro:
+      "At the very start, we asked how you were feeling about Generative AI in higher education. Set the slider to where you stand now.",
+    leftLabel: "Deeply concerned",
+    midLabel: "Uncertain / mixed",
+    rightLabel: "Full of possibility",
+    noStart:
+      "You didn't record a starting point, so there's nothing to compare against — but this is still worth marking: where do you stand now?",
+    movement: {
+      steady:
+        "Barely moved — and that's not nothing. The course didn't swing you; it gave you reasons for where you already stood. A considered position held is worth more than an easy one adopted.",
+      towardPossibility:
+        "You've moved toward possibility. Not the naïve kind — you arrived here by questioning thirty provocations, not by being sold anything. That is optimism with its eyes open.",
+      towardConcern:
+        "You've moved toward concern. That isn't defeat or pessimism; a clearer sense of what's at stake is its own kind of readiness. Caution you can articulate is more useful than confidence you can't.",
+    },
+  },
+
+  recap: {
+    title: "What you've made your own",
+    intro:
+      "Everything below stayed on this device as you worked. It is the shape of your thinking across the course — take it with you.",
+    empty:
+      "You haven't built your personal manifesto yet. Head to Your Practice to choose the statements you want to carry forward.",
+    anchorLabel: "Your anchor",
+    fiveLabel: "The statements you're carrying forward",
+    changeLabel: "The change you'll make in the next four weeks",
+    changeEmpty: "You haven't named a change yet — Your Practice is where to set one.",
+    notebookLabel: "From your reflections",
+    /* Labels for the freeform notebook entries, keyed by reflection id. */
+    notebook: {
+      chooseProvocationWhy: "On the provocation that most challenges conventional teaching",
+      whatMustRemainHuman: "On what must remain deeply human",
+      constraintCreates: "Your constrained learning-activity design",
+      oneSmallChange: "The change you'll make",
+    },
+  },
+
+  takeaway: {
+    title: "Take it with you",
+    intro:
+      "Save a copy of your manifesto, your anchor and your reflections — to keep, to share with a colleague, or to bring to a conversation about practice.",
+    printLabel: "Print or save as PDF",
+    printHint: "Opens your browser's print dialogue — choose “Save as PDF” to keep a copy.",
+  },
+
+  closing: {
+    line: "The horizon is still ours to shape.",
+    body: "The future of education with Generative AI is not something that happens to us. It is something we decide, in countless ordinary choices, together. Thank you for thinking it through.",
+    linkLabel: "Return to the Manifesto",
+    linkUrl: "https://manifesto.genain3.ie",
+  },
+};
+
 /* Theme 3 activity content (DRAFT). */
 export const THEME3 = {
   opening: {
