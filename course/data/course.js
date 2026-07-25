@@ -524,11 +524,11 @@ export const CONNECTING = {
         ],
       },
       {
-        prompt: "A colleague argues: “The AI tutor is cheaper, so we should adopt it.” Which pair of statements together forms the strongest reply?",
+        prompt: "A university argues that an AI tutor should be adopted because it will reduce costs and provide 24-hour access. Which pair of statements best exposes the tension?",
         options: [
-          { label: "Institutions must lead ethically, not just efficiently (T2) + Efficiency is seductive; wisdom lingers (T2).", kind: "corrective", correct: true, feedback: "Yes. 13 refuses to let cost be the deciding value; 15 warns that speed can quietly crowd out the slow work of understanding. Together they answer 'cheaper' with 'at what cost?'" },
-          { label: "Curiosity surpasses completion (T1) + Constraint catalyses creativity (T3).", kind: "interpretive", feedback: "Both are about learning, but neither speaks to a procurement decision driven by cost." },
-          { label: "Privacy is practice (T3) + Prompting is pedagogy (T2).", kind: "interpretive", feedback: "Relevant to using a tool well, but not to the question of whether cost should decide adoption." },
+          { label: "Institutions must lead ethically, not just efficiently (T2) + Inclusion is not optional (T3).", kind: "corrective", correct: true, feedback: "Cost and access both matter. Statement 13 asks whether efficiency is driving the decision; Statement 23 complicates the picture by reminding us that access itself may be an inclusion benefit. The question becomes not simply “cheap or ethical?” but “who gains access, who may be excluded, and what trade-offs are we willing to make?”" },
+          { label: "Efficiency is seductive; wisdom lingers (T2) + Curiosity surpasses completion (T1).", kind: "interpretive", feedback: "Both caution against rushing, but neither directly weighs cost and round-the-clock access against who gains and who might be excluded — the tension the argument actually raises." },
+          { label: "Prompting is pedagogy (T2) + Constraint catalyses creativity (T3).", kind: "interpretive", feedback: "These are about how a tool is used in learning, not about whether cost and access should drive the decision to adopt it in the first place." },
         ],
       },
       {
@@ -546,8 +546,15 @@ export const CONNECTING = {
     title: "Where statements pull apart",
     intro:
       "Connection isn't always agreement. Some statements sit in genuine tension — and holding that tension is part of thinking well.",
-    prompt: "Choose two statements from different themes that you think pull against each other. Which two, and what does the tension teach?",
-    placeholder: "e.g. 'Windows not walls' invites early use, but 'the cost of not thinking' warns where that goes wrong when…",
+    prompt: "Choose two statements from different themes that you think pull against each other.",
+    labelA: "Statement A",
+    labelB: "Statement B",
+    tensionWord: "tension",
+    sameThemeNote: "Try choosing statements from two different themes — the sharpest tensions usually cross theme boundaries.",
+    priorityPrompt: "If you had to make a decision where these principles pointed in different directions, which would you prioritise?",
+    contextLabel: "It depends on context",
+    changePrompt: "What would make you change your mind?",
+    changePlaceholder: "Optional — the condition or evidence that would shift how you'd weigh these two…",
   },
 };
 
