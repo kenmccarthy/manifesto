@@ -164,6 +164,31 @@ export const Progress = {
     return (read().savedStatements || []).length;
   },
 
+  /* Branching scenarios (Manifesto in Action). */
+  saveScenarioPath(id, pathIndices) {
+    const s = read();
+    s.scenarioPaths = s.scenarioPaths || {};
+    s.scenarioPaths[id] = pathIndices;
+    write(s);
+    return s;
+  },
+
+  completeScenario(id) {
+    const s = read();
+    s.completedScenarios = s.completedScenarios || [];
+    if (!s.completedScenarios.includes(id)) s.completedScenarios.push(id);
+    write(s);
+    return s;
+  },
+
+  scenariosCompleted() {
+    return (read().completedScenarios || []).slice();
+  },
+
+  isScenarioComplete(id) {
+    return (read().completedScenarios || []).includes(id);
+  },
+
   hasStarted() {
     return !!read().startedAt;
   },

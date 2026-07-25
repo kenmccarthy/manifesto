@@ -1,38 +1,60 @@
-/* Section 7 — Manifesto in Action: single-decision institutional dilemmas.
-   Each dilemma is a scenario + a multiple-choice call with typed (interpretive)
-   feedback, footed by the statements that bear on it. No scored answers. */
+/* Section 7 — Manifesto in Action: branching, multi-stage scenarios.
+   The learner chooses at least two of four scenarios; each unfolds as a small
+   decision tree where earlier choices change what comes next. No route is a
+   clean win — every ending names what it protected and what it put at risk. */
 
-import { sectionHeader, multipleChoice, el } from "../interactions.js";
-import { shapeSvg } from "../shapes.js";
+import { sectionHeader, branchingScenario, el } from "../interactions.js";
 import { Progress } from "../progress.js";
-import { MANIFESTO } from "../../data/manifesto.js";
 import { ACTION } from "../../data/course.js";
 
-const byNumber = (n) => MANIFESTO.find((s) => s.number === n);
+const SUMMARY_LABELS = ACTION.summaryLabels;
 
-/* Themed, linked chips naming the statements a dilemma pulls on. */
-function statementsInPlay(numbers) {
-  const chips = el("div", { class: "play-chips" });
-  numbers.forEach((n) => {
-    const s = byNumber(n);
-    chips.appendChild(
-      el("a", {
-        class: "play-chip theme-" + s.theme,
-        href: s.url,
-        target: "_blank",
-        rel: "noopener",
-        title: s.statement,
-      }, [
-        el("span", { class: "play-mark", html: shapeSvg(s.theme) }),
-        el("span", { class: "play-num", text: String(s.number).padStart(2, "0") }),
-        el("span", { class: "play-text", text: s.statement }),
-      ])
+function scenarioCard(sc, occupies, onChange) {
+  const card = el("section", { class: "scenario-card", "aria-label": sc.title });
+  const host = el("div", { class: "scenario-host" });
+
+  function heading(withBadge) {
+    return el("div", { class: "scenario-card-head" }, [
+      el("h3", { class: "scenario-title", text: sc.title }),
+      withBadge && Progress.isScenarioComplete(sc.id)
+        ? el("span", { class: "scenario-badge", text: ACTION.completedBadge })
+        : null,
+    ]);
+  }
+
+  function intro() {
+    host.innerHTML = "";
+    const completed = Progress.isScenarioComplete(sc.id);
+    const begin = el("button", { type: "button", class: "c-btn small" }, completed ? ACTION.restartLabel : ACTION.beginLabel);
+    begin.addEventListener("click", start);
+    host.append(heading(true), el("p", { class: "scenario-situation", text: sc.situation }), begin);
+  }
+
+  function start() {
+    host.innerHTML = "";
+    host.append(heading(false), el("p", { class: "scenario-situation", text: sc.situation }));
+    if (sc.interest && occupies.has(sc.interest)) {
+      host.appendChild(el("p", { class: "scenario-interest", text: sc.interestNote }));
+    }
+    host.appendChild(
+      branchingScenario(sc, {
+        labels: { statementsLabel: ACTION.statementsLabel, summaryTitle: ACTION.summaryTitle, summaryLabels: SUMMARY_LABELS },
+        onComplete: () => {
+          onChange();
+          const again = el("button", { type: "button", class: "c-btn ghost small scenario-restart" }, ACTION.restartLabel);
+          again.addEventListener("click", start);
+          host.appendChild(again);
+        },
+      })
     );
-  });
-  return el("div", { class: "play-block" }, [
-    el("p", { class: "play-label", text: ACTION.statementsLabel }),
-    chips,
-  ]);
+    // Move focus to the first decision for keyboard/SR users.
+    const firstOpt = host.querySelector(".scenario-option");
+    if (firstOpt) firstOpt.focus();
+  }
+
+  card.appendChild(host);
+  intro();
+  return card;
 }
 
 export default function renderAction({ meta }) {
@@ -47,32 +69,21 @@ export default function renderAction({ meta }) {
       el("p", { class: "section-lead", text: op.body }),
     ])
   );
-
   frag.appendChild(el("p", { class: "activity-intro standalone-intro", text: ACTION.intro }));
 
-  /* Dilemmas — mark the section complete once every one has been answered. */
-  const total = ACTION.dilemmas.length;
-  const answered = new Set();
+  const occupies = new Set(Progress.getActivity("occupies") || []);
+  const counter = el("p", { class: "explore-counter scenario-counter", role: "status", "aria-live": "polite" });
+  function updateCounter() {
+    const n = Progress.scenariosCompleted().length;
+    counter.textContent = ACTION.chooseNote(n);
+    if (n >= 2) Progress.markCompleted("action");
+  }
 
-  ACTION.dilemmas.forEach((d, i) => {
-    const mc = multipleChoice(
-      { prompt: d.prompt, options: d.options, saveKey: "action-dilemma-" + i },
-      {
-        onAnswer: () => {
-          answered.add(i);
-          if (answered.size === total) Progress.markCompleted("action");
-        },
-      }
-    );
-    frag.appendChild(
-      el("section", { class: "activity dilemma" }, [
-        el("p", { class: "dilemma-kicker", text: "Dilemma " + (i + 1) + " of " + total }),
-        el("p", { class: "dilemma-scenario", text: d.scenario }),
-        mc,
-        statementsInPlay(d.statements),
-      ])
-    );
-  });
+  const list = el("div", { class: "scenario-list" });
+  ACTION.scenarios.forEach((sc) => list.appendChild(scenarioCard(sc, occupies, updateCounter)));
+  frag.appendChild(counter);
+  frag.appendChild(list);
+  updateCounter();
 
   /* Closing */
   frag.appendChild(el("p", { class: "scenario-conclusion action-closing", text: ACTION.closing }));

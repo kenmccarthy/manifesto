@@ -426,6 +426,102 @@ export function knowledgeCheck(questions, opts = {}) {
 }
 
 /* ---------------------------------------------------------------------------
+   Statement chips — small linked chips naming the statements in play.
+--------------------------------------------------------------------------- */
+export function statementChips(numbers, label) {
+  const chips = el("div", { class: "play-chips" });
+  numbers.forEach((n) => {
+    const s = byNumber(n);
+    chips.appendChild(
+      el("a", { class: "play-chip theme-" + s.theme, href: s.url, target: "_blank", rel: "noopener", title: s.statement }, [
+        el("span", { class: "play-mark", html: shapeSvg(s.theme) }),
+        el("span", { class: "play-num", text: String(s.number).padStart(2, "0") }),
+        el("span", { class: "play-text", text: s.statement }),
+      ])
+    );
+  });
+  return el("div", { class: "play-block" }, [label ? el("p", { class: "play-label", text: label }) : null, chips]);
+}
+
+/* ---------------------------------------------------------------------------
+   Branching scenario — a multi-stage decision tree. Each option carries a
+   consequence, the statements it surfaces, and either a `next` node id or (at
+   a leaf) an `outcome` with what it protected and put at risk. Earlier choices
+   change what comes next; no route is a clean win. Fully keyboard-operable and
+   understandable without animation; new content is focus-moved for SR users.
+   sc: { id, situation, start, reflection, nodes:{ id:{ decision, options:[...] } } }
+   opts: { labels:{ statementsLabel, summaryTitle, summaryLabels }, onComplete }
+--------------------------------------------------------------------------- */
+export function branchingScenario(sc, opts = {}) {
+  const L = opts.labels || {};
+  const SL = L.summaryLabels || {};
+  const flow = el("div", { class: "scenario-flow" });
+  const path = []; // [{ node, option }]
+
+  const optOf = (p) => sc.nodes[p.node].options[p.option];
+
+  function endSummary(term) {
+    const surfaced = [...new Set(path.flatMap((p) => optOf(p).statements || []))].sort((a, b) => a - b);
+    const principles = [...new Set(path.flatMap((p) => optOf(p).principles || []))];
+    const block = (label, node) =>
+      node ? el("div", { class: "scenario-sum-block" }, [el("p", { class: "scenario-sum-label", text: label }), node]) : null;
+    return el("div", { class: "scenario-end" }, [
+      el("p", { class: "scenario-end-title", text: L.summaryTitle || "Where your choices led" }),
+      block(SL.emphasised, principles.length ? el("ul", { class: "scenario-principles" }, principles.map((p) => el("li", { text: p }))) : null),
+      block(SL.surfaced, surfaced.length ? statementChips(surfaced) : null),
+      block(SL.protected, el("p", { class: "scenario-protected", text: term.protected })),
+      block(SL.atRisk, el("p", { class: "scenario-atrisk", text: term.atRisk })),
+      el("p", { class: "scenario-reflection", text: sc.reflection }),
+    ]);
+  }
+
+  function renderNode(nodeId) {
+    const node = sc.nodes[nodeId];
+    const stage = el("div", { class: "scenario-stage" });
+    stage.appendChild(el("p", { class: "scenario-decision", text: node.decision }));
+    const optsWrap = el("div", { class: "scenario-options", role: "group", "aria-label": node.decision });
+
+    node.options.forEach((o, i) => {
+      const btn = el("button", { type: "button", class: "scenario-option" }, [
+        el("span", { class: "scenario-opt-key", "aria-hidden": "true", text: String.fromCharCode(65 + i) }),
+        el("span", { text: o.label }),
+      ]);
+      btn.addEventListener("click", () => {
+        if (stage.dataset.answered) return;
+        stage.dataset.answered = "1";
+        optsWrap.querySelectorAll(".scenario-option").forEach((b) => (b.disabled = true));
+        btn.classList.add("chosen");
+        path.push({ node: nodeId, option: i });
+        Progress.saveScenarioPath(sc.id, path.map((p) => p.option));
+
+        const cons = el("div", { class: "scenario-consequence", tabindex: "-1", role: "status", "aria-live": "polite" });
+        cons.appendChild(el("p", { class: "scenario-consequence-text", text: o.consequence || o.outcome }));
+        if (o.statements && o.statements.length) cons.appendChild(statementChips(o.statements, L.statementsLabel));
+        stage.appendChild(cons);
+
+        if (o.next) {
+          const cont = el("button", { type: "button", class: "c-btn small scenario-continue", text: "Continue →" });
+          cont.addEventListener("click", () => { cont.remove(); renderNode(o.next); });
+          cons.appendChild(cont);
+        } else {
+          stage.appendChild(endSummary(o));
+          Progress.completeScenario(sc.id);
+          if (opts.onComplete) opts.onComplete(sc.id);
+        }
+        cons.focus();
+      });
+      optsWrap.appendChild(btn);
+    });
+
+    stage.appendChild(optsWrap);
+    flow.appendChild(stage);
+  }
+
+  renderNode(sc.start);
+  return flow;
+}
+
+/* ---------------------------------------------------------------------------
    Reflection prompt — saves to the local notebook
    opts: { id, label, prompt?, placeholder?, maxlength }
 --------------------------------------------------------------------------- */

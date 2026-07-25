@@ -402,70 +402,233 @@ export const PRACTICE = {
     "That is the work. Five statements, one anchor, one change. In the final section you'll see everything you've made — and revisit the feeling you started with.",
 };
 
-/* "Manifesto in Action" content (DRAFT).
-   Single-decision institutional dilemmas — no scored answers. Each option is
-   defensible; the feedback weighs the trade-off and names the statements in
-   play. The point is to practise bringing the Manifesto to a hard choice. */
+/* "Manifesto in Action" content.
+   Branching, multi-stage scenarios. Each scenario is a small decision tree:
+   Situation -> Decision 1 -> Consequence -> Decision 2 -> Consequence ->
+   Decision 3 -> Outcome / unresolved tension -> Reflection. Earlier choices
+   change what comes next; paths may converge. No route is a clean "win" —
+   every terminal option names what it protected and what it put at risk. */
 export const ACTION = {
   opening: {
     line: "A principle you never have to act on costs you nothing.",
-    body: "The Manifesto is easy to admire in the abstract. It earns its keep when a decision is genuinely hard — when every option has a cost and the clock is running. Below are four dilemmas drawn from real institutional life. None has a right answer. Choose, read what your choice trades away, and notice which statements were pulling on you.",
+    body: "The Manifesto is easy to admire in the abstract. It earns its keep when a decision is genuinely hard — when every option has a cost and the clock is running. Below are four scenarios drawn from real institutional life. None has a perfect answer. Every choice protects something and puts something else at risk.",
   },
 
   intro:
-    "For each dilemma, make the call you'd actually make. The feedback weighs what that choice gains and gives up — and the tags show which statements bear on it.",
+    "Choose at least two scenarios to work through. Each unfolds over several decisions, and your earlier choices shape what you meet next. Notice which statements keep surfacing — and what each route quietly trades away.",
+
+  chooseNote: (n) =>
+    n === 0
+      ? "Complete at least two scenarios. You can do all four if you wish."
+      : n === 1
+        ? "One scenario completed. Complete at least one more."
+        : "You've completed " + n + " scenarios — enough to move on, though the others are here if you want them.",
 
   statementsLabel: "Statements in play",
+  beginLabel: "Begin this scenario",
+  restartLabel: "Start this scenario again",
+  completedBadge: "Completed",
+  summaryTitle: "Where your choices led",
+  summaryLabels: {
+    emphasised: "Your decisions emphasised",
+    surfaced: "Statements that surfaced",
+    protected: "What your choices protected",
+    atRisk: "What they put at risk",
+  },
 
-  dilemmas: [
+  scenarios: [
+    /* ---- 1. Assessment ---- */
     {
-      scenario:
-        "A final-year module's major essay can now be produced competently by widely available GenAI. The exam board meets in three weeks — too soon for a full redesign. What do you advance as the immediate response?",
-      prompt: "Your call:",
-      statements: [4, 11, 12, 19],
-      options: [
-        { label: "Switch to a closed, invigilated exam for this cycle.", kind: "interpretive", feedback: "It restores integrity quickly and is defensible under time pressure. But it narrows what you can assess to what fits an exam hall, treats the task as a security problem, and buys a year without answering what the assessment is for (Statement 4). A stopgap, not a fix." },
-        { label: "Keep the essay, but add a short oral defence of the submitted work.", kind: "interpretive", feedback: "Often the most realistic three-week move: a viva makes this student's reasoning visible without discarding the essay, and it's hard to fake understanding you don't have (Statements 4, 19). It costs staff time and needs clear, fair criteria — but it rebuilds the evidence of learning the essay lost." },
-        { label: "Allow GenAI openly and require a disclosed process log.", kind: "interpretive", feedback: "Honest about the tool's presence, and it can work — but only if you're precise about what the log must evidence and who judges it (Statements 11, 12). Without that, 'use anything and log it' risks a pile of process that still doesn't show the student thought." },
-      ],
+      id: "assessment",
+      title: "Assessment",
+      interest: "assessment",
+      interestNote: "Earlier, you identified assessment as something occupying your thinking. This scenario brings that concern into focus.",
+      situation: "A final-year module's major essay can now be produced competently using widely available GenAI. The exam board meets in three weeks, too soon for a complete redesign.",
+      start: "d1",
+      reflection: "Three weeks was never enough to solve this well. Which of the things you protected would you be least willing to give up — and how would you defend that to a colleague who chose differently?",
+      nodes: {
+        d1: {
+          decision: "What do you advance as the immediate response?",
+          options: [
+            { label: "Move temporarily to an invigilated exam", consequence: "It creates a more controlled assessment environment quickly and may strengthen confidence about authorship. The cost is that the assessment may now measure a narrower range of learning.", statements: [4], principles: ["Control over authorship"], next: "exam" },
+            { label: "Keep the essay and add a short oral defence", consequence: "Staff support the idea, but estimate that short vivas will require an additional 35 staff hours.", statements: [4, 19], principles: ["Making reasoning visible"], next: "viva" },
+            { label: "Allow GenAI and require a process account", consequence: "Students can use the tools openly, but early submissions show that a 'process account' can be padded with detail that still doesn't evidence understanding.", statements: [11, 12], principles: ["Transparency of process"], next: "process" },
+          ],
+        },
+        exam: {
+          decision: "With an exam hall booked, how do you handle what the exam can't capture?",
+          options: [
+            { label: "Accept the narrower assessment for one cycle and flag it for redesign", consequence: "A defensible stopgap — but a year's cohort is assessed on less than the module intends, and the redesign question is postponed rather than answered.", statements: [4], principles: ["Buying time"], next: "d3" },
+            { label: "Add a small reflective component alongside the exam", consequence: "This widens what you can see a little, but bolting reflection onto an exam under time pressure risks a token task neither you nor students take seriously.", statements: [19], principles: ["Partial visibility of thinking"], next: "d3" },
+          ],
+        },
+        viva: {
+          decision: "Short vivas would need about 35 extra staff hours. How do you proceed?",
+          options: [
+            { label: "Proceed anyway", consequence: "You protect the fullest picture of each student's understanding, but the hours come from somewhere — marking, feedback or staff wellbeing. Courage opened the door; without resource, the path is hard to walk (Statement 5).", statements: [5, 12], principles: ["Depth over cost"], next: "d3" },
+            { label: "Reduce the viva to a random sample", consequence: "Feasible on the hours available, but students face different assessment experiences depending on whether they are sampled — a fairness question of its own.", statements: [12], principles: ["Feasibility over consistency"], next: "d3" },
+            { label: "Use a five-minute structured conversation with every student", consequence: "A pragmatic compromise: every student is seen, briefly. It may not probe deeply, but it keeps a human judgement in the loop for everyone (Statement 12).", statements: [12], principles: ["Human judgement for all"], next: "d3" },
+            { label: "Abandon the viva", consequence: "Understandable given the workload, but you are back where you started — an essay the tools can produce, and no new evidence of the student's thinking.", statements: [4], principles: ["Retreat under pressure"], next: "d3" },
+          ],
+        },
+        process: {
+          decision: "The process accounts vary wildly in quality. How do you make them evidence learning?",
+          options: [
+            { label: "Specify exactly what the account must show, and who judges it", consequence: "Precision helps — an account that must name decisions, rejections and checks is harder to fake. But it adds marking load and a new skill students must be taught (Statements 11, 12).", statements: [11, 12], principles: ["Rigour of disclosure"], next: "d3" },
+            { label: "Pair the account with a short conversation about it", consequence: "Talking it through surfaces whether the thinking is real, at the cost of staff time — you have partly reinvented the viva (Statement 12).", statements: [12], principles: ["Human judgement for all"], next: "d3" },
+          ],
+        },
+        d3: {
+          decision: "A second problem now surfaces: some students report high anxiety about being assessed 'live', and disability services flag that timed oral or exam formats disadvantage particular students. How do you respond?",
+          options: [
+            { label: "Offer adjustments and alternative formats for those who need them", outcome: "You protect inclusion, but multiple formats make consistency across the cohort harder to guarantee — and 'the same standard, assessed differently' is a genuinely hard line to hold.", statements: [23], principles: ["Inclusion by design"], protected: "Access and belonging for students disadvantaged by a single rigid format.", atRisk: "Consistency across the cohort, and the extra work of keeping standards comparable across formats." },
+            { label: "Keep one format for fairness and support students to prepare", outcome: "You protect a consistent standard, but 'the same for everyone' can still land unequally on the students the format disadvantages. Fairness of process and fairness of outcome are not the same thing.", statements: [23], principles: ["Consistency of standard"], protected: "A single, comparable standard applied to every student.", atRisk: "Students for whom the chosen format is a barrier rather than a neutral test of learning." },
+          ],
+        },
+      },
     },
+
+    /* ---- 2. Institutional AI Policy ---- */
     {
-      scenario:
-        "Your institution wants every programme to publish an identical, university-wide 'AI use' rule, in the name of consistency and fairness to students. You chair a discipline the template doesn't fit. What do you argue for at the working group?",
-      prompt: "Your position:",
-      statements: [13, 14, 18],
-      options: [
-        { label: "Accept the single rule — consistency is fairer to students.", kind: "interpretive", feedback: "Fairness across modules is a real good, and students do deserve not to face a different regime in every class. But one rule flattens genuine disciplinary difference — GenAI sits differently in nursing, history and computer science (Statement 18) — and a rule that fits none well can be quietly ignored by all." },
-        { label: "Reject central rules; let each module set its own.", kind: "interpretive", feedback: "This respects disciplinary judgement (Statement 18), but pure localism has costs: students meet incoherence and inequity, and when no one owns the overall approach, accountability falls through the gaps (Statement 14)." },
-        { label: "Argue for shared principles set centrally, interpreted by each discipline.", kind: "interpretive", feedback: "This refuses the false choice: institutional accountability and ethical leadership (Statements 13, 14) holding hands with disciplinary plurality (Statement 18). It's harder to run and harder to explain than a single rule — but it's the option that takes both fairness and difference seriously." },
-      ],
+      id: "policy",
+      title: "Institutional AI Policy",
+      interest: "policy",
+      interestNote: "You named institutional policy as something on your mind. Here it is, with the trade-offs made explicit.",
+      situation: "The institution wants one identical rule for GenAI use across every programme, in the name of consistency and fairness to students.",
+      start: "d1",
+      reflection: "A policy is never finished. What would tell you, a year from now, that this one was working — for staff, for students, and across different disciplines?",
+      nodes: {
+        d1: {
+          decision: "You are in the room where this is decided. What do you argue for?",
+          options: [
+            { label: "Accept one institutional rule", consequence: "Consistency is real, and students deserve not to meet a different regime in every module. But one rule flattens genuine disciplinary difference — GenAI sits differently in nursing, history and computer science (Statement 18).", statements: [18], principles: ["Uniformity"], next: "single" },
+            { label: "Reject central rules", consequence: "This protects disciplinary judgement, but pure localism has costs: students meet incoherence between modules, and when no one owns the overall approach, accountability falls through the gaps (Statements 14, 18).", statements: [14, 18], principles: ["Local autonomy"], next: "local" },
+            { label: "Adopt shared institutional principles interpreted locally", consequence: "You refuse the false choice — but six months on, students report that they still experience confusing differences between modules.", statements: [13, 18], principles: ["Principled pluralism"], next: "principles" },
+          ],
+        },
+        single: {
+          decision: "The single rule is in force, but staff in several disciplines say it doesn't fit their teaching and quietly work around it. What now?",
+          options: [
+            { label: "Hold the line and enforce the rule", consequence: "Enforced uniformity looks coherent on paper, but a rule widely worked around erodes trust and still doesn't fit the disciplines it governs (Statement 18).", statements: [18], principles: ["Enforcement"], next: "d3" },
+            { label: "Allow documented exceptions by discipline", consequence: "You have reinvented local interpretation under another name — pragmatic, but now you need a way to keep the exceptions coherent (Statement 14).", statements: [14, 18], principles: ["Principled pluralism"], next: "d3" },
+          ],
+        },
+        local: {
+          decision: "With no central rule, coherence is the problem. How will the institution improve it?",
+          options: [
+            { label: "Create a shared disclosure vocabulary", consequence: "A common language for 'how I used AI' helps students move between modules without decoding a new system each time (Statement 11).", statements: [11], principles: ["Shared transparency"], next: "d3" },
+            { label: "Require every assessment to publish its local GenAI position", consequence: "Transparency about each module's stance reduces confusion and makes someone accountable for it (Statements 11, 14) — though it only works if the positions are actually read.", statements: [11, 14], principles: ["Published accountability"], next: "d3" },
+            { label: "Return to one universal rule", consequence: "This buys coherence at the price of the disciplinary difference you rejected central rules to protect (Statement 18). The pendulum has swung back.", statements: [18], principles: ["Uniformity"], next: "d3" },
+          ],
+        },
+        principles: {
+          decision: "Shared principles exist, but students still feel the differences. How do you improve coherence?",
+          options: [
+            { label: "Create a shared disclosure vocabulary", consequence: "A common language for disclosure lets students carry one habit across very different modules (Statement 11).", statements: [11], principles: ["Shared transparency"], next: "d3" },
+            { label: "Require every assessment to publish its local GenAI position", consequence: "Publishing each module's position makes the differences legible and accountable rather than confusing (Statements 11, 14).", statements: [11, 14], principles: ["Published accountability"], next: "d3" },
+            { label: "Return to one universal rule", consequence: "Coherence returns, but so does the flattening of disciplinary difference the principles were meant to honour (Statement 18).", statements: [18], principles: ["Uniformity"], next: "d3" },
+          ],
+        },
+        d3: {
+          decision: "Whatever mechanism you chose, one voice has been absent: students. Who should shape the next version of the policy?",
+          options: [
+            { label: "Staff and leadership finalise it, then inform students", outcome: "Efficient, but a policy about students' learning, written without them, tends to be obeyed rather than owned — and misses what students often see most clearly.", statements: [8], principles: ["Policy done to students"], protected: "Speed and a clear line of institutional authority.", atRisk: "Legitimacy and insight — the people who live with the tools daily had no hand in the rules." },
+            { label: "Include students as partners in drafting the next version", outcome: "Slower and messier, and it means holding some decisions open enough to be reshaped. But students often see the pressures and workarounds staff miss, and a policy they helped write is one they are more likely to respect (Statement 8).", statements: [8, 9], principles: ["Students as collaborators"], protected: "Legitimacy, and decisions informed by the people closest to the tools.", atRisk: "Time, and institutional comfort — genuine partnership means ceding some control (Statement 9)." },
+          ],
+        },
+      },
     },
+
+    /* ---- 3. At-Risk Student System ---- */
     {
-      scenario:
-        "A vendor offers a tool that flags students as 'at risk' early, so staff can intervene. It's accurate on average, but noticeably less accurate for some student groups, and the vendor won't fully explain how it scores. Budget is tight and the need is real. Your decision?",
-      prompt: "Your decision:",
-      statements: [12, 14, 16, 23],
-      options: [
-        { label: "Adopt it — early support helps students, and no tool is perfect.", kind: "interpretive", feedback: "The benefit is genuine and lives could be improved. But uneven accuracy builds inequity into everyday practice for the students least able to object (Statements 16, 23), and you cannot answer for logic you're not allowed to see (Statement 14). 'No tool is perfect' shouldn't become 'so we needn't ask whom it fails'." },
-        { label: "Decline until the scoring is explainable and the bias is addressed.", kind: "interpretive", feedback: "This protects accountability and inclusion (Statements 14, 16, 23) and refuses to normalise a black box. The honest cost: support that could have reached struggling students earlier is delayed. Caution has a price too — the question is which risk you can better defend." },
-        { label: "Pilot it strictly as an aid to staff judgement, never an automated decision, while pressing the vendor on transparency and bias.", kind: "interpretive", feedback: "Augmentation, not automation (Statement 12): a human stays responsible while you test in the open. It's a principled middle path — but it only holds if staff don't quietly start deferring to the score, and if 'pressing the vendor' has teeth rather than becoming permanent acceptance." },
-      ],
+      id: "atrisk",
+      title: "Predictive / At-Risk Student System",
+      interest: "equity",
+      interestNote: "You identified equity and inclusion as a concern at the beginning. Notice what becomes visible when the system performs differently for different groups.",
+      situation: "A vendor offers a system that identifies students considered at risk of failing. It performs well overall but is less accurate for some groups, and the vendor provides limited explanation of its scoring. Budget is tight and the need is real.",
+      start: "d1",
+      reflection: "Has the problem become primarily technical, educational, ethical, or all three? Name where the real decision now sits — and who should be in the room to make it.",
+      nodes: {
+        d1: {
+          decision: "What do you decide?",
+          options: [
+            { label: "Adopt", consequence: "Some students could receive useful support earlier. But uneven accuracy builds inequity into everyday practice for the students least able to object (Statements 16, 23), and you cannot answer for logic you are not allowed to see (Statement 14).", statements: [14, 16, 23], principles: ["Support at the cost of scrutiny"], next: "adopt" },
+            { label: "Decline", consequence: "You refuse to normalise a black box (Statements 14, 23). The honest cost: support that could have reached struggling students earlier is delayed. Caution has a price too.", statements: [14, 23], principles: ["Scrutiny over speed"], next: "decline" },
+            { label: "Pilot as decision support", consequence: "Six weeks into the pilot, staff report that they rarely challenge the system's flags because workloads are high.", statements: [12], principles: ["Cautious trial"], next: "pilot" },
+          ],
+        },
+        pilot: {
+          decision: "Staff are deferring to the flags under workload pressure. What do you change?",
+          options: [
+            { label: "Pause the pilot", consequence: "You stop a system being trusted without scrutiny — but also stop the support it was providing while you regroup.", statements: [12], principles: ["Scrutiny over speed"], next: "d3" },
+            { label: "Provide additional training", consequence: "Training may help staff read flags critically, though training alone rarely survives a heavy workload — the pressure to defer remains (Statement 12).", statements: [12], principles: ["Capacity building"], next: "d3" },
+            { label: "Reduce the number of flags and require documented human review", consequence: "Fewer, higher-confidence flags with mandatory human sign-off keeps judgement in the loop (Statements 12, 14), at the cost of catching fewer cases.", statements: [12, 14], principles: ["Judgement in the loop"], next: "d3" },
+            { label: "Continue while collecting more evidence", consequence: "You keep the benefits flowing, but 'more evidence' can become a way of postponing the hard decision while deferral becomes the norm.", statements: [12], principles: ["Deferring the decision"], next: "d3" },
+          ],
+        },
+        adopt: {
+          decision: "The system is live. How do you handle the groups it serves less accurately?",
+          options: [
+            { label: "Monitor outcomes by group and correct course if harm appears", consequence: "Watching for uneven impact is the minimum responsible step (Statements 16, 23) — but 'we'll fix it if it shows' still exposes those students in the meantime.", statements: [16, 23], principles: ["Monitoring for harm"], next: "d3" },
+            { label: "Rely on the vendor's overall accuracy figures", consequence: "Aggregate accuracy hides exactly the group differences that matter here, and you still can't see how the score is produced (Statements 14, 16).", statements: [14, 16], principles: ["Trust in aggregates"], next: "d3" },
+          ],
+        },
+        decline: {
+          decision: "You've declined the tool, but the underlying need — spotting struggling students earlier — hasn't gone away. What now?",
+          options: [
+            { label: "Invest in staff capacity to notice and respond instead", consequence: "This puts human judgement first (Statement 12), but staff time is the scarce resource the tool was meant to save — the need may outrun what people can do.", statements: [12], principles: ["Human judgement first"], next: "d3" },
+            { label: "Ask the vendor for explainability and bias evidence as a condition of return", consequence: "Making transparency a precondition is principled (Statement 14); whether it has teeth depends on whether you can really walk away.", statements: [14], principles: ["Transparency as precondition"], next: "d3" },
+          ],
+        },
+        d3: {
+          decision: "Students discover the system exists and ask whether they can see their own risk scores. How transparent should the institution be?",
+          options: [
+            { label: "Show students their scores and explain how they are produced", outcome: "Openness respects students as agents (Statements 11, 27) — but a risk score can become a label that shapes how a student sees themselves, and 'explaining' a model you don't fully understand is hard.", statements: [11, 27], principles: ["Transparency with students"], protected: "Students' right to know what is held and decided about them.", atRisk: "A score hardening into a self-fulfilling label, and the limits of explaining an opaque model." },
+            { label: "Keep scores internal but tell students the system exists and why", outcome: "A middle path: students know the practice exists without being handed a number that might mislabel them. But 'trust us with the score' sits awkwardly beside a system even staff can't fully explain (Statement 14).", statements: [14, 27], principles: ["Partial disclosure"], protected: "Students from a potentially misleading label, while acknowledging the system openly.", atRisk: "Full accountability — asking students to trust a score they cannot see or contest." },
+          ],
+        },
+      },
     },
+
+    /* ---- 4. Student Transparency and Learning ---- */
     {
-      scenario:
-        "A student tells you — honestly, unprompted — that they used GenAI to write most of an assignment and now realise they don't understand the topic. Nothing in your module rules forbade it. How do you respond?",
-      prompt: "You:",
-      statements: [3, 11, 19, 28],
-      options: [
-        { label: "Note that no rule was broken, and move on.", kind: "interpretive", feedback: "Technically fair — and it avoids punishing honesty. But it steps past the real issue: the learning that didn't happen (Statements 3, 19). Doing nothing also wastes a rare thing — a student telling you the truth about their process (Statement 11)." },
-        { label: "Treat the honesty as an opening: set a short task where they rebuild the understanding themselves, tool optional.", kind: "interpretive", feedback: "This turns a gap into learning and rewards disclosure rather than punishing it (Statements 3, 11, 28). It asks a little more of you now, but it's the response most likely to make the next student honest too — and to leave this one actually understanding the topic." },
-        { label: "Refer it as a possible integrity issue, to be safe.", kind: "interpretive", feedback: "Understandable caution — but there's no rule to breach here, and referring an honest, unprompted disclosure teaches students that admitting AI use is dangerous (Statement 11). That drives the very behaviour transparency is meant to surface underground." },
-      ],
+      id: "transparency",
+      title: "Student Transparency and Learning",
+      interest: "integrity",
+      interestNote: "You flagged academic integrity as something on your mind. This scenario tests it against a student who chose to be honest.",
+      situation: "A student tells you, without being asked, that they used GenAI to write much of an assignment and now realise they do not understand the topic. The module's own instructions did not explicitly prohibit this use.",
+      start: "d1",
+      reflection: "What response would make future honesty more likely without lowering academic expectations? Notice that both instincts — protect honesty, protect the standard — are right, and still pull against each other.",
+      nodes: {
+        d1: {
+          decision: "How do you respond?",
+          options: [
+            { label: "Move on because the module rule was unclear", consequence: "It avoids punishing honesty, but it steps past the real issue — the learning that didn't happen (Statements 3, 19) — and wastes a rare thing: a student telling you the truth about their process (Statement 11).", statements: [3, 11, 19], principles: ["Letting it pass"], next: "d2" },
+            { label: "Use the disclosure as an opportunity for additional learning", consequence: "You treat the honesty as an opening rather than an offence (Statements 3, 11). It asks a little more of you now, but it is the response most likely to leave the student understanding the topic — and to keep the next student honest (Statement 28).", statements: [3, 11, 28], principles: ["Disclosure as learning"], next: "d2" },
+            { label: "Check whether wider institutional regulations apply", consequence: "Referral may be appropriate if wider institutional regulations have been breached, but the scenario tells us the module itself set no restriction. Before escalating, clarify what rule actually applies and what educational response is still needed.", statements: [11], principles: ["Clarifying the rule"], next: "d2" },
+          ],
+        },
+        d2: {
+          decision: "The student asks whether they may use AI again while rebuilding their understanding. What do you allow?",
+          options: [
+            { label: "No AI this time", consequence: "Working unaided may rebuild the foundations the tool skipped over — though for some students a total ban simply recreates the struggle that sent them to the tool in the first place (Statement 7).", statements: [7, 19], principles: ["Unaided practice"], next: "d3" },
+            { label: "AI allowed, but every use must be explained", consequence: "This keeps the tool available while making the thinking visible (Statements 11, 19) — using disclosure as a learning device rather than a confession.", statements: [11, 19], principles: ["Disclosure as learning"], next: "d3" },
+            { label: "Let the student decide", consequence: "Trusting the student's judgement can build the very self-awareness that was missing (Statements 7, 28) — but a student who just told you they don't understand may not yet be well placed to choose.", statements: [7, 28], principles: ["Student agency"], next: "d3" },
+          ],
+        },
+        d3: {
+          decision: "The student asks directly: “Will being honest about this affect my grade?” What do you tell them?",
+          options: [
+            { label: "Honesty won't be penalised; the work will be assessed on what you now demonstrate", outcome: "This makes future honesty safer (Statement 11) and keeps the standard intact — the grade tracks demonstrated learning, not the confession. The tension: you must still hold the line on what counts as meeting the outcome (Statement 20).", statements: [11, 20], principles: ["Rewarding disclosure"], protected: "A culture where students can be honest about their process without fearing punishment.", atRisk: "Vigilance that 'honesty protected' never quietly becomes 'lower expectations tolerated'." },
+            { label: "Honesty is expected, and the original attempt can't simply be set aside", outcome: "Holding a firm line signals that disclosure is not a reset button — but if honesty feels costly, the next student may simply stay quiet (Statement 11). Fairness to others and encouragement of honesty pull against each other here.", statements: [11, 20], principles: ["Holding the standard"], protected: "Consistency and fairness to students who did the work unaided.", atRisk: "The incentive to be honest — if candour carries a penalty, transparency goes underground." },
+          ],
+        },
+      },
     },
   ],
 
   closing:
-    "Notice what never happened: you were never told the right answer. That's the point. The Manifesto doesn't remove hard choices — it gives you sharper questions, and a clearer sense of what each choice is really trading away.",
+    "Notice what never happened: no choice removed every tension. The Manifesto does not remove hard choices. It gives you sharper questions and makes the values inside those choices more visible.",
 };
 
 /* "Connecting the Manifesto" content (DRAFT).

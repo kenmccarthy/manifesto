@@ -704,6 +704,38 @@ a { color: var(--accent-deep); }
 .play-text { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 22ch; }
 .action-closing { margin-top: 1.6rem; padding-top: 1.3rem; border-top: 1px solid var(--line); }
 
+/* --- Branching scenarios -------------------------------------------------- */
+.scenario-counter { margin: 0.4rem 0 1rem; }
+.scenario-list { display: grid; gap: 1.2rem; }
+.scenario-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); padding: 1.2rem 1.3rem; }
+.scenario-card-head { display: flex; align-items: center; gap: 0.7rem; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.scenario-title { font-family: var(--font-display); font-size: 1.25rem; }
+.scenario-badge { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: var(--accent-deep); background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 999px; padding: 0.2rem 0.6rem; }
+.scenario-situation { font-family: var(--font-display); font-size: 1.1rem; line-height: 1.5; margin-bottom: 1rem; }
+.scenario-interest { font-size: 0.92rem; color: var(--ink-soft); background: color-mix(in srgb, var(--accent) 7%, transparent); border-left: 3px solid var(--accent); border-radius: 4px; padding: 0.6rem 0.8rem; margin-bottom: 1rem; }
+.scenario-flow { display: grid; gap: 1.1rem; }
+.scenario-stage { border-top: 1px solid var(--line); padding-top: 1rem; }
+.scenario-decision { font-weight: 600; margin-bottom: 0.7rem; }
+.scenario-options { display: grid; gap: 0.5rem; }
+.scenario-option { display: flex; gap: 0.7rem; align-items: baseline; text-align: left; width: 100%; background: var(--card); border: 1px solid var(--line); border-radius: 6px; padding: 0.7rem 0.9rem; cursor: pointer; font: inherit; }
+.scenario-option:hover:not(:disabled) { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 5%, var(--card)); }
+.scenario-option:disabled { cursor: default; opacity: 0.55; }
+.scenario-option.chosen { opacity: 1; border-color: var(--accent); border-left: 4px solid var(--accent); background: color-mix(in srgb, var(--accent) 8%, var(--card)); font-weight: 600; }
+.scenario-opt-key { flex: none; font-family: var(--font-display); font-weight: 700; color: var(--accent-deep); }
+.scenario-consequence { margin-top: 0.9rem; }
+.scenario-consequence:focus { outline: none; }
+.scenario-consequence-text { line-height: 1.6; background: var(--paper); border-radius: 6px; padding: 0.8rem 1rem; }
+.scenario-continue { margin-top: 0.9rem; }
+.scenario-end { margin-top: 1rem; border-top: 2px solid var(--accent); padding-top: 1rem; }
+.scenario-end-title { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; margin-bottom: 0.8rem; }
+.scenario-sum-block { margin-bottom: 0.9rem; }
+.scenario-sum-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-soft); font-weight: 700; margin-bottom: 0.35rem; }
+.scenario-principles { margin: 0; padding-left: 1.1rem; }
+.scenario-principles li { margin: 0.1rem 0; }
+.scenario-protected, .scenario-atrisk { line-height: 1.55; }
+.scenario-reflection { font-family: var(--font-display); font-size: 1.08rem; line-height: 1.5; margin-top: 1rem; background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: 6px; padding: 0.9rem 1.1rem; }
+.scenario-restart { margin-top: 1rem; }
+
 /* --- Connecting the Manifesto (threads) ----------------------------------- */
 .thread-links { display: grid; gap: 0.9rem; }
 .thread-link { --c: var(--line); display: flex; gap: 0.8rem; align-items: flex-start; border-left: 4px solid var(--c); padding: 0.2rem 0 0.2rem 0.9rem; }
