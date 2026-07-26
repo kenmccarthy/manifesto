@@ -21,3 +21,6 @@ _smoke.mjs
 # Local environment / secrets (keep real credentials out of git)
 .env
 .env.local
+
+# SCORM build output
+dist/
