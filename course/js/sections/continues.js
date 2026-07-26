@@ -258,6 +258,37 @@ export default function renderContinues({ meta }) {
   refreshPlan();
   frag.appendChild(planHost);
 
+  /* ---- Mark complete (SCORM LMS only) ----
+     On the standalone web course this block is omitted entirely, so live UX is
+     unchanged; inside a SCORM 1.2 LMS it gives the learner the explicit Finish
+     action that reports cmi.core.lesson_status = "completed". */
+  if (Progress.isLmsSession()) {
+    const alreadyDone = Progress.isCourseComplete();
+    const finishStatus = el("p", {
+      class: "finish-status", role: "status", "aria-live": "polite",
+      text: alreadyDone ? "This course is marked complete in your learning system." : "",
+    });
+    const finishBtn = el("button", {
+      type: "button", class: "c-btn",
+      text: alreadyDone ? "Completed ✓" : "Mark course complete",
+    });
+    if (alreadyDone) finishBtn.disabled = true;
+    finishBtn.addEventListener("click", () => {
+      Progress.markCourseComplete();
+      finishBtn.textContent = "Completed ✓";
+      finishBtn.disabled = true;
+      finishStatus.textContent = "Your completion has been recorded in your learning system.";
+    });
+    frag.appendChild(
+      el("section", { class: "activity course-finish" }, [
+        el("h2", { class: "activity-title", text: "Mark your completion" }),
+        el("p", { class: "section-lead", text: "When you're ready, record this course as complete in your learning system. You can keep exploring afterwards — your reflections stay with you." }),
+        el("div", { class: "finish-actions" }, [finishBtn]),
+        finishStatus,
+      ])
+    );
+  }
+
   /* ---- Closing coda ---- */
   const CL = CONTINUES.closing;
   frag.appendChild(

@@ -1,11 +1,21 @@
-/* Progress & persistence — localStorage only, no PII, nothing sent anywhere.
-   One namespaced, versioned key holds the learner's whole journey so they can
-   leave and return.
+/* Progress & persistence — localStorage-first, no PII, nothing sent to any
+   server. One namespaced, versioned key holds the learner's whole journey so
+   they can leave and return.
 
    State is versioned. Version 1 (the original live course) is migrated on read
    into the Version 2 shape below — no field is dropped, and new fields simply
    default when absent. The storage key is unchanged so existing learners keep
-   their progress. See migrate(). */
+   their progress. See migrate().
+
+   SCORM 1.2 (optional): when the course runs inside a SCORM LMS, a *compact
+   subset* of this state is mirrored to cmi.suspend_data (progress, completion,
+   selected statements, resume point) so the LMS can resume the learner across
+   sessions and devices. Freeform reflection text is deliberately kept
+   localStorage-only to stay well within SCORM 1.2's 4096-char suspend_data
+   cap. Off-LMS, js/scorm.js is fully inert and this file behaves exactly as
+   the standalone web version. See compactState()/expandState()/syncScorm(). */
+
+import { Scorm } from "./scorm.js";
 
 const KEY = "manifesto_course_v1";
 const STATE_VERSION = 2;
@@ -36,6 +46,7 @@ function defaults() {
     statement31: null, // the learner's own 31st statement
     completedScenarios: [], // branching scenario ids completed in Manifesto in Action
     scenarioPaths: {}, // scenarioId -> [decision indices taken]
+    courseComplete: false, // explicit "Finish" action (drives SCORM completion)
   };
 }
 
@@ -70,6 +81,82 @@ function write(state) {
     localStorage.setItem(KEY, JSON.stringify(state));
   } catch (e) {
     /* storage may be unavailable (private mode / full) — fail quietly */
+  }
+  syncScorm(state);
+}
+
+/* ---------------- SCORM 1.2 mirror (optional, inert off-LMS) ----------------
+   Only structured, bounded fields travel to the LMS. Everything freeform
+   (reflections, Stop/Start/Continue, Statement 31, final-thinking note) stays
+   in localStorage so suspend_data can never approach the 4096-char cap. */
+
+function compactState(s) {
+  const truthyKeys = (o) => Object.keys(o || {}).filter((k) => o[k]);
+  return {
+    v: s.version,
+    startedAt: s.startedAt || null,
+    lastSection: s.lastSection || null,
+    visited: truthyKeys(s.visited),
+    completed: truthyKeys(s.completed),
+    selectedStatements: s.selectedStatements || [],
+    anchor: s.anchor != null ? s.anchor : null,
+    sentimentStart: s.sentimentStart != null ? s.sentimentStart : null,
+    sentimentEnd: s.sentimentEnd != null ? s.sentimentEnd : null,
+    savedStatements: s.savedStatements || [],
+    completedScenarios: s.completedScenarios || [],
+    scenarioPaths: s.scenarioPaths || {},
+    stakeholders: s.stakeholders || [],
+    courseComplete: !!s.courseComplete,
+  };
+}
+
+function expandState(c) {
+  const s = defaults();
+  s.version = STATE_VERSION;
+  s.startedAt = c.startedAt || null;
+  s.lastSection = c.lastSection || null;
+  (c.visited || []).forEach((id) => { s.visited[id] = true; });
+  (c.completed || []).forEach((id) => { s.completed[id] = true; });
+  s.selectedStatements = Array.isArray(c.selectedStatements) ? c.selectedStatements : [];
+  s.anchor = c.anchor != null ? c.anchor : null;
+  s.sentimentStart = c.sentimentStart != null ? c.sentimentStart : null;
+  s.sentimentEnd = c.sentimentEnd != null ? c.sentimentEnd : null;
+  s.savedStatements = Array.isArray(c.savedStatements) ? c.savedStatements : [];
+  s.completedScenarios = Array.isArray(c.completedScenarios) ? c.completedScenarios : [];
+  s.scenarioPaths = (c.scenarioPaths && typeof c.scenarioPaths === "object") ? c.scenarioPaths : {};
+  s.stakeholders = Array.isArray(c.stakeholders) ? c.stakeholders : [];
+  s.courseComplete = !!c.courseComplete;
+  return s;
+}
+
+function syncScorm(state) {
+  try {
+    if (!Scorm.available) return;
+    Scorm.setSuspendData(JSON.stringify(compactState(state)));
+    if (state.lastSection) Scorm.setLocation(state.lastSection);
+    if (state.courseComplete && Scorm.getStatus() !== "completed") {
+      Scorm.set("cmi.core.lesson_status", "completed");
+    }
+    Scorm.commit();
+  } catch (e) {
+    /* tracking must never break the course */
+  }
+}
+
+/* One-time resume: if this device has no saved state but the LMS is holding a
+   suspend_data blob (learner started elsewhere), seed localStorage from it. */
+function hydrateFromScorm() {
+  try {
+    if (!Scorm.available) return;
+    let hasLocal = false;
+    try { hasLocal = !!localStorage.getItem(KEY); } catch (e) { hasLocal = false; }
+    if (hasLocal) return; // this device already has the fuller, freeform state
+    const sd = Scorm.getSuspendData();
+    if (!sd) return;
+    const parsed = JSON.parse(sd);
+    if (parsed && typeof parsed === "object") write(expandState(parsed));
+  } catch (e) {
+    /* malformed/absent suspend_data — start fresh */
   }
 }
 
@@ -193,6 +280,25 @@ export const Progress = {
     return !!read().startedAt;
   },
 
+  /** The learner's explicit "Finish" action. Marks the course complete and,
+      on a SCORM LMS, reports cmi.core.lesson_status = "completed". */
+  markCourseComplete() {
+    const s = read();
+    s.courseComplete = true;
+    write(s); // mirrors the flag into suspend_data
+    try { Scorm.setComplete(); } catch (e) { /* inert off-LMS */ }
+    return s;
+  },
+
+  isCourseComplete() {
+    return !!read().courseComplete;
+  },
+
+  /** True only when running inside a SCORM LMS (drives optional UI hints). */
+  isLmsSession() {
+    try { return !!Scorm.available; } catch (e) { return false; }
+  },
+
   /** Wipe everything (Start Again / Reset Progress). */
   reset() {
     try {
@@ -200,5 +306,18 @@ export const Progress = {
     } catch (e) {
       /* ignore */
     }
+    /* Clear the LMS mirror too, so a reset doesn't get re-hydrated on reload. */
+    try {
+      if (Scorm.available) {
+        Scorm.setSuspendData("");
+        Scorm.commit();
+      }
+    } catch (e) {
+      /* ignore */
+    }
   },
 };
+
+/* Resume from the LMS on first load (no-op off-LMS or when this device already
+   holds state). Runs after the export so `write`/helpers are defined. */
+hydrateFromScorm();
