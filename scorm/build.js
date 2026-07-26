@@ -31,10 +31,12 @@ const PKG_DIR = path.join(OUT_DIR, "manifesto-scorm12");
 const ZIP_PATH = path.join(OUT_DIR, "manifesto-course-scorm12.zip");
 const SCHEMA_DIR = path.join(__dirname, "schemas");
 
-/* The single SCO's launch file, relative to the package root. Launching the
- * SPA directly (rather than the welcome splash) means one clean SCORM session
- * owns the whole course — simplest, most predictable tracking. */
-const LAUNCH_FILE = "course/course.html";
+/* The single SCO's launch file, relative to the package root. We launch the
+ * welcome page so learners see the course intro and — importantly for an LMS /
+ * accredited context — the learning outcomes before starting. The welcome page
+ * carries no SCORM code, so the tracked session cleanly begins when the learner
+ * clicks through to course.html. */
+const LAUNCH_FILE = "course/index.html";
 
 const COURSE_TITLE = "The Future Is Still Ours to Shape — Manifesto Course";
 const ITEM_TITLE = "The Future Is Still Ours to Shape";
@@ -72,6 +74,20 @@ function stripAnalytics(relFile) {
   if (html !== before) {
     fs.writeFileSync(p, html);
     log("stripped analytics from", relFile);
+  }
+}
+
+/* In the LMS package, show the learning outcomes up front rather than behind a
+ * collapsed disclosure — outcomes are expected to be visible in an accredited
+ * context. Opens the "What will I learn?" <details> on the welcome page. */
+function expandOutcomes(relFile) {
+  const p = path.join(PKG_DIR, relFile);
+  let html = fs.readFileSync(p, "utf8");
+  const before = html;
+  html = html.replace(/<details(\s+class="outcomes")>/i, "<details$1 open>");
+  if (html !== before) {
+    fs.writeFileSync(p, html);
+    log("expanded learning outcomes in", relFile);
   }
 }
 
@@ -145,8 +161,10 @@ function main() {
   ROOT_FILES.forEach(copyInto);
   log("staged course/, shared assets, favicon");
 
-  // 2. Strip third-party analytics.
+  // 2. Strip third-party analytics; surface the learning outcomes on the
+  //    welcome page.
   ["course/course.html", "course/index.html"].forEach(stripAnalytics);
+  expandOutcomes("course/index.html");
 
   // 3. Control schemas at the package root.
   for (const f of fs.readdirSync(SCHEMA_DIR)) {

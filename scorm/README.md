@@ -40,9 +40,11 @@ Before rolling out to a production LMS, upload the `.zip` to
 3. **Adds** the four standard SCORM 1.2 control schemas (`imscp_rootv1p1p2.xsd`,
    `adlcp_rootv1p2.xsd`, `imsmd_rootv1p2p1.xsd`, `ims_xml.xsd`) at the package
    root (in `scorm/schemas/`).
-4. **Writes** a conformant `imsmanifest.xml`: a single SCO whose launch file is
-   `course/course.html`.
-5. **Zips** the result.
+4. **Opens** the “What will I learn?” disclosure on the welcome page so the
+   learning outcomes are visible up front (expected in an accredited context).
+5. **Writes** a conformant `imsmanifest.xml`: a single SCO whose launch file is
+   the welcome page, `course/index.html`.
+6. **Zips** the result.
 
 ## How tracking works
 
@@ -87,9 +89,12 @@ Freeform reflections, being local-only, don’t travel between devices.
 
 ## Notes & limits
 
-- **One SCO, single page.** The whole course is one SCORM object launched at
-  `course/course.html` (a single-page app), so one clean session owns the run
-  and `cmi.core.total_time` accumulates across visits.
+- **One SCO.** The whole course is one SCORM object, launched at the welcome
+  page (`course/index.html`). The welcome page carries no SCORM code, so the
+  tracked session begins when the learner clicks through to the course
+  (`course.html`, a single-page app); `cmi.core.total_time` accumulates across
+  visits. On LMS-driven resume the learner re-enters via the welcome page and
+  the app restores their place from `suspend_data` / local state.
 - **No score / pass–fail.** The course is reflective, so no `cmi.core.score` or
   mastery score is reported — only completion.
 - **SCORM 1.2 specifically** (not 2004). It has the broadest LMS support; a
