@@ -22,5 +22,7 @@ _smoke.mjs
 .env
 .env.local
 
-# SCORM build output
-dist/
+# SCORM build output — ignore the unpacked package, but keep the uploadable
+# .zip tracked so it's downloadable straight from the repo.
+dist/*
+!dist/manifesto-course-scorm12.zip
